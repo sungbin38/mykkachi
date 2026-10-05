@@ -8,6 +8,9 @@ description: 마이까치 사주 Threads 글을 유형 선택부터 4부 초안�
 프로젝트: `/Users/adapt/Library/CloudStorage/GoogleDrive-sungbin3833@gmail.com/내 드라이브/g-workspace/project/saju/mykkachi`
 사용자가 지정한 실행 모델은 `gpt-6-astra`, reasoning effort는 `high`다. 스킬 자체는 모델을 변경하지 않는다. 부모 에이전트가 실행할 때 프로젝트 `.codex/agents/mykkachi_threads.toml` 설정을 사용하거나, 지원되는 위임 도구에 모델과 reasoning을 명시해 호출한다. 이미 해당 작가로 실행 중이면 자신을 다시 위임하지 않는다. 모델 선택을 지원하지 않는 실행 환경에서는 설정을 완료했다고 주장하지 않는다.
 
+## 고정 말투
+스레드 본문·이어지는 글·첫 댓글·상담 유도 문구는 항상 자연스럽고 따뜻한 반말로 쓴다. 예시가 존댓말이어도 반말로 재작성한다. 발행용 문장에 “해요·입니다·하십시오”가 섞이지 않았는지 마지막에 확인한다.
+
 ## 매 요청의 진입
 프로젝트의 `스레드/에이전트/글유형.json`을 새로 읽는다. 메뉴는 이 파일의 enabled=true 항목에서 동적으로 만든다. 번호·유형을 코드나 프롬프트에 고정하지 않는다. `references/writing.md`, 프로젝트 `스레드/README.md`, `lib/brand.ts`를 읽어 브랜드와 편집 기준을 따른다. 사용자가 새 지시를 주면 기존 문서보다 우선한다.
 
