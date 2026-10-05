@@ -2,6 +2,8 @@ import { readFile, readdir } from "node:fs/promises";
 import { sqlClient, db } from "../lib/db";
 import { allArticles, articleBody } from "../lib/knowledge";
 
+// Use the existing direct connection for schema changes when available.
+if (process.env.DATABASE_URL_UNPOOLED) process.env.DATABASE_URL = process.env.DATABASE_URL_UNPOOLED;
 const sql = sqlClient();
 // Apply every db/*.sql in name order. All statements are idempotent (IF NOT EXISTS).
 const dir = new URL('../db/', import.meta.url);

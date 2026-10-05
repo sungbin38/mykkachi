@@ -1,8 +1,10 @@
+import { getArticle } from "@/lib/knowledge";
+import { toJournalCard } from "@/lib/journal-card";
 import type { Metadata } from "next";
 import { HomePage } from "@/components/site";
 import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const metadata: Metadata = {
-  title: "MY KKACHI｜一對一八字諮詢・免費五行解析",
+  title: { absolute: "MY KKACHI｜一對一八字諮詢・免費五行解析" },
   description:
     "MY KKACHI 聽你說故事，陪你看明天。了解 KakaoTalk 一對一八字諮詢，或先免費探索你的八字與五行，從感情、工作到日常，慢慢認識自己。",
   alternates: {
@@ -17,5 +19,5 @@ export const metadata: Metadata = {
   },
 };
 export default function Page() {
-  return <HomePage locale="zh-TW" />;
+  return <HomePage locale="zh-TW" featuredArticles={["five-elements-balance", "day-branch", "luck-cycles"].map((slug) => toJournalCard(getArticle(slug, "zh-TW")!))} />;
 }

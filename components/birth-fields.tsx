@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 // Year / month / day selects instead of a native date picker: faster on phones and
 // no calendar scrolling back decades. Emits "YYYY-MM-DD" or "" while incomplete.
 const THIS_YEAR = new Date().getFullYear();
@@ -8,11 +9,18 @@ const daysIn = (y: number, m: number) => (y && m ? new Date(y, m, 0).getDate() :
 export function BirthFields({ value, onChange, minYear = 1930, zh = false, required = true, idPrefix = "birth" }: {
   value: string; onChange: (date: string) => void; minYear?: number; zh?: boolean; required?: boolean; idPrefix?: string;
 }) {
-  const [y, m, d] = value ? value.split("-").map(Number) : [0, 0, 0];
+  // Keep partial selections locally until all three fields form a complete date.
+  const [draft, setDraft] = useState({ value, parts: value ? value.split("-").map(Number) : [0, 0, 0] });
+  if (draft.value !== value) {
+    setDraft({ value, parts: value ? value.split("-").map(Number) : [0, 0, 0] });
+  }
+  const [y, m, d] = draft.parts;
   const emit = (ny: number, nm: number, nd: number) => {
     const max = daysIn(ny, nm);
     const day = nd > max ? max : nd;
-    onChange(ny && nm && day ? `${ny}-${pad(nm)}-${pad(day)}` : "");
+    const next = ny && nm && day ? `${ny}-${pad(nm)}-${pad(day)}` : "";
+    setDraft({ value: next, parts: [ny, nm, day] });
+    onChange(next);
   };
   const years = Array.from({ length: THIS_YEAR - minYear + 1 }, (_, i) => THIS_YEAR - i);
   return <div className="birth-fields" role="group" aria-label={zh ? "出生日期" : "생년월일"}>

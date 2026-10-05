@@ -1,6 +1,38 @@
-'use client';
-import{useState}from'react';
-import{SiteHeader,SiteFooter}from'./site';
-import{localPath,type Locale}from'@/lib/brand';
-import type{Editorial}from'@/lib/editorial';
-export function Journal({locale,articles}:{locale:Locale;articles:Editorial[]}){const[filter,setFilter]=useState('all');const zh=locale==='zh-TW';const categories=[...new Set(articles.map(a=>a.category))];return <><SiteHeader locale={locale}/><main className="shell"><div className="page-heading"><p className="tiny-label muted">THE MY KKACHI JOURNAL</p><h1 className="serif">{zh?'讓八字，走進日常。':'사주를 일상의 언어로.'}</h1><p>{zh?'從五行入門到關係筆記，慢慢靠近自己。':'처음 만나는 사주부터 관계의 힌트까지. 나를 이해하는 읽을거리.'}</p></div><div className="journal-filters"><button onClick={()=>setFilter('all')} className={`filter-button ${filter==='all'?'active':''}`}>{zh?'全部':'전체'}</button>{categories.map(c=><button key={c} onClick={()=>setFilter(c)} className={`filter-button ${filter===c?'active':''}`}>{c}</button>)}</div><div className="journal-grid" style={{paddingBottom:65}}>{articles.filter(a=>filter==='all'||a.category===filter).map((a,i)=><a className="journal-card" key={a.slug} href={localPath(locale,`/journal/${a.slug}`)}><div className={`journal-cover c${i%3}`}><span className="tiny-label">MY KKACHI JOURNAL / {String(i+1).padStart(2,'0')}</span><span className="serif">{a.title}</span><span className="cover-character">{a.symbol}</span></div><h3>{a.title}</h3><p>{a.excerpt}</p><div className="journal-meta">{a.category} · {a.date} · {zh?'3 分鐘':'3분 읽기'}</div></a>)}</div></main><SiteFooter locale={locale}/></>}
+"use client";
+import { useState } from "react";
+import { Search, X } from "lucide-react";
+import { SiteHeader, SiteFooter } from "./site";
+import { JournalCard } from "./journal-card";
+import type { JournalCardData } from "@/lib/journal-card";
+import type { Locale } from "@/lib/brand";
+
+export function Journal({ locale, articles }: { locale: Locale; articles: JournalCardData[] }) {
+  const [filter, setFilter] = useState("all");
+  const [query, setQuery] = useState("");
+  const zh = locale === "zh-TW";
+  const categories = [...new Set(articles.map((a) => a.category))];
+  const search = query.trim().toLocaleLowerCase();
+  const visible = articles.filter((a) => (filter === "all" || a.category === filter) &&
+    `${a.title} ${a.excerpt} ${a.category}`.toLocaleLowerCase().includes(search));
+  return <><SiteHeader locale={locale} /><main id="main-content" tabIndex={-1} className="shell journal-library">
+    <div className="page-heading journal-heading">
+      <p className="tiny-label muted">LETTERS FROM KKACHI</p>
+      <h1 className="serif">{zh ? "一封信，慢慢讀懂自己。" : "한 편의 편지, 조금 더 나다운 하루."}</h1>
+      <p>{zh ? "從八字與五行，到關係、工作和人生的節奏。\n讓小喜鵲陪你，把古老的語言讀成今天的故事。" : "사주와 오행에서 관계, 일, 삶의 흐름까지.\n낯선 말들을 오늘의 이야기로 풀어 전합니다."}</p>
+      <span className="journal-intro-note">{zh ? "給初學者，也給想重新認識自己的你。" : "처음 읽는 분에게도, 다시 나를 살피는 분에게도."}</span>
+    </div>
+    <div className="journal-tools">
+      <p className="tiny-label muted">{zh ? "尋找今天想讀的信" : "오늘 마음에 닿는 편지를 찾아보세요"}</p>
+      <label className="journal-search"><Search size={18} aria-hidden="true" /><span className="sr-only">{zh ? "搜尋專欄" : "콘텐츠 검색"}</span>
+        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={zh ? "搜尋五行、關係、大運…" : "오행, 관계, 대운 검색…"} />
+      </label>
+    </div>
+    <div className="journal-filters" role="group" aria-label={zh ? "依主題篩選" : "주제별로 보기"}>
+      <button onClick={() => setFilter("all")} aria-pressed={filter === "all"} className={`filter-button ${filter === "all" ? "active" : ""}`}>{zh ? "全部" : "전체"}<span>{articles.length}</span></button>
+      {categories.map((category) => <button key={category} onClick={() => setFilter(category)} aria-pressed={filter === category} className={`filter-button ${filter === category ? "active" : ""}`}>{category}<span>{articles.filter((a) => a.category === category).length}</span></button>)}
+    </div>
+    <p className="journal-result-count" role="status">{zh ? `共 ${visible.length} 封信` : `${visible.length}편의 편지`}</p>
+    <div className="journal-grid">{visible.map((a, i) => <JournalCard key={a.slug} article={a} locale={locale} priority={i === 0} />)}</div>
+    {visible.length === 0 && <div className="journal-empty"><p>{zh ? "暫時沒有找到這個主題，換個關鍵字試試。" : "아직 찾는 편지가 없어요. 다른 단어로 찾아보세요."}</p><button className="text-link" onClick={() => { setFilter("all"); setQuery(""); }}><X size={15} />{zh ? "清除篩選" : "검색 초기화"}</button></div>}
+  </main><SiteFooter locale={locale} /></>;
+}

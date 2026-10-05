@@ -1,4 +1,6 @@
 import type { Locale } from "./brand";
+import { SAJU_ENTRIES } from "./saju-library";
+import { journalArtwork } from "./journal-art";
 export type Article = {
   slug: string;
   locale: Locale;
@@ -10,8 +12,9 @@ export type Article = {
   hook: string;
   sections: { title: string; text: string }[];
   date: string;
+  image: ReturnType<typeof journalArtwork>;
 };
-type Entry = Omit<Article, "slug" | "locale" | "date">;
+export type Entry = Omit<Article, "slug" | "locale" | "date" | "image">;
 const entries: Record<string, [Entry, Entry]> = {
   "five-elements": [
     {
@@ -298,10 +301,23 @@ const entries: Record<string, [Entry, Entry]> = {
     },
   ],
 };
-export const TOPICS = Object.keys(entries);
+const learningOrder = [
+  "four-pillars", "yin-yang", "ten-heavenly-stems", "earthly-branches",
+  "five-elements-balance", "seasonal-balance", "chart-strength", "useful-elements",
+  "ten-gods", "peers-and-competition", "expression-and-creativity", "wealth-stars",
+  "officer-stars", "resource-stars", "month-branch", "day-branch", "hour-pillar",
+  "peach-blossom", "benefactors", "harmony-and-clashes", "luck-cycles",
+  "career-and-vocation", "relationship-boundaries", "daily-renewal",
+];
+const library = { ...SAJU_ENTRIES, ...entries };
+const categories: Record<string, string> = {
+  "사주 가이드": "사주 입문", "관계 이야기": "나와 관계", "일과 가능성": "일과 생활",
+  "五行入門": "八字入門", "八字指南": "八字入門", "關係筆記": "自我與關係", "工作探索": "工作與日常",
+};
+export const TOPICS = [...learningOrder, ...Object.keys(entries)];
 export function getArticle(slug: string, locale: Locale): Article | undefined {
-  const e = entries[slug]?.[locale === "ko" ? 0 : 1];
-  return e ? { ...e, slug, locale, date: "2026-10-05" } : undefined;
+  const e = library[slug]?.[locale === "ko" ? 0 : 1];
+  return e ? { ...e, category: categories[e.category] ?? e.category, slug, locale, date: "2026-10-05", image: journalArtwork(slug, locale) } : undefined;
 }
 export function allArticles(locale: Locale): Article[] {
   return TOPICS.map((k) => getArticle(k, locale)!);

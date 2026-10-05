@@ -182,7 +182,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
   return (
     <>
       <SiteHeader locale={locale} />
-      <main className="shell">
+      <main id="main-content" tabIndex={-1} className="shell">
         <div className="page-heading">
           <p className="eyebrow">
             <Sparkles size={16} />

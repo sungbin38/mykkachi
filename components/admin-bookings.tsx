@@ -2,12 +2,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Mail, MailCheck, RefreshCw, CalendarPlus, X, BellRing, BellOff, Banknote, Route, Smartphone, Monitor, Tablet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { BOOKING_HOURS, BOOKING_STATUSES, STATUS_LABEL, formatWon, type BookingStatus } from "@/lib/booking-shared";
+import { BOOKING_HOURS, BOOKING_STATUSES, bookingStatusLabel, defaultHoursFor, DEFAULT_HOURS_LABEL, BOOKING_PRODUCTS, formatWon, type BookingProduct, type BookingStatus } from "@/lib/booking-shared";
 
 type Slot = { id: string; date: string; hour: number; status: "open" | "booked" | "closed" };
 type Source = { landingPath?: string | null; referrer?: string | null; referrerHost?: string | null; utmSource?: string | null; utmMedium?: string | null; utmCampaign?: string | null; utmContent?: string | null; device?: string | null; country?: string | null; city?: string | null; startedAt?: string | null; pageViews?: number | null; visits?: number | null };
 type Booking = {
-  id: string; slotId: string; date: string; hour: number; name: string; email: string; phone: string | null;
+  id: string; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
   topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
   note: string | null; reportSentAt: string | null; seenAt: string | null; visitorId: string | null; sessionId: string | null; source: Source | null; createdAt: string; updatedAt: string;
@@ -81,7 +81,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
   }, [data]);
   const bookings = useMemo(() => {
     const list = data?.bookings || []; const today = todayKST();
-    return filter === "upcoming" ? list.filter((b) => b.date >= today && !["cancelled", "expired"].includes(b.status)).sort((a, b) => a.date.localeCompare(b.date) || a.hour - b.hour) : list;
+    return filter === "upcoming" ? list.filter((b) => (b.product === "report" ? ["requested", "confirmed"].includes(b.status) : b.date !== null && b.date >= today && !["cancelled", "expired"].includes(b.status))).sort((a, b) => (a.date ?? a.createdAt).localeCompare(b.date ?? b.createdAt) || (a.hour ?? 0) - (b.hour ?? 0)) : list;
   }, [data, filter]);
 
   async function toggleHour(hour: number) {
@@ -111,17 +111,17 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
     {error && <p className="error-message" role="alert">{error}</p>}
     <div className="metric-grid bookings-metrics">
       <div className="metric-card"><span className="tiny-label muted">입금 대기</span><strong>{waiting}</strong><p>입금 확인이 필요한 요청</p></div>
-      <div className="metric-card"><span className="tiny-label muted">확정된 상담</span><strong>{bookings.filter((b) => b.status === "confirmed").length}</strong><p>다가오는 1:1 상담</p></div>
+      <div className="metric-card"><span className="tiny-label muted">확정된 상담</span><strong>{bookings.filter((b) => b.product !== "report" && b.status === "confirmed").length}</strong><p>다가오는 1:1 상담</p></div>
       <div className="metric-card"><span className="tiny-label muted">열린 시간</span><strong>{data.slots.filter((s) => s.status === "open" && s.date >= todayKST()).length}</strong><p>예약 가능한 1시간 슬롯</p></div>
       <div className="metric-card"><span className="tiny-label muted">알림</span><strong className="metric-inline">{data.notifications ? <BellRing size={20} /> : <BellOff size={20} />}</strong><p>{data.notifications ? "새 예약을 이메일로 받아요" : "RESEND_API_KEY · NOTIFY_EMAIL 미설정"}</p></div>
     </div>
     <div className="studio-two-col bookings-layout">
       <section className="studio-panel">
         <div className="panel-heading"><h2>상담 가능 시간 열기</h2><button className="icon-button" onClick={() => void load()} aria-label="새로고침"><RefreshCw size={15} /></button></div>
-        <p className="panel-footnote">날짜를 고르고 시간을 눌러 열거나 닫아요. 예약된 시간은 닫을 수 없어요.</p>
+        <p className="panel-footnote">날짜를 고르고 시간을 눌러 열거나 닫아요. 기본 운영 시간은 {DEFAULT_HOURS_LABEL}예요. 예약된 시간은 닫을 수 없어요.</p>
         <div className="slot-date-row">
           <input className="input-control" type="date" value={date} min={todayKST()} onChange={(e) => setDate(e.target.value)} />
-          <button className="outline-button" disabled={busyHour !== null} onClick={() => openAll(BOOKING_HOURS.filter((h) => h >= 10 && h <= 18))}><CalendarPlus size={14} />10–19시 한번에 열기</button>
+          <button className="outline-button" disabled={busyHour !== null} onClick={() => openAll(defaultHoursFor(date))} title={DEFAULT_HOURS_LABEL}><CalendarPlus size={14} />기본 시간 한번에 열기</button>
         </div>
         <p className="slot-day-label">{dayLabel(date)}</p>
         <div className="slot-grid">
@@ -134,24 +134,25 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
         </div>
       </section>
       <section className="studio-panel">
-        <div className="panel-heading"><h2>예약 목록</h2><div className="inline-actions"><button className={`filter-button${filter === "upcoming" ? " active" : ""}`} onClick={() => setFilter("upcoming")}>다가오는</button><button className={`filter-button${filter === "all" ? " active" : ""}`} onClick={() => setFilter("all")}>전체 {data.bookings.length}</button></div></div>
-        {bookings.length === 0 ? <div className="quiet-empty"><p>{filter === "upcoming" ? "다가오는 예약이 없어요." : "아직 예약이 없어요."}</p></div>
+        <div className="panel-heading"><h2>상담·리포트 신청</h2><div className="inline-actions"><button className={`filter-button${filter === "upcoming" ? " active" : ""}`} onClick={() => setFilter("upcoming")}>진행 예정</button><button className={`filter-button${filter === "all" ? " active" : ""}`} onClick={() => setFilter("all")}>전체 {data.bookings.length}</button></div></div>
+        {bookings.length === 0 ? <div className="quiet-empty"><p>{filter === "upcoming" ? "진행할 상담이나 리포트가 없어요." : "아직 예약이 없어요."}</p></div>
           : <ul className="booking-list">{bookings.map((b) => <li key={b.id}><button type="button" className="booking-row" onClick={() => { setSelected(b); setNote(b.note || ""); }}>
-            <div className="booking-when"><strong>{dayLabel(b.date)}</strong><span>{hh(b.hour)}–{hh(b.hour + 1)}</span></div>
+            <div className="booking-when"><strong>{b.date ? dayLabel(b.date) : "리포트"}</strong><span>{b.hour !== null ? `${hh(b.hour)}–${hh(b.hour + 1)}` : "이메일 수령"}</span></div>
             <div className="booking-who"><strong>{b.name}</strong><span>{b.story ? b.story.slice(0, 40) : "사연 없음"} · {sourceLabel(b.source)}</span></div>
-            <div className="booking-flags"><span className={`pill ${STATUS_CLASS[b.status]}`}>{STATUS_LABEL[b.status]}</span>{b.reportSentAt && <span className="pill"><MailCheck size={12} />리포트</span>}{!b.seenAt && <span className="pill red">NEW</span>}</div>
+            <div className="booking-flags"><span className={`pill ${STATUS_CLASS[b.status]}`}>{bookingStatusLabel(b.status, b.product)}</span>{b.reportSentAt && <span className="pill"><MailCheck size={12} />리포트</span>}{!b.seenAt && <span className="pill red">NEW</span>}</div>
           </button></li>)}</ul>}
       </section>
     </div>
     <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
       <DialogContent className="booking-dialog">
         {selected && <>
-          <DialogHeader><DialogTitle>{selected.name}님 · {dayLabel(selected.date)} {hh(selected.hour)}–{hh(selected.hour + 1)}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{STATUS_LABEL[selected.status]}</span></DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{selected.name}님 · {BOOKING_PRODUCTS[selected.product].name}{selected.date && selected.hour !== null ? ` · ${dayLabel(selected.date)} ${hh(selected.hour)}` : ""}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{bookingStatusLabel(selected.status, selected.product)}</span></DialogDescription></DialogHeader>
           <div className="booking-pay-row">
-            <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 동의</em>}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
+            <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 활용 동의</em>}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
             {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />입금 확인 · 확정</button>}
           </div>
           <dl className="booking-detail">
+            <div><dt>상품</dt><dd>{BOOKING_PRODUCTS[selected.product].name}</dd></div>
             <div><dt>이메일</dt><dd><a href={`mailto:${selected.email}`}>{selected.email}</a></dd></div>
             <div><dt>연락처</dt><dd>{selected.phone || "-"}</dd></div>
             <div><dt>생년월일</dt><dd>{selected.birthDate} ({selected.calendar === "lunar" ? "음력" : "양력"})</dd></div>
@@ -162,11 +163,11 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
           <div className="booking-story-box"><h3>남긴 사연</h3><p>{selected.story || "남긴 사연이 없어요."}</p></div>
           <JourneyPanel booking={selected} />
           <div className="booking-actions">
-            <div className="inline-actions">{BOOKING_STATUSES.map((s) => <button key={s} type="button" disabled={saving || selected.status === s} className={`filter-button${selected.status === s ? " active" : ""}`} onClick={() => patch(selected, { status: s })}>{STATUS_LABEL[s]}</button>)}</div>
+            <div className="inline-actions">{BOOKING_STATUSES.map((s) => <button key={s} type="button" disabled={saving || selected.status === s} className={`filter-button${selected.status === s ? " active" : ""}`} onClick={() => patch(selected, { status: s })}>{bookingStatusLabel(s, selected.product)}</button>)}</div>
             <button type="button" className="outline-button" disabled={saving} onClick={() => patch(selected, { reportSent: !selected.reportSentAt })}>{selected.reportSentAt ? <><X size={14} />리포트 발송 취소</> : <><Mail size={14} />리포트 보냈어요</>}</button>
           </div>
           <label className="field"><span className="field-label">상담 메모 (나만 보는 메모)</span><textarea className="input-control booking-story" rows={4} maxLength={2000} value={note} onChange={(e) => setNote(e.target.value)} onBlur={() => note !== (selected.note || "") && patch(selected, { note })} placeholder="상담 중 메모, 리포트에 넣을 내용 등" /></label>
-          <p className="panel-footnote">취소하거나 기한이 지나면 그 시간은 다시 예약 가능으로 열려요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
+          <p className="panel-footnote">1:1 상담은 취소하거나 기한이 지나면 그 시간이 다시 열려요. 리포트만 신청한 건은 시간표에 영향을 주지 않아요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
         </>}
       </DialogContent>
     </Dialog>

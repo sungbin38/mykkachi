@@ -6,6 +6,7 @@ import {
 } from "./knowledge";
 import { publicContent } from "./server";
 import type { Locale } from "./brand";
+import { cache } from "react";
 export type Editorial = Article & { body: string };
 // Keep saved editorial snapshots intact while presenting the current brand.
 const currentBrandCopy = (text: string) => text
@@ -13,7 +14,7 @@ const currentBrandCopy = (text: string) => text
   .replaceAll("루운으로", "마이까치로")
   .replaceAll("루운", "마이까치")
   .replaceAll("LUUN", "MY KKACHI");
-export async function articles(locale: Locale): Promise<Editorial[]> {
+export const articles = cache(async (locale: Locale): Promise<Editorial[]> => {
   const base = allArticles(locale).map((a) => ({ ...a, body: articleBody(a) }));
   try {
     const published = await publicContent(locale);
@@ -40,7 +41,7 @@ export async function articles(locale: Locale): Promise<Editorial[]> {
     );
   }
   return base;
-}
+});
 export async function article(slug: string, locale: Locale) {
   return (await articles(locale)).find((a) => a.slug === slug);
 }

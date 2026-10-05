@@ -71,10 +71,10 @@ export function generatePackage(topic: string, locale: Locale): ContentItem[] {
         : "내 안에는 어떤 기운이 있을까요?",
       body: zh
         ? "從個人檔案連結，免費查看你的八字與五行。\n追蹤 @mykkachi.tw，聽你說故事，陪你看明天。"
-        : "프로필 링크에서 내 사주와 오행을 무료로 확인하세요.\n@mykkachi · 내 이야기를 듣고, 내일을 함께 살피다.",
+        : "프로필 링크에서 내 사주와 오행을 무료로 확인하세요.\n@mykkachi · 시간이 걸리더라도, 제대로 봐드리겠습니다.",
       label: "A LITTLE BIRD, BY YOUR SIDE",
       footer: zh ? "MY KKACHI · 不需註冊" : "MY KKACHI · 회원가입 없이 무료",
-      index: 4,
+      index: a.sections.length + 1,
     },
   ];
   return (["seo", "threads", "instagram"] as Channel[]).map((channel) => ({

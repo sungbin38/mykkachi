@@ -1,21 +1,10 @@
 import { Journal } from "@/components/journal";
 import { articles } from "@/lib/editorial";
-import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
+import { toJournalCard } from "@/lib/journal-card";
+import { journalMetadata, journalSchema, jsonLd } from "@/lib/journal-seo";
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "MY KKACHI 專欄 — 五行、八字與日常",
-  description: "從五行、日主、出生時間到關係理解，用容易懂的文字認識八字。",
-  alternates: {
-    canonical: "/zh-TW/journal",
-    languages: { "ko-KR": "/journal", "zh-TW": "/zh-TW/journal" },
-  },
-  openGraph: {
-    title: "MY KKACHI 專欄",
-    description: "讓八字，走進日常。",
-    locale: "zh_TW",
-    images: [MASCOT_OG_IMAGE],
-  },
-};
+export const metadata = journalMetadata("zh-TW");
 export default async function Page() {
-  return <Journal locale="zh-TW" articles={await articles("zh-TW")} />;
+  const cards = (await articles("zh-TW")).map(toJournalCard);
+  return <><Journal locale="zh-TW" articles={cards} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(journalSchema(cards, "zh-TW")) }} /></>;
 }

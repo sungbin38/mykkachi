@@ -8,7 +8,7 @@ export const BRAND = {
   english: "MY KKACHI",
   handle: "mykkachi",
   taiwanHandle: "mykkachi.tw",
-  slogan: "내 이야기를 듣고, 내일을 함께 살피다",
+  slogan: "시간이 걸리더라도, 제대로 봐드리겠습니다",
   chinese: "聽你說故事，陪你看明天",
 };
 
@@ -24,3 +24,6 @@ export const websiteSchema = {
   url: ORIGIN,
   inLanguage: ["ko-KR", "zh-Hant-TW"],
 };
+
+// Free self-reading entry points (section 05, nav, hero link). Off for now; the /read page itself stays reachable by URL.
+export const FREE_READING_ENABLED = false;

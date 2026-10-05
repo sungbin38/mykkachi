@@ -1,9 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+TC:wght@400;500;600&display=swap");
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
-@import "tailwindcss";
+@import "./fonts.css";
+@import "tailwindcss" source(none);
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
+/* Keep the separate studio checkout and generated previews out of this app's CSS. */
+@source "./";
+@source "../components";
+@source "../lib";
+/* Keep UI-library dark utilities from following the operating system. */
+@custom-variant dark (&:where(.dark, .dark *));
 :root {
+  color-scheme: only light;
+  --font-pretendard: "Pretendard Variable";
+  --font-noto-tc: "PingFang TC", "Microsoft JhengHei", sans-serif;
   --background: #f8f5ed;
   --foreground: #243b3b;
   --card: #fff;
@@ -71,7 +79,7 @@
   --radius-md: 6px;
   --radius-lg: 10px;
   --radius-xl: 16px;
-  --font-sans: "Pretendard", "Noto Sans TC", sans-serif;
+  --font-sans: var(--font-pretendard), var(--font-noto-tc), sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -82,7 +90,7 @@ html {
 }
 body {
   margin: 0;
-  font-family: "Pretendard", "Noto Sans TC", sans-serif;
+  font-family: var(--font-pretendard), var(--font-noto-tc), sans-serif;
   font-size: 16px;
   line-height: 1.65;
   background: var(--paper);
@@ -135,10 +143,10 @@ h3 {
   color: #183c40;
 }
 .serif {
-  font-family: "Gowun Batang", "Noto Sans TC", serif;
+  font-family: var(--font-gowun), var(--font-noto-tc), serif;
 }
 .en {
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-dm), sans-serif;
 }
 .shell {
   max-width: 1256px;
@@ -236,7 +244,7 @@ h3 {
   letter-spacing: 2px;
   text-transform: uppercase;
   font-weight: 500;
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-dm), sans-serif;
 }
 .eyebrow {
   display: flex;
@@ -255,7 +263,7 @@ h3 {
   padding-bottom: 47px;
 }
 .hero h1 {
-  font-family: "Gowun Batang", "Noto Sans TC", serif;
+  font-family: var(--font-gowun), var(--font-noto-tc), serif;
   font-weight: 400;
   font-size: 48px;
   letter-spacing: -2px;
@@ -493,7 +501,7 @@ h3 {
   right: 24px;
   bottom: -24px;
   line-height: 1.3;
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 128px;
   opacity: 0.22;
 }
@@ -536,7 +544,7 @@ h3 {
   gap: 24px;
 }
 .brand-note h2 {
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 25px;
   font-weight: 400;
   color: var(--ink);
@@ -692,12 +700,12 @@ h3 {
   padding: 38px;
 }
 .result-empty .empty-symbol {
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 65px;
   color: #7c9a7f;
 }
 .result-empty h2 {
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 27px;
   font-weight: 400;
 }
@@ -748,7 +756,7 @@ h3 {
   background: #edf3e8;
   border-radius: 7px;
   padding: 21px;
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 21px;
   color: #416147;
 }
@@ -775,7 +783,7 @@ h3 {
 }
 .pillar strong {
   display: block;
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 31px;
   line-height: 1.9;
 }
@@ -838,7 +846,7 @@ h3 {
   padding: 45px 0 70px;
 }
 .article-body h1 {
-  font-family: "Gowun Batang", serif;
+  font-family: var(--font-gowun), serif;
   font-size: 36px;
   font-weight: 400;
   margin: 15px 0 20px;
@@ -1120,12 +1128,12 @@ h3 {
 .wordmark { gap: 10px; letter-spacing: 0; flex-shrink: 0; }
 .wordmark img { width: 44px; height: 44px; flex-shrink: 0; }
 .wordmark-type { display: flex; flex-direction: column; gap: 5px; }
-.wordmark-type strong { font-family: "Pretendard", sans-serif; font-size: 25px; font-weight: 750; line-height: 1.1; letter-spacing: -.8px; }
-.wordmark-type > span { font-family: "DM Sans", sans-serif; font-size: 10px; line-height: 1.3; letter-spacing: 2.6px; }
+.wordmark-type strong { font-family: var(--font-pretendard), sans-serif; font-size: 25px; font-weight: 750; line-height: 1.1; letter-spacing: -.8px; }
+.wordmark-type > span { font-family: var(--font-dm), sans-serif; font-size: 10px; line-height: 1.3; letter-spacing: 2.6px; }
 .site-nav { gap: 25px; font-size: 14px; }
 .header-inner { gap: 22px; }
 .brand-home .hero { padding-top: 55px; padding-bottom: 55px; gap: 34px; grid-template-columns: 1.1fr 1fr; }
-.brand-home .hero h1 { font-size: clamp(34px, 3.65vw, 49px); line-height: 1.55; letter-spacing: -2px; margin: 26px 0 22px; }
+.brand-home .hero h1 { font-size: clamp(34px, 3.65vw, 49px); line-height: 1.55; letter-spacing: -2px; margin: 26px 0 22px; text-wrap: balance; }
 .brand-home .hero h1 em { color: #517c73; }
 .brand-home .hero-description { color: #616b62; font-size: 16px; line-height: 1.95; }
 .brand-home .hero-art { margin: 0; height: auto; aspect-ratio: 1 / 1.08; border-radius: 46% 46% 7px 7px; background: #eee9dc; }
@@ -1141,7 +1149,7 @@ h3 {
 .brand-home .editorial-strip > .en { margin-left: auto; white-space: nowrap; font-size: 11px; letter-spacing: 1px; }
 .brand-home .strip-pill { white-space: nowrap; background: #e9e8d9; color: #516c5e; letter-spacing: 1px; font-size: 11px; }
 .story-section { display: grid; grid-template-columns: 1fr 1.1fr; gap: 90px; padding-top: 100px; padding-bottom: 64px; }
-.story-heading h2, .consultation-top h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-size: 36px; font-weight: 400; line-height: 1.65; letter-spacing: -1.5px; margin-top: 18px; }
+.story-heading h2, .consultation-top h2 { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-size: 36px; font-weight: 400; line-height: 1.65; letter-spacing: -1.5px; margin-top: 18px; }
 .story-copy { padding-top: 27px; }
 .story-copy > p { font-size: 16px; line-height: 2; color: #667065; margin-bottom: 20px; word-break: keep-all; }
 .story-copy > .story-emphasis { color: #314e48; }
@@ -1149,7 +1157,7 @@ h3 {
 .story-source a { text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .story-note { margin-top: 30px; padding: 22px 24px; border-left: 2px solid #c8cdb8; }
 .story-note img { margin-left: -8px; margin-bottom: 8px; }
-.story-note p { font-family: "Gowun Batang", "Noto Sans TC", serif; font-size: 19px; }
+.story-note p { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-size: 19px; }
 .story-note > span { display: block; font-size: 10px; letter-spacing: 2px; margin-top: 10px; color: #8b8c7d; }
 .promise-section { padding-bottom: 90px; }
 .promise-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -1157,7 +1165,7 @@ h3 {
 .promise-grid article:first-child { padding-left: 0; }
 .promise-grid article:last-child { padding-right: 0; }
 .promise-grid article + article { border-left: 1px solid var(--border); }
-.promise-number { font-family: "Gowun Batang", serif; color: #b88162; font-size: 19px; }
+.promise-number { font-family: var(--font-gowun), serif; color: #b88162; font-size: 19px; }
 .promise-grid h3 { font-size: 18px; font-weight: 600; margin: 14px 0 10px; }
 .promise-grid p { font-size: 15px; color: #6c7367; line-height: 1.9; word-break: keep-all; }
 .consultation-section { padding: 70px 0; background: #e9ede2; }
@@ -1167,7 +1175,7 @@ h3 {
 .consultation-chip { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; margin-top: 20px; color: #496654; }
 .consultation-steps { padding: 0; margin: 38px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; list-style: none; }
 .consultation-steps li { border-top: 1px solid #c7d2c0; padding-top: 21px; }
-.step-number { font-family: "DM Sans", sans-serif; font-size: 12px; letter-spacing: 2px; color: #6c826b; }
+.step-number { font-family: var(--font-dm), sans-serif; font-size: 12px; letter-spacing: 2px; color: #6c826b; }
 .consultation-steps h3 { font-size: 18px; font-weight: 600; margin: 12px 0 10px; }
 .consultation-steps p { font-size: 15px; line-height: 1.9; color: #65725f; word-break: keep-all; }
 .consultation-action { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding-top: 37px; margin-top: 36px; border-top: 1px solid #c7d2c0; }
@@ -1175,7 +1183,7 @@ h3 {
 .consultation-action p { color: #65725f; font-size: 14px; }
 .free-reading-section { padding-top: 82px; }
 .free-reading-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 45px; align-items: center; margin-bottom: 32px; }
-.free-reading-intro h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-size: 29px; font-weight: 400; margin-top: 13px; margin-bottom: 9px; }
+.free-reading-intro h2 { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-size: 29px; font-weight: 400; margin-top: 13px; margin-bottom: 9px; }
 .free-reading-intro > div > p:last-child { color: #6c7567; font-size: 15px; }
 .free-reading-intro .mini-form { margin-top: 0; }
 .free-reading-intro .privacy-hint { font-size: 12px; }
@@ -1184,11 +1192,11 @@ h3 {
 .brand-home .reading-tile:nth-child(3) { background: #edf0ea; }
 .brand-home .reading-tile:nth-child(4) { background: #eeedf0; }
 .brand-home .journal-section { padding-top: 72px; }
-.brand-home .section-heading h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-weight: 400; }
+.brand-home .section-heading h2 { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-weight: 400; }
 .brand-home .journal-cover .tiny-label { font-size: 10px; letter-spacing: 1.3px; }
 .closing-note { text-align: center; padding: 75px 0; }
 .closing-note img { display: block; margin: 0 auto 16px; }
-.closing-note p { font-family: "Gowun Batang", "Noto Sans TC", serif; font-size: 24px; color: #4d695a; margin-bottom: 15px; }
+.closing-note p { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-size: 24px; color: #4d695a; margin-bottom: 15px; }
 .closing-note > span { color: #8b8e7c; font-size: 10px; }
 
 /* The approved 3D magpie is shared by the site and social profiles. */
@@ -1216,18 +1224,19 @@ h3 {
   transform: scale(1.5);
   transform-origin: 50% 30%;
 }
-.brand-home .mascot-hero {
+.brand-home .watercolor-hero {
   aspect-ratio: auto;
   align-self: center;
-  border-radius: 36px;
+  border-radius: 46% 46% 12px 12px;
   border: 1px solid #e9e3d6;
-  background: #fbf7ef;
+  background: var(--paper);
 }
-.mascot-hero .hero-mascot {
+.brand-home .watercolor-hero > img {
   display: block;
   width: 100%;
+  height: auto;
 }
-.brand-home .mascot-hero .hero-art-caption {
+.brand-home .watercolor-hero .hero-art-caption {
   position: static;
   justify-content: center;
   flex-direction: column;
@@ -1299,7 +1308,6 @@ h3 {
   .story-note img { width: 45px; height: 45px; }
   .story-note p { font-size: 17px; }
   .wordmark-mascot { width: 40px; }
-  .brand-home .mascot-hero { border-radius: 28px; }
   .mascot-story-note { padding: 8px 0; gap: 14px; }
   .mascot-story-note .brand-mascot { width: 64px; }
   .mascot-story-note p { font-size: 16px; }
@@ -1341,13 +1349,13 @@ h3 {
 .why-section { padding: 78px 0; background: #243b3b; color: #f3efe4; }
 .why-heading { max-width: 640px; margin-bottom: 44px; }
 .why-heading .tiny-label { color: #a9c0b4; }
-.why-heading h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-weight: 400; font-size: 34px; line-height: 1.4; margin: 14px 0 18px; }
+.why-heading h2 { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-weight: 400; font-size: 34px; line-height: 1.4; margin: 14px 0 18px; }
 .why-heading p { font-size: 16px; line-height: 1.95; color: #c8d3c9; word-break: keep-all; }
 .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .why-col { border-radius: 18px; padding: 28px; }
 .why-col.ai { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
 .why-col.ours { background: #f8f5ed; color: var(--ink); }
-.why-col-label { display: flex; align-items: center; gap: 7px; font-family: "DM Sans", sans-serif; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 22px; }
+.why-col-label { display: flex; align-items: center; gap: 7px; font-family: var(--font-dm), sans-serif; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 22px; }
 .why-col.ai .why-col-label { color: #a9c0b4; }
 .why-col.ours .why-col-label { color: #517c73; }
 .why-chat { padding: 16px 0; border-top: 1px solid rgba(255,255,255,0.1); }
@@ -1362,26 +1370,20 @@ h3 {
 .consultation-chip span { opacity: 0.5; }
 .consultation-steps.four { grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .report-section { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: center; padding-top: 86px; padding-bottom: 40px; }
-.report-intro h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-weight: 400; font-size: 32px; line-height: 1.4; margin: 14px 0 16px; }
+.report-intro h2 { font-family: var(--font-gowun), var(--font-noto-tc), serif; font-weight: 400; font-size: 32px; line-height: 1.4; margin: 14px 0 16px; }
 .report-intro > p { font-size: 16px; line-height: 1.95; color: #5d7061; max-width: 480px; word-break: keep-all; }
 .report-parts { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
 .report-parts li { display: grid; gap: 3px; padding: 13px 0; border-top: 1px solid var(--border); }
-.report-parts strong { font-family: "Gowun Batang", serif; font-weight: 700; font-size: 16px; color: #2f4a46; }
+.report-parts strong { font-family: var(--font-gowun), serif; font-weight: 700; font-size: 16px; color: #2f4a46; }
 .report-parts span { font-size: 13.5px; color: #6c7567; line-height: 1.6; word-break: keep-all; }
-.report-preview { margin: 0; }
-.report-page { position: relative; background: #fff; border: 1px solid #e3e1d6; border-radius: 6px; padding: 38px 36px 54px; box-shadow: 0 24px 60px -30px rgba(36,59,59,0.35); overflow: hidden; }
-.report-page .tiny-label { color: #517c73; }
-.report-page h3 { font-family: "Gowun Batang", serif; font-weight: 700; font-size: 22px; margin: 12px 0 18px; }
-.report-label { font-size: 12px; letter-spacing: 1.2px; color: #b56d4d; margin: 18px 0 6px; font-weight: 600; }
-.report-page > p:not(.report-label) { font-size: 14.5px; line-height: 1.9; color: #4a5a55; word-break: keep-all; }
-.report-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
-.report-preview figcaption { font-size: 12.5px; color: #8b8e7c; margin-top: 12px; text-align: center; }
+.brand-home:lang(zh-Hant-TW) :is(h1, h2, h3, p, .report-parts span) { word-break: normal; }
+
 
 /* ---------- Booking page ---------- */
 .booking-page { padding-top: 34px; padding-bottom: 80px; }
 .booking-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #6c7f6d; margin-bottom: 28px; }
 .booking-heading { max-width: 640px; margin-bottom: 36px; }
-.booking-heading h1 { font-family: "Gowun Batang", serif; font-weight: 400; font-size: 36px; margin: 12px 0 14px; }
+.booking-heading h1 { font-family: var(--font-gowun), serif; font-weight: 400; font-size: 36px; margin: 12px 0 14px; }
 .booking-heading p { font-size: 16px; line-height: 1.9; color: #5d7061; word-break: keep-all; }
 .booking-layout { display: grid; gap: 22px; max-width: 760px; }
 .booking-step { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
@@ -1409,11 +1411,11 @@ h3 {
 .booking-submit:disabled { opacity: .55; cursor: not-allowed; }
 .booking-done { max-width: 620px; margin: 40px auto 20px; text-align: center; }
 .booking-done-icon { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; background: #e9ede2; color: #315f58; align-items: center; justify-content: center; margin-bottom: 18px; }
-.booking-done h1 { font-family: "Gowun Batang", serif; font-weight: 400; font-size: 32px; margin: 10px 0 14px; word-break: keep-all; }
+.booking-done h1 { font-family: var(--font-gowun), serif; font-weight: 400; font-size: 32px; margin: 10px 0 14px; word-break: keep-all; }
 .booking-done-slot { display: inline-flex; gap: 7px; align-items: center; padding: 9px 16px; border-radius: 30px; background: #fff; border: 1px solid var(--border); font-size: 14.5px; font-weight: 500; }
 .booking-next { text-align: left; list-style: none; padding: 0; margin: 32px 0; display: grid; gap: 14px; counter-reset: next; }
 .booking-next li { position: relative; padding: 16px 18px 16px 52px; background: #fff; border: 1px solid var(--border); border-radius: 12px; font-size: 14.5px; line-height: 1.8; color: #5d6b63; word-break: keep-all; }
-.booking-next li::before { counter-increment: next; content: counter(next, decimal-leading-zero); position: absolute; left: 18px; top: 17px; font-family: "DM Sans", sans-serif; font-size: 12px; letter-spacing: 1px; color: #b56d4d; }
+.booking-next li::before { counter-increment: next; content: counter(next, decimal-leading-zero); position: absolute; left: 18px; top: 17px; font-family: var(--font-dm), sans-serif; font-size: 12px; letter-spacing: 1px; color: #b56d4d; }
 .booking-next strong { color: var(--ink); display: block; }
 .booking-next em { font-style: normal; color: #315f58; }
 .booking-done .hero-actions { justify-content: center; }
@@ -1442,11 +1444,12 @@ h3 {
 .mini-form .birth-fields { flex: 1; }
 .mini-form-row .birth-fields select { height: 52px; }
 .booking-price { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
-.booking-price strong { font-family: "Gowun Batang", serif; font-size: 28px; color: #2f4a46; }
+.booking-price strong { font-family: var(--font-gowun), serif; font-size: 28px; color: #2f4a46; }
 .booking-price span { font-size: 14px; color: #6c7567; }
 .bank-box { background: #f8f5ed; border: 1px dashed #c7d2c0; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; text-align: left; }
 .bank-box-label { display: flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: 1px; color: #517c73; font-weight: 600; margin-bottom: 8px; }
 .bank-box-account { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 17px; margin-bottom: 4px; }
+.bank-account-number { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
 .bank-copy { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border: 1px solid var(--border); border-radius: 30px; background: #fff; font-family: inherit; font-size: 12px; cursor: pointer; }
 .bank-box-sub { font-size: 13.5px; color: #5d6b63; }
 .booking-hint { font-size: 14px; line-height: 1.8; color: #5d6b63; margin-bottom: 16px; word-break: keep-all; }
@@ -1457,3 +1460,29 @@ h3 {
   .mini-form-row { flex-direction: column; }
   .mini-form-row .birth-fields select { height: 47px; }
 }
+.consent-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin-bottom: 16px; cursor: pointer; }
+.consent-card.on { border-color: #517c73; background: #eef3ee; }
+.consent-card input { width: 18px; height: 18px; margin-top: 3px; flex: none; }
+.consent-card span { display: grid; gap: 4px; }
+.consent-card strong { font-size: 15px; color: #2f4a46; }
+.consent-card small { font-size: 13px; line-height: 1.7; color: #5d6b63; word-break: keep-all; }
+.booking-done-amount { margin-top: 6px; font-size: 14.5px; color: #5d6b63; }
+.booking-done-amount strong { color: #2f4a46; }
+.story-help { margin-bottom: 10px; }
+.story-note { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #eef3ef; font-size: 13px; line-height: 1.7; color: #3e685c; word-break: keep-all; }
+.story-note svg { flex: 0 0 auto; margin-top: 3px; }
+.story-example-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; font: inherit; font-size: 13.5px; color: #517c73; cursor: pointer; text-decoration: underline dotted; }
+.story-examples { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.story-examples li { background: #f8f5ed; border-radius: 10px; padding: 12px 14px; display: grid; gap: 6px; }
+.story-examples p { font-size: 13.5px; line-height: 1.75; color: #4a5a55; word-break: keep-all; }
+.story-examples .text-link { font-size: 13px; justify-self: start; }
+.booking-deadline strong { color: #b4532a; }
+
+.booking-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 28px 0 36px; }
+.booking-products > button { display: flex; flex-direction: column; gap: 9px; padding: 24px; border: 1px solid #ccd8cf; border-radius: 18px; background: transparent; text-align: left; color: var(--ink); cursor: pointer; }
+.booking-products > button[aria-pressed="true"] { border: 2px solid #315f58; padding: 23px; background: #edf3ec; }
+.booking-products > button:focus-visible { outline: 2px solid #315f58; outline-offset: 4px; }
+.booking-products strong { font-size: 19px; }
+.booking-products b { font-size: 25px; margin-top: 8px; }
+.booking-products span, .booking-products small { color: #52665b; font-size: 13px; line-height: 1.7; }
+@media (max-width: 600px) { .booking-products { grid-template-columns: 1fr; gap: 12px; } }

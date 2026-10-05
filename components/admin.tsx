@@ -389,7 +389,7 @@ export function AdminDashboard({ name }: { name: string }) {
             </span>
             <div>
               <strong>마이까치 워크스페이스</strong>
-              <p>내 이야기를 듣고, 내일을 함께 살피다</p>
+              <p>시간이 걸리더라도, 제대로 봐드리겠습니다</p>
             </div>
           </div>
           <SidebarGroup>
@@ -1692,13 +1692,13 @@ function ContentEditor({
 function BrandPanel() {
   const [copied, setCopied] = useState(false);
   const bio =
-    "내 곁의 작은 까치, 마이까치\n내 이야기를 듣고, 내일을 함께 살피다.\n1:1 카카오톡 사주 상담 · 무료 오행 풀이 ↓";
+    "내 곁의 작은 까치, 마이까치\n시간이 걸리더라도, 제대로 봐드리겠습니다.\n1:1 카카오톡 사주 상담 · 무료 오행 풀이 ↓";
   return (
     <>
       <SocialProfile />
       <div className="brand-strategy-hero">
         <Logo />
-        <span className="tiny-label">내 이야기를 듣고, 내일을 함께 살피다</span>
+        <span className="tiny-label">시간이 걸리더라도, 제대로 봐드리겠습니다</span>
         <h2>
           좋은 소식을 기다리는
           <br />

@@ -1,11 +1,14 @@
 .reviews-featured { padding: 78px 0 84px; background: #f0f3ef; border-block: 1px solid #e1e7df; }
-.review-eyebrow { font-family: "DM Sans", sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .15em; color: #67766b; }
+.review-eyebrow { font-family: var(--font-dm), sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .15em; color: #67766b; }
+.reviews-translation-note { margin-bottom: 22px; color: #627068; font-size: .875rem; line-height: 1.8; }
+.review-bubble:lang(zh-Hant-TW) { word-break: normal; overflow-wrap: break-word; }
+.reviews-featured:lang(zh-Hant-TW) h2, .reviews-page:lang(zh-Hant-TW) h1, .reviews-closing:lang(zh-Hant-TW) p { font-family: var(--font-noto-tc), sans-serif; letter-spacing: .01em; }
 .reviews-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 36px; }
-.reviews-section-heading h2 { margin-top: 15px; font-family: "Gowun Batang", serif; font-size: 2.25rem; font-weight: 400; line-height: 1.6; letter-spacing: -.04em; }
+.reviews-section-heading h2 { margin-top: 15px; font-family: var(--font-gowun), serif; font-size: 2.25rem; font-weight: 400; line-height: 1.6; letter-spacing: -.04em; }
 .reviews-section-intro { padding-bottom: 7px; }
 .reviews-section-intro > p { font-size: 1rem; line-height: 1.9; color: #627068; }
 .reviews-all-link { display: inline-flex; gap: 15px; align-items: center; margin-top: 20px; font-size: .9375rem; font-weight: 600; color: #315f58; border-bottom: 1px solid #a6b3a6; padding-bottom: 7px; }
-.reviews-all-link > span { font-family: "DM Sans", sans-serif; font-size: .8125rem; border-radius: 50%; background: #dfe6da; min-width: 27px; padding: 2px 5px; text-align: center; }
+.reviews-all-link > span { font-family: var(--font-dm), sans-serif; font-size: .8125rem; border-radius: 50%; background: #dfe6da; min-width: 27px; padding: 2px 5px; text-align: center; }
 .reviews-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; align-items: stretch; }
 .review-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid #dde5df; border-radius: 25px; background: white; box-shadow: 0 12px 36px #203e3510; }
 .review-chat { --chat-bg: #b2c8da; --chat-header: #9eb9ce; --chat-ink: #263d4c; --chat-secondary: #4c6577; --incoming: white; --incoming-ink: #262626; --outgoing: #ffe600; background: var(--chat-bg); color: var(--chat-ink); }
@@ -19,10 +22,10 @@
 .review-chat-tools { display: flex; align-items: center; gap: 14px; margin-left: auto; }
 .review-chat-tools svg { flex-shrink: 0; }
 .review-chat-body { display: flex; flex-direction: column; gap: 9px; padding: 22px 19px 29px; }
+.review-chat-context { align-self: center; margin-bottom: 7px; padding: 4px 11px; border-radius: 20px; background: #ffffff45; color: #344e60; font-size: .6875rem; line-height: 1.6; text-align: center; }
 .review-message { display: flex; flex-direction: column; min-width: 0; }
 .review-message + .review-message-first { margin-top: 11px; }
 .review-sender { display: flex; gap: 8px; align-items: center; margin: 0 4px 6px; font-size: .8125rem; color: var(--chat-ink); }
-.review-example-label { font-size: .75rem; letter-spacing: .01em; }
 .review-message-teacher .review-sender { justify-content: flex-end; }
 .review-bubble-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; }
 .review-bubble { position: relative; max-width: 91%; padding: 13px 15px; border-radius: 17px; background: var(--incoming); color: var(--incoming-ink); font-size: 1rem; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; box-shadow: 0 2px 1px #34445209; }
@@ -35,24 +38,15 @@
 .review-message-teacher .review-message-time { text-align: right; }
 .review-card-info { padding: 19px 21px 18px; background: #fff; border-top: 1px solid #e5ebe8; }
 .review-card-meta { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
-.review-client-name { font-family: "Gowun Batang", serif; color: #31766c; font-size: 1.125rem; }
+.review-client-name { font-family: var(--font-gowun), serif; color: #31766c; font-size: 1.125rem; }
 .review-topic { display: inline-flex; font-size: .8125rem; color: #31766c; background: #eff7f2; padding: 3px 10px; border-radius: 20px; }
 .review-card-info h3 { font-size: 1rem; line-height: 1.6; font-weight: 500; margin-top: 10px; }
 .review-card-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 5px 12px; margin-top: 13px; }
-.review-kind { font-size: .75rem; color: #737a74; }
-.review-card-actual .review-kind { color: #416b52; }
-.review-read-button { color: #3e685c; font-size: .875rem; text-decoration: underline; text-decoration-color: #b0bfb0; text-underline-offset: 5px; padding: 4px 0; }
-.review-read-button:hover { color: #213e36; text-decoration-color: currentColor; }
-.review-dialog { display: block; padding: 0; width: min(580px, calc(100% - 32px)); max-width: min(580px, calc(100% - 32px)); max-height: 88dvh; overflow-y: auto; overscroll-behavior: contain; border: 0; border-radius: 20px; }
-.review-dialog-heading { padding: 28px 28px 24px; }
-.review-dialog-heading [data-slot="dialog-title"] { font-family: "Gowun Batang", serif; font-size: 1.5rem; font-weight: 400; line-height: 1.5; margin: 14px 12px 12px 0; }
-.review-dialog-heading [data-slot="dialog-description"] { font-size: .8125rem; line-height: 1.8; color: #6c6b5d; }
-.review-chat-expanded .review-chat-body { padding: 23px 28px 32px; }
-.review-chat-expanded .review-bubble { max-width: 88%; }
+.review-kind { font-size: .75rem; color: #416b52; }
 .reviews-page { padding-top: 34px; }
 .reviews-back { font-size: .875rem; color: #5b7166; text-decoration: underline; text-underline-offset: 5px; }
 .reviews-page-heading { padding: 49px 0 31px; }
-.reviews-page-heading h1 { font-family: "Gowun Batang", serif; font-size: clamp(2.1rem, 4vw, 3rem); font-weight: 400; line-height: 1.55; letter-spacing: -.045em; margin-top: 20px; }
+.reviews-page-heading h1 { font-family: var(--font-gowun), serif; font-size: clamp(2.1rem, 4vw, 3rem); font-weight: 400; line-height: 1.55; letter-spacing: -.045em; margin-top: 20px; }
 .reviews-page-heading em { color: #517c73; font-style: normal; }
 .reviews-page-heading > p:last-child { margin-top: 21px; font-size: 1rem; color: #687269; line-height: 1.9; }
 .reviews-collection-label { display: flex; align-items: baseline; gap: 11px; margin: 15px 0 26px; padding-top: 25px; border-top: 1px solid var(--border); }
@@ -61,7 +55,7 @@
 .reviews-collection { row-gap: 32px; }
 .reviews-closing { padding: 75px 0; text-align: center; }
 .reviews-closing img { display: block; margin: 0 auto 15px; }
-.reviews-closing p { font-family: "Gowun Batang", serif; font-size: 1.5rem; margin-bottom: 22px; }
+.reviews-closing p { font-family: var(--font-gowun), serif; font-size: 1.5rem; margin-bottom: 22px; }
 @media (max-width: 1100px) {
   .reviews-grid { gap: 20px; }
   .reviews-collection { row-gap: 28px; }
@@ -96,7 +90,15 @@
   .reviews-page-heading h1 { margin-top: 15px; }
   .reviews-closing { padding: 52px 0; }
   .reviews-closing p { font-size: 1.1875rem; }
-  .review-dialog-heading { padding: 23px 21px; }
-  .review-chat-expanded .review-chat-body { padding: 20px 19px 28px; }
-  .review-chat-expanded .review-bubble { max-width: 94%; }
+}
+
+.reviews-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 30px 0 12px; }
+.reviews-filters button { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 9px 17px; border: 1px solid #ccd8cf; border-radius: 24px; background: transparent; color: #36594e; font: inherit; font-size: .875rem; cursor: pointer; transition: background .15s, color .15s; }
+.reviews-filters button:hover { background: #e7eee7; }
+.reviews-filters button[aria-pressed="true"] { background: #315f58; border-color: #315f58; color: white; }
+.reviews-filters button:focus-visible { outline: 2px solid #315f58; outline-offset: 3px; }
+.reviews-filters button > span { font-size: .75rem; font-variant-numeric: tabular-nums; opacity: .8; }
+@media (max-width: 600px) {
+  .reviews-filters { gap: 7px; margin-top: 24px; }
+  .reviews-filters button { padding: 9px 12px; font-size: .8125rem; }
 }

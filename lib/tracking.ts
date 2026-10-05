@@ -17,6 +17,25 @@ function hostOf(url: string | null) {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return null; }
 }
 
+// Owner/office traffic is dropped before it reaches the database, so statistics only count real visitors.
+// Built-in list plus TRACK_EXCLUDE_IPS (comma-separated). IPs are compared in memory only and never stored.
+const BUILT_IN_EXCLUDED_IPS = ["112.161.16.159"];
+export const NO_TRACK_COOKIE = "mk_notrack";
+export function excludedIps() {
+  return new Set([...BUILT_IN_EXCLUDED_IPS, ...(process.env.TRACK_EXCLUDE_IPS || "").split(",").map((v) => v.trim()).filter(Boolean)]);
+}
+export function clientIp(headers: Headers) {
+  const raw = headers.get("x-vercel-forwarded-for") || headers.get("x-forwarded-for") || headers.get("x-real-ip") || "";
+  return raw.split(",")[0]?.trim().replace(/^::ffff:/, "") || null;
+}
+/** True when this request comes from an excluded IP or from a browser already marked with the no-track cookie. */
+export function isExcludedVisitor(headers: Headers) {
+  const ip = clientIp(headers);
+  if (ip && excludedIps().has(ip)) return true;
+  const cookie = headers.get("cookie") || "";
+  return new RegExp(`(?:^|;\\s*)${NO_TRACK_COOKIE}=1(?:;|$)`).test(cookie);
+}
+
 export type TrackPayload = {
   vid: string; sid: string; event: TrackEvent; path?: string; meta?: Record<string, unknown>;
   landing?: { path?: string; referrer?: string; utm?: Record<string, string>; language?: string; screen?: string };
