@@ -9,7 +9,7 @@ type Source = { landingPath?: string | null; referrer?: string | null; referrerH
 type Booking = {
   id: string; slotId: string; date: string; hour: number; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
-  topic: string; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
+  topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
   note: string | null; reportSentAt: string | null; seenAt: string | null; visitorId: string | null; sessionId: string | null; source: Source | null; createdAt: string; updatedAt: string;
 };
 type Payload = { bookings: Booking[]; slots: Slot[]; unseen: number; notifications: boolean };
@@ -138,7 +138,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
         {bookings.length === 0 ? <div className="quiet-empty"><p>{filter === "upcoming" ? "다가오는 예약이 없어요." : "아직 예약이 없어요."}</p></div>
           : <ul className="booking-list">{bookings.map((b) => <li key={b.id}><button type="button" className="booking-row" onClick={() => { setSelected(b); setNote(b.note || ""); }}>
             <div className="booking-when"><strong>{dayLabel(b.date)}</strong><span>{hh(b.hour)}–{hh(b.hour + 1)}</span></div>
-            <div className="booking-who"><strong>{b.name}</strong><span>{b.topic} · {sourceLabel(b.source)}</span></div>
+            <div className="booking-who"><strong>{b.name}</strong><span>{b.story ? b.story.slice(0, 40) : "사연 없음"} · {sourceLabel(b.source)}</span></div>
             <div className="booking-flags"><span className={`pill ${STATUS_CLASS[b.status]}`}>{STATUS_LABEL[b.status]}</span>{b.reportSentAt && <span className="pill"><MailCheck size={12} />리포트</span>}{!b.seenAt && <span className="pill red">NEW</span>}</div>
           </button></li>)}</ul>}
       </section>
@@ -146,7 +146,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
     <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
       <DialogContent className="booking-dialog">
         {selected && <>
-          <DialogHeader><DialogTitle>{selected.name}님 · {dayLabel(selected.date)} {hh(selected.hour)}–{hh(selected.hour + 1)}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · {selected.topic} · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{STATUS_LABEL[selected.status]}</span></DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{selected.name}님 · {dayLabel(selected.date)} {hh(selected.hour)}–{hh(selected.hour + 1)}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{STATUS_LABEL[selected.status]}</span></DialogDescription></DialogHeader>
           <div className="booking-pay-row">
             <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 동의</em>}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
             {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />입금 확인 · 확정</button>}
