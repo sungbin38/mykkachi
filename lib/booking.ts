@@ -1,5 +1,5 @@
 import "server-only";
-import { CONTACT_EMAIL, type Locale } from "./brand";
+import { CONTACT_EMAIL, KAKAO_URL, KAKAO_CHANNEL_URL, type Locale } from "./brand";
 import { bookingSlotLabel, bookingMoney } from "./booking-locale";
 import { db, HttpError, runtime } from "./server";
 import { BANK, BOOKING_HOURS, bankAccountDisplay, BOOKING_STATUSES, HOLD_MINUTES, formatWon, priceFor, BOOKING_PRODUCTS, type BookingProduct, type BookingStatus } from "./booking-shared";
@@ -227,14 +227,14 @@ async function notifyOwner(b: Booking) {
       `應付金額：${bookingMoney(b.amount, "zh-TW")}${b.marketingConsent ? "（已套用匿名行銷使用折扣）" : ""}`,
       `轉帳帳戶：Hana Bank（하나은행） ${bankAccountDisplay()}`, `戶名：${BANK.holder}`, `匯款人：${b.depositName || b.name}`,
       `請於 ${cutoff}（台灣標準時間 UTC+8）前完成轉帳。申請後 ${HOLD_MINUTES} 分鐘內未確認入帳，申請將自動失效。確認入帳後，再通知你正式確認。`,
-      reportOnly ? "確認入帳後，由老師親自分析與撰寫約 10 頁 PDF，約一天後寄到此信箱。" : "諮詢最長一小時，可能提前結束。諮詢後由老師親自撰寫約 10 頁 PDF，約一天後寄到此信箱。",
-      `預約與付款問題：${CONTACT_EMAIL}`, "MY KKACHI",
+      reportOnly ? "確認入帳後，由老師親自分析與撰寫約 10 頁 PDF，約一天後寄到此信箱。" : `諮詢以 KakaoTalk 一對一文字聊天進行，最長一小時，可能提前結束。請務必加入 MY KKACHI 頻道，並傳送預約姓名。加入頻道：${KAKAO_CHANNEL_URL}。諮詢後由老師親自撰寫約 10 頁 PDF，約一天後寄到此信箱。`,
+      `預約與付款問題：${CONTACT_EMAIL}`, ...(KAKAO_URL ? [`KakaoTalk：${KAKAO_URL}`] : []), "MY KKACHI",
     ].join("\n")).catch(() => false);
     return;
   }
   await sendMail(b.email, `[마이까치] 예약 요청을 받았어요 · ${when}`, [
     `${b.name}님, 마이까치에 이야기를 건네주셔서 고마워요.`, ``, reportOnly ? `신청 상품: ${productName} (상담 없이 PDF를 이메일로 보내드려요)` : `요청하신 상담 시간: ${when} (최대 1시간, 이야기가 정리되면 더 일찍 끝날 수 있어요)`, `이용 금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인 적용)" : ""}`, `입금 계좌: ${bankLine()}`, `입금자명: ${b.depositName || b.name}`, ``,
     `신청 뒤 ${HOLD_MINUTES}분 안에 입금해 주세요. 기한 안에 입금이 확인되지 않으면 신청이 자동 만료돼요. 입금 확인 뒤 진행 안내를 보내드려요.`,
-    reportOnly ? `입금 확인 후 상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``, `예약·입금 문의: ${CONTACT_EMAIL}`, `마이까치 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
+    reportOnly ? `입금 확인 후 상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담은 카카오톡 1:1 채팅으로 진행합니다. 마이까치 채널을 반드시 추가하고 채팅으로 예약자 성함을 보내주세요. 채널 추가: ${KAKAO_CHANNEL_URL}\n상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``, `예약·입금 문의: ${CONTACT_EMAIL}`, ...(KAKAO_URL ? [`카카오톡 문의: ${KAKAO_URL}`] : []), `마이까치 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
   ].join("\n")).catch(() => false);
 }

@@ -474,3 +474,8 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
 .booking-contact a, .site-contact a { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
 .site-contact { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; line-height: 1.8; color: var(--muted-foreground); margin: 25px 0; }
 .booking-page .booking-done-slot { flex-wrap: wrap; justify-content: center; }
+
+.kakao-consultation-notice { margin: 20px 0; padding: 20px; border: 1px solid #b9cdbb; border-radius: 14px; background: #f0f5eb; color: #213d35; text-align: left; }
+.kakao-consultation-notice > strong { display: block; font-size: 16px; line-height: 1.6; }
+.kakao-consultation-notice > p { margin: 8px 0 16px; font-size: 14px; line-height: 1.8; }
+.kakao-consultation-notice .outline-button { max-width: 100%; white-space: normal; text-align: center; font-size: 14px; }
