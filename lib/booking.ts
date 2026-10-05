@@ -1,6 +1,6 @@
 import "server-only";
 import { db, HttpError, runtime } from "./server";
-import { BANK, BOOKING_HOURS, BOOKING_STATUSES, BOOKING_TOPICS, HOLD_HOURS, PRICE, formatWon, type BookingStatus } from "./booking-shared";
+import { BANK, BOOKING_HOURS, BOOKING_STATUSES, BOOKING_TOPICS, HOLD_HOURS, formatWon, priceFor, type BookingStatus } from "./booking-shared";
 import { recordEvent, sessionSnapshot } from "./tracking";
 export { BOOKING_HOURS, BOOKING_STATUSES, BOOKING_TOPICS, STATUS_LABEL, PRICE, type BookingStatus } from "./booking-shared";
 
@@ -13,14 +13,14 @@ export type BookingSource = {
 export type Booking = {
   id: string; slotId: string; date: string; hour: number; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
-  topic: string; story: string | null; depositName: string | null; amount: number; status: BookingStatus;
+  topic: string; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus;
   holdUntil: string | null; paidAt: string | null; note: string | null; reportSentAt: string | null; seenAt: string | null;
   visitorId: string | null; sessionId: string | null; source: BookingSource | null; createdAt: string; updatedAt: string;
 };
 type Row = {
   id: string; slot_id: string; date: string; hour: number; name: string; email: string; phone: string | null;
   birth_date: string; birth_time: string | null; birth_unknown: boolean; calendar: string; gender: string | null;
-  topic: string; story: string | null; deposit_name: string | null; amount: number; status: string; hold_until: string | Date | null;
+  topic: string; story: string | null; deposit_name: string | null; amount: number; marketing_consent: boolean; status: string; hold_until: string | Date | null;
   paid_at: string | Date | null; note: string | null; report_sent_at: string | Date | null; seen_at: string | Date | null;
   visitor_id: string | null; session_id: string | null; source: BookingSource | null; created_at: string | Date; updated_at: string | Date;
 };
@@ -29,7 +29,7 @@ const fromRow = (r: Row): Booking => ({
   id: r.id, slotId: r.slot_id, date: r.date, hour: r.hour, name: r.name, email: r.email, phone: r.phone,
   birthDate: r.birth_date, birthTime: r.birth_time, birthUnknown: !!r.birth_unknown,
   calendar: r.calendar === "lunar" ? "lunar" : "solar", gender: r.gender, topic: r.topic, story: r.story,
-  depositName: r.deposit_name, amount: r.amount, status: r.status as BookingStatus, holdUntil: iso(r.hold_until), paidAt: iso(r.paid_at),
+  depositName: r.deposit_name, amount: r.amount, marketingConsent: !!r.marketing_consent, status: r.status as BookingStatus, holdUntil: iso(r.hold_until), paidAt: iso(r.paid_at),
   note: r.note, reportSentAt: iso(r.report_sent_at), seenAt: iso(r.seen_at), visitorId: r.visitor_id, sessionId: r.session_id,
   source: r.source, createdAt: iso(r.created_at)!, updatedAt: iso(r.updated_at)!,
 });
@@ -82,7 +82,7 @@ export async function setSlots(date: unknown, hours: unknown, action: unknown) {
 
 export type BookingInput = {
   slotId: string; name: string; email: string; phone?: string; birthDate: string; birthTime?: string; birthUnknown: boolean;
-  calendar: "solar" | "lunar"; gender?: string; topic: string; story?: string; depositName?: string; visitorId?: string; sessionId?: string;
+  calendar: "solar" | "lunar"; gender?: string; topic: string; story?: string; depositName?: string; marketingConsent: boolean; visitorId?: string; sessionId?: string;
 };
 export function validateBooking(p: Record<string, unknown>): BookingInput {
   const str = (v: unknown, max: number) => (typeof v === "string" && v.trim().length <= max ? v.trim() : null);
@@ -100,7 +100,7 @@ export function validateBooking(p: Record<string, unknown>): BookingInput {
   const depositName = str(p.depositName, 40) || undefined;
   const gender = ["female", "male", "other"].includes(p.gender as string) ? (p.gender as string) : undefined;
   const id = (v: unknown) => (typeof v === "string" && /^[A-Za-z0-9_-]{8,64}$/.test(v) ? v : undefined);
-  return { slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, visitorId: id(p.visitorId), sessionId: id(p.sessionId) };
+  return { slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, marketingConsent: p.marketingConsent === true, visitorId: id(p.visitorId), sessionId: id(p.sessionId) };
 }
 
 export async function createBooking(input: BookingInput): Promise<Booking> {
@@ -114,9 +114,9 @@ export async function createBooking(input: BookingInput): Promise<Booking> {
   const id = crypto.randomUUID();
   const source = input.sessionId ? await sessionSnapshot(input.sessionId, input.visitorId) : null;
   await db()
-    .prepare(`INSERT INTO bookings (id,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,status,hold_until,visitor_id,session_id,source)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(hours => ?),?,?,?::jsonb)`)
-    .bind(id, slot.id, slot.date, slot.hour, input.name, input.email, input.phone ?? null, input.birthDate, input.birthTime ?? null, input.birthUnknown, input.calendar, input.gender ?? null, input.topic, input.story ?? null, input.depositName ?? null, PRICE, HOLD_HOURS, input.visitorId ?? null, input.sessionId ?? null, source ? JSON.stringify(source) : null)
+    .prepare(`INSERT INTO bookings (id,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,marketing_consent,status,hold_until,visitor_id,session_id,source)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(hours => ?),?,?,?::jsonb)`)
+    .bind(id, slot.id, slot.date, slot.hour, input.name, input.email, input.phone ?? null, input.birthDate, input.birthTime ?? null, input.birthUnknown, input.calendar, input.gender ?? null, input.topic, input.story ?? null, input.depositName ?? null, priceFor(input.marketingConsent), input.marketingConsent, HOLD_HOURS, input.visitorId ?? null, input.sessionId ?? null, source ? JSON.stringify(source) : null)
     .run();
   if (input.sessionId) {
     await db().prepare("UPDATE sessions SET booked_at=now() WHERE id=? AND booked_at IS NULL").bind(input.sessionId).run().catch(() => {});
@@ -199,12 +199,12 @@ async function notifyOwner(b: Booking) {
   const route = src ? [src.utmSource || src.referrerHost || "직접 방문", src.utmCampaign, src.landingPath].filter(Boolean).join(" · ") : "추적 정보 없음";
   const owner = [
     `새 상담 예약 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``, `일시: ${when}`, `이름: ${b.name} / 입금자명: ${b.depositName || b.name}`, `이메일: ${b.email}`, `연락처: ${b.phone || "-"}`,
-    `생년월일: ${b.birthDate} (${b.calendar === "lunar" ? "음력" : "양력"}) ${b.birthUnknown ? "시간 모름" : b.birthTime}`, `주제: ${b.topic}`, `금액: ${formatWon(b.amount)} · 입금 기한 ${HOLD_HOURS}시간`,
+    `생년월일: ${b.birthDate} (${b.calendar === "lunar" ? "음력" : "양력"}) ${b.birthUnknown ? "시간 모름" : b.birthTime}`, `주제: ${b.topic}`, `금액: ${formatWon(b.amount)}${b.marketingConsent ? " (마케팅 동의 할인)" : ""} · 입금 기한 ${HOLD_HOURS}시간`,
     `유입: ${route}`, ``, `사연:`, b.story || "(없음)", ``, `스튜디오에서 확인: /admin`,
   ];
   if (r.NOTIFY_EMAIL) await sendMail(r.NOTIFY_EMAIL, `[마이까치] 새 예약 요청 · ${when} · ${b.name}`, owner.join("\n"));
   await sendMail(b.email, `[마이까치] 예약 요청을 받았어요 · ${when}`, [
-    `${b.name}님, 마이까치에 이야기를 건네주셔서 고마워요.`, ``, `요청하신 상담 시간: ${when}`, `상담 비용: ${formatWon(b.amount)}`, `입금 계좌: ${bankLine()}`, `입금자명: ${b.depositName || b.name}`, ``,
+    `${b.name}님, 마이까치에 이야기를 건네주셔서 고마워요.`, ``, `요청하신 상담 시간: ${when} (최대 1시간, 이야기가 정리되면 더 일찍 끝날 수 있어요)`, `상담 비용: ${formatWon(b.amount)}${b.marketingConsent ? " (마케팅 동의 할인 적용)" : ""}`, `입금 계좌: ${bankLine()}`, `입금자명: ${b.depositName || b.name}`, ``,
     `${HOLD_HOURS}시간 안에 입금해 주시면 상담자가 확인한 뒤 확정 메일을 보내드려요. 기한이 지나면 자리가 다시 열려요.`,
     `상담이 끝나면 정리한 사주 리포트를 이 이메일로 보내드립니다.`, ``, `마이까치 · 내 이야기를 듣고, 내일을 함께 살피다`,
   ].join("\n")).catch(() => false);

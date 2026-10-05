@@ -1564,3 +1564,4 @@
 .session-trail { font-size: 12.5px; color: #4a5a55; margin-top: 6px; word-break: break-all; font-family: "DM Sans", sans-serif; }
 .session-ref { font-size: 11.5px; color: #8b8e7c; margin-top: 2px; word-break: break-all; }
 @media (max-width: 760px) { .journey-facts { grid-template-columns: 1fr 1fr; } .journey-steps li { grid-template-columns: 60px 1fr; } .journey-path { grid-column: 2; } .funnel li { grid-template-columns: 90px 1fr 36px 44px; } }
+.consent-tag { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 5px; background: #e9ede2; color: #517c73; font-size: 11px; font-style: normal; font-family: "Pretendard", sans-serif; vertical-align: middle; }

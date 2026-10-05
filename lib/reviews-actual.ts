@@ -16,7 +16,7 @@ export const actualConversation = {
     { role: "client", text: "사주로 지금 시기에 어떤 환경이나 방향을 선택하는 게 저한테 더 잘 맞는지도 나오나요?" },
     { role: "teacher", text: "근데 커리어적으로는 지금 엄청 좋은 흐름이 들어 온 건 맞아서 사실 [C사] 가실 것 같은 느낌? 이거 참고하시면 좋을 거 같은데 민*님한테는 노란색이 커리어+이성운 인데 27년부터 쭉 노란색 있어서 잘 될 거 같아요. 근데 2031년부터는 잠깐 힘든 시기 올 수도 있어요 검은색 수 기운을 조심하시면 됩니다.", time: "오전 9:30", preview: true },
     { role: "teacher", text: "참고로 본부장님이 수 기운이에요", time: "오전 9:33" },
-    { role: "client", text: "사주보는 개발자분... 너무 소중 사발자이시네여..........", time: "오전 10:27", preview: true },
+    { role: "client", text: "와 선생님... 이렇게 콕 집어주시니까 너무 소중하시네여..........", time: "오전 10:27", preview: true },
     { role: "client", text: "오호 그렇군요(!) 수기운 과다라서 오호", time: "오전 10:28" },
   ],
 } satisfies ReviewStory;

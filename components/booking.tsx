@@ -3,29 +3,29 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Banknote, CalendarDays, Check, Clock3, Copy, Loader2, LockKeyhole, Mail } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site";
 import { BirthFields, BirthTimeField } from "@/components/birth-fields";
-import { BANK, BOOKING_TOPICS, HOLD_HOURS, PRICE, bankConfigured, formatWon } from "@/lib/booking-shared";
+import { BANK, BOOKING_TOPICS, DURATION_TEXT, HOLD_HOURS, MARKETING_CONSENT_TEXT, PRICE_BASE, PRICE_MARKETING, bankConfigured, formatWon, priceFor } from "@/lib/booking-shared";
 import { homePath } from "@/lib/brand";
 import { ids, track } from "@/lib/track-client";
 
 type Slot = { id: string; date: string; hour: number };
 type Form = {
   name: string; email: string; phone: string; birthDate: string; birthTime: string; birthUnknown: boolean;
-  calendar: "solar" | "lunar"; gender: string; topic: string; story: string; depositName: string; agree: boolean;
+  calendar: "solar" | "lunar"; gender: string; topic: string; story: string; depositName: string; marketingConsent: boolean; agree: boolean;
 };
-type Done = { date: string; hour: number; email: string; name: string; amount: number; holdUntil: string | null; depositName: string };
+type Done = { date: string; hour: number; email: string; name: string; amount: number; marketingConsent: boolean; holdUntil: string | null; depositName: string };
 const dayLabel = (date: string) =>
   new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short" }).format(new Date(`${date}T00:00:00+09:00`));
 const hourLabel = (h: number) => `${String(h).padStart(2, "0")}:00`;
 const deadline = (iso: string | null) => (iso ? new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)) : `${HOLD_HOURS}시간 이내`);
 
-export function BankBox({ depositName }: { depositName?: string }) {
+export function BankBox({ depositName, amount }: { depositName?: string; amount: number }) {
   const [copied, setCopied] = useState(false);
   return <div className="bank-box">
     <p className="bank-box-label"><Banknote size={15} />입금 계좌</p>
     {bankConfigured() ? <>
       <p className="bank-box-account"><strong>{BANK.name} {BANK.account}</strong><button type="button" className="bank-copy" onClick={() => { navigator.clipboard?.writeText(BANK.account).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? "복사됨" : "복사"}</button></p>
-      <p className="bank-box-sub">예금주 {BANK.holder || "마이까치"} · 금액 {formatWon(PRICE)}{depositName ? ` · 입금자명 ${depositName}` : ""}</p>
-    </> : <p className="bank-box-sub">{BANK.name} 계좌번호는 예약 확인 메일로 안내드려요. 금액 {formatWon(PRICE)}.</p>}
+      <p className="bank-box-sub">예금주 {BANK.holder || "마이까치"} · 금액 {formatWon(amount)}{depositName ? ` · 입금자명 ${depositName}` : ""}</p>
+    </> : <p className="bank-box-sub">{BANK.name} 계좌번호는 예약 확인 메일로 안내드려요. 금액 {formatWon(amount)}.</p>}
   </div>;
 }
 
@@ -33,7 +33,7 @@ export function BookingPage() {
   const [slots, setSlots] = useState<Slot[] | null>(null);
   const [date, setDate] = useState("");
   const [slot, setSlot] = useState<Slot | null>(null);
-  const [form, setForm] = useState<Form>({ name: "", email: "", phone: "", birthDate: "", birthTime: "", birthUnknown: false, calendar: "solar", gender: "", topic: BOOKING_TOPICS[0], story: "", depositName: "", agree: false });
+  const [form, setForm] = useState<Form>({ name: "", email: "", phone: "", birthDate: "", birthTime: "", birthUnknown: false, calendar: "solar", gender: "", topic: BOOKING_TOPICS[0], story: "", depositName: "", marketingConsent: false, agree: false });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState<Done | null>(null);
@@ -71,11 +71,12 @@ export function BookingPage() {
     <p className="tiny-label muted">BOOKING REQUESTED</p>
     <h1>{done.name}님, 자리를 잡아두었어요.</h1>
     <p className="booking-done-slot"><CalendarDays size={16} />{dayLabel(done.date)} · {hourLabel(done.hour)}–{hourLabel(done.hour + 1)}</p>
-    <BankBox depositName={done.depositName} />
+    <BankBox depositName={done.depositName} amount={done.amount} />
+    <p className="booking-done-amount">상담 비용 <strong>{formatWon(done.amount)}</strong>{done.marketingConsent ? " · 마케팅 동의 할인 적용" : ""}</p>
     <p className="booking-deadline"><Clock3 size={14} />{deadline(done.holdUntil)}까지 입금해 주세요. 기한이 지나면 자리가 다시 열려요.</p>
     <ol className="booking-next">
       <li><strong>입금하면 예약이 확정돼요.</strong> 상담자가 입금을 확인한 뒤 <em>{done.email}</em>로 확정 메일과 상담 방법을 보내드려요.</li>
-      <li><strong>약속한 시간에 1:1로 만나요.</strong> 미리 남겨주신 사연과 명식을 바탕으로 한 시간 동안 이야기를 나눠요.</li>
+      <li><strong>약속한 시간에 1:1로 만나요.</strong> 미리 남겨주신 사연과 명식을 바탕으로 최대 1시간 이야기를 나눠요. 이야기가 정리되면 더 일찍 끝날 수도 있어요.</li>
       <li><strong>상담 뒤, 사주 리포트가 도착해요.</strong> 상담 내용을 정리한 리포트를 같은 이메일로 보내드려요.</li>
     </ol>
     <div className="hero-actions"><a className="primary-button" href={homePath("ko")}>홈으로 돌아가기</a><a className="text-link" href="/read">기다리는 동안 무료 사주 보기<ArrowRight size={16} /></a></div>
@@ -86,7 +87,7 @@ export function BookingPage() {
     <header className="booking-heading">
       <p className="tiny-label muted">BOOK A CONVERSATION</p>
       <h1>상담 시간을 골라주세요.</h1>
-      <p>한 시간 동안, 상담자가 직접 당신의 사주와 이야기를 읽어요.<br />시간을 고르고 정보를 남긴 뒤 <strong>{formatWon(PRICE)}</strong>을 입금하면 예약이 확정됩니다.</p>
+      <p>최대 1시간, 상담자가 직접 당신의 사주와 이야기를 읽어요. 이야기가 정리되면 더 일찍 끝날 수도 있어요.<br />시간을 고르고 정보를 남긴 뒤 <strong>{formatWon(PRICE_BASE)}</strong>(마케팅 동의 시 <strong>{formatWon(PRICE_MARKETING)}</strong>)을 입금하면 예약이 확정됩니다.</p>
     </header>
     <form className="booking-layout" onSubmit={submit}>
       <section className="booking-step">
@@ -125,8 +126,9 @@ export function BookingPage() {
       </section>
       <section className="booking-step">
         <h2><span className="step-number">STEP 04</span>입금 안내</h2>
-        <p className="booking-price"><strong>{formatWon(PRICE)}</strong><span>1시간 1:1 상담 + 상담 후 사주 리포트</span></p>
-        <BankBox />
+        <p className="booking-price"><strong>{formatWon(priceFor(form.marketingConsent))}</strong><span>{DURATION_TEXT} 1:1 상담 + 상담 후 사주 리포트</span></p>
+        <label className={`consent-card${form.marketingConsent ? " on" : ""}`}><input type="checkbox" checked={form.marketingConsent} onChange={(e) => set("marketingConsent", e.target.checked)} /><span><strong>마케팅 활용에 동의하고 {formatWon(PRICE_MARKETING)}에 상담하기</strong><small>{MARKETING_CONSENT_TEXT} 동의하지 않아도 {formatWon(PRICE_BASE)}에 상담할 수 있어요.</small></span></label>
+        <BankBox amount={priceFor(form.marketingConsent)} />
         <label className="field"><span className="field-label">입금자명 <small>이름과 다르면 적어주세요</small></span><input className="input-control" maxLength={40} value={form.depositName} onChange={(e) => set("depositName", e.target.value)} placeholder={form.name || "입금할 때 쓰는 이름"} /></label>
         <p className="booking-hint">예약 요청 뒤 <strong>{HOLD_HOURS}시간</strong> 안에 입금해 주세요. 상담자가 입금을 확인하면 확정 메일을 보내드리고, 기한이 지나면 자리가 자동으로 다시 열려요.</p>
         <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} />입력한 정보는 상담 예약·입금 확인·리포트 발송에만 사용하고, 상담 뒤 요청하시면 지워드려요. 동의합니다. *</label>

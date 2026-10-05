@@ -1,0 +1,2 @@
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marketing_consent boolean NOT NULL DEFAULT false;
+ALTER TABLE bookings ALTER COLUMN amount SET DEFAULT 200000;

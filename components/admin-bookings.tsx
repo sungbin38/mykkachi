@@ -9,7 +9,7 @@ type Source = { landingPath?: string | null; referrer?: string | null; referrerH
 type Booking = {
   id: string; slotId: string; date: string; hour: number; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
-  topic: string; story: string | null; depositName: string | null; amount: number; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
+  topic: string; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
   note: string | null; reportSentAt: string | null; seenAt: string | null; visitorId: string | null; sessionId: string | null; source: Source | null; createdAt: string; updatedAt: string;
 };
 type Payload = { bookings: Booking[]; slots: Slot[]; unseen: number; notifications: boolean };
@@ -148,7 +148,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
         {selected && <>
           <DialogHeader><DialogTitle>{selected.name}님 · {dayLabel(selected.date)} {hh(selected.hour)}–{hh(selected.hour + 1)}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · {selected.topic} · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{STATUS_LABEL[selected.status]}</span></DialogDescription></DialogHeader>
           <div className="booking-pay-row">
-            <div><strong>{formatWon(selected.amount)}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
+            <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 동의</em>}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
             {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />입금 확인 · 확정</button>}
           </div>
           <dl className="booking-detail">
