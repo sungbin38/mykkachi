@@ -31,8 +31,8 @@ try {
   assert.equal((await download).suggestedFilename(), 'mykkachi-my-reading.png');
   const admin = await page.request.get(origin + '/admin', { maxRedirects: 0, headers: { 'oai-authenticated-user-email': 'fake@example.com', 'oai-authenticated-user-id': 'fake' } });
   assert.ok([307, 308].includes(admin.status()));
-  assert.equal(admin.headers().location, 'https://luun-saju.luke3833.chatgpt.site/admin');
-  assert.equal((await page.request.get(origin + '/api/admin/content')).status(), 404);
+  assert.equal(admin.headers().location, '/admin/login');
+  assert.equal((await page.request.get(origin + '/api/admin/content')).status(), 401);
   for (const route of ['/robots.txt', '/sitemap.xml']) {
     const response = await page.request.get(origin + route);
     assert.equal(response.status(), 200);

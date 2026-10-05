@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { BRAND, ORIGIN } from "@/lib/brand";
+import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 
 export const metadata: Metadata = {
   metadataBase: new URL(ORIGIN),
@@ -20,7 +21,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ko_KR",
     siteName: BRAND.name,
+    images: [MASCOT_OG_IMAGE],
   },
+  twitter: { card: "summary", images: [MASCOT_OG_IMAGE.url] },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

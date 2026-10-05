@@ -1,6 +1,13 @@
 import { redirect } from "next/navigation";
-import { STUDIO_ORIGIN } from "@/lib/brand";
-export const metadata = { title: "마이까치 Studio", robots: { index: false, follow: false } };
-export default function Page() {
-  redirect(`${STUDIO_ORIGIN}/admin`);
+import { hasAdminSession } from "@/lib/admin-auth";
+import { AdminDashboard } from "@/components/admin";
+export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "MY KKACHI Studio — 콘텐츠 운영",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/admin" },
+};
+export default async function Page() {
+  if (!(await hasAdminSession())) redirect("/admin/login");
+  return <AdminDashboard name="운영자" />;
 }

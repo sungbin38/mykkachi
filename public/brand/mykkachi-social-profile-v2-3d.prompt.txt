@@ -1,0 +1,14 @@
+Tool: built-in image_gen__imagegen
+References: three user-provided 3D character images (style references only)
+Output: public/brand/mykkachi-social-profile-v2-3d.png
+
+Use case: stylized-concept.
+Asset type: one finished square social profile avatar for 마이까치 / MY KKACHI.
+Input images: Images 1, 2 and 3 are style references for cute 3D character proportions, simple expressive faces, rounded volumes and soft toy materials. Use their visual appeal to design a MAGPIE mascot for the existing brand.
+Primary request: An exceptionally cute, original 3D Korean magpie mascot. An oversized round head, tiny plump pear-shaped body, very short rounded feet, and small soft flipper-like bird wings. Huge head and small body, similar to the charming chubby proportions in the references. The character looks toward the viewer in a subtle three-quarter pose and raises one little wing in a shy hello. Relaxed, friendly expression, two simple small glossy bead eyes with tiny visible catchlights, and a tiny rounded dark beak; a very uncluttered face.
+Magpie identity: soft charcoal-black head and back, big warm ivory-white belly, ivory shoulder patches, rich muted teal-blue wings, and one clearly visible long tapered magpie tail tucked diagonally alongside its little body. Simplify feathers into smooth sculpted forms. Make it unmistakably a bird rather than a bear, penguin or owl.
+Style/medium: polished high-end 3D character render, smooth matte vinyl with a subtle soft-touch clay finish, appealing broad highlights, gentle ambient occlusion, no visible feather texture. The forms should be as rounded, tactile, cheerful and collectible as the references.
+Scene/backdrop: seamless solid warm cream #F8F5ED studio backdrop and a very subtle grounding shadow. No sun disk or scenery.
+Composition: square 1:1 avatar, centered single character, entire character fills roughly 72 percent of the image, large easily readable face, all important features stay inside a central circular profile crop. Full silhouette with comfortable margins, no cropped head or tail.
+Palette: warm charcoal #243B3B, subdued teal #517C73, ivory-white; warm soft studio light.
+Constraints: one finished image, no words, no logo, no watermark, no collage, no humans, no clothing, hats, bags, sports equipment, musical notes or props, no realistic bird anatomy, no sharp claws, no painterly texture, no checkerboard background.

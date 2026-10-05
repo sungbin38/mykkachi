@@ -4,9 +4,10 @@ import { ArrowUpRight, Leaf, Heart, Compass, Moon, Globe2, LockKeyhole, BookOpen
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose, SheetDescription } from "@/components/ui/sheet";
 import { BRAND, KAKAO_URL, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
+import { BrandMascot } from "./brand-mascot";
 
 export function Logo() {
-  return <span className="wordmark"><img src="/brand/mykkachi-mark.svg" width="44" height="44" alt="" /><span className="wordmark-type"><strong>{BRAND.name}</strong><span>{BRAND.english}</span></span></span>;
+  return <span className="wordmark"><BrandMascot portrait size={48} className="wordmark-mascot" /><span className="wordmark-type"><strong>{BRAND.name}</strong><span>{BRAND.english}</span></span></span>;
 }
 export function SiteHeader({ locale = "ko" }: { locale?: Locale }) {
   const zh = locale === "zh-TW";
@@ -32,8 +33,8 @@ export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
   const zh = locale === "zh-TW";
   const [policy, setPolicy] = useState("");
   const privacy = zh
-    ? "免費排盤所用的生日、出生時間與暱稱僅在瀏覽器中處理，不儲存在伺服器。本網站不將排盤輸入傳送至伺服器，亦不提供站內會員註冊。管理後台為獨立服務。KakaoTalk 諮詢為獨立服務，個人資料使用方式將於預約前說明。"
-    : "무료 사주에 입력한 생년월일·출생시간·닉네임은 브라우저에서 계산하며 서버에 저장하지 않습니다. 입력한 출생 정보를 서버로 전송하지 않으며 사이트 내 회원가입은 없습니다. 관리자는 별도 비공개 스튜디오를 이용합니다. 카카오톡 상담은 별도 서비스로, 상담 정보의 이용·보관 안내는 예약 전에 제공합니다.";
+    ? "免費排盤所用的生日、出生時間與暱稱僅在瀏覽器中處理，不儲存在伺服器。本網站不將排盤輸入傳送至伺服器，亦不提供站內會員註冊。管理員登入使用安全 Cookie，內容與營運設定儲存於資料庫。KakaoTalk 諮詢為獨立服務，個人資料使用方式將於預約前說明。"
+    : "무료 사주에 입력한 생년월일·출생시간·닉네임은 브라우저에서 계산하며 서버에 저장하지 않습니다. 입력한 출생 정보를 서버로 전송하지 않으며 사이트 내 회원가입은 없습니다. 관리자 로그인에는 보안 쿠키를 사용하며, 콘텐츠와 운영 설정은 데이터베이스에 저장합니다. 카카오톡 상담은 별도 서비스로, 상담 정보의 이용·보관 안내는 예약 전에 제공합니다.";
   const terms = zh
     ? "免費八字排盤採陽曆、節氣換年月、午夜換日，不做真太陽時校正。解讀以文化體驗與自我探索為目的。一對一諮詢採 KakaoTalk 文字對話，預約前會說明費用、時間與取消退款規則，確認後再以銀行轉帳付款。網站不提供自動扣款。"
     : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 카카오톡 대화로 진행하며 비용·일정·취소 및 환불 기준을 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 사이트 내 자동 결제는 제공하지 않습니다.";
@@ -75,11 +76,11 @@ export function HomePage({ locale }: { locale: Locale }) {
         <div className="hero-actions"><a className="primary-button" href="#consultation">{zh ? "了解一對一諮詢" : "1:1 상담 알아보기"}<ArrowUpRight size={18} /></a><a className="text-link" href="#free-reading">{zh ? "先免費看八字" : "내 사주 먼저 살펴보기"}<ArrowRight size={16} /></a></div>
         <div className="hero-signature"><span className="signature-line" /><span>{zh ? "一隻小喜鵲，陪在你身旁。" : "내 곁의 작은 까치, 마이까치"}</span></div>
       </div>
-      <figure className="hero-art"><img src="/images/mykkachi-magpie.webp" alt={zh ? "一隻青綠色翅膀的喜鵲，停在柿子枝上，身旁是一封繫著緞帶的信" : "편지 곁의 감나무 가지에 앉은 청록빛 날개의 작은 까치"} width="1254" height="1254" fetchPriority="high" /><figcaption className="hero-art-caption"><span className="tiny-label">A LITTLE BIRD, BY YOUR SIDE</span><span>{zh ? "給明天的你，一封信。" : "내일의 당신에게, 작은 안부."}</span></figcaption></figure>
+      <figure className="hero-art mascot-hero"><BrandMascot size={560} className="hero-mascot" priority sizes="(max-width: 600px) 90vw, (max-width: 1100px) 45vw, 540px" alt={zh ? "圓圓的 3D 小喜鵲，揮著青綠色翅膀向你打招呼" : "청록색 날개를 흔들며 인사하는 동글동글한 3D 마이까치"} /><figcaption className="hero-art-caption"><span className="tiny-label">YOUR LITTLE KKACHI</span><span>{zh ? "你好，今天想聊聊什麼呢？" : "안녕, 오늘은 어떤 마음으로 왔나요?"}</span></figcaption></figure>
     </section>
     <div className="shell"><div className="editorial-strip"><span className="strip-pill">MY KKACHI</span><p>{zh ? "不急著找出答案，也可以先說說心裡的話。" : "답을 서두르지 않아도 괜찮아요. 마음의 이야기부터 시작해요."}</p><span className="en">A NOTE FOR TOMORROW ↗</span></div></div>
     <section id="story" className="shell story-section" aria-labelledby="story-title">
-      <div className="story-heading"><p className="tiny-label muted">01 / OUR STORY</p><h2 id="story-title">{zh ? <>等待好消息的心，<br />也需要陪伴。</> : <>좋은 소식을 기다리는<br />마음 곁으로.</>}</h2><div className="story-note"><img src="/brand/mykkachi-mark.svg" width="65" height="65" alt="" /><p>{zh ? "「今天，想聊聊什麼呢？」" : "“오늘은 어떤 마음으로 왔나요?”"}</p><span>— YOUR KKACHI</span></div></div>
+      <div className="story-heading"><p className="tiny-label muted">01 / OUR STORY</p><h2 id="story-title">{zh ? <>等待好消息的心，<br />也需要陪伴。</> : <>좋은 소식을 기다리는<br />마음 곁으로.</>}</h2><div className="story-note mascot-story-note"><BrandMascot portrait size={76} /><div><p>{zh ? "「慢慢說，我在這裡聽。」" : "“천천히 말해요. 여기서 듣고 있을게요.”"}</p><span className="tiny-label">— YOUR KKACHI</span></div></div></div>
       <div className="story-copy"><p>{zh ? "在韓國，喜鵲承載著迎接喜訊與訪客的想像。MY KKACHI 從這份期待出發，想做一隻陪在你身邊的小喜鵲。" : "한국에서 까치는 반가운 소식을 전하는 새로 여겨져 왔어요. 마이까치는 그 다정한 기다림에서 시작했습니다. 좋은 소식을 기다리는 당신 곁에, 작은 새 한 마리가 앉는 상상으로요."}</p>
         <p>{zh ? "故事裡的小喜鵲，會在有人睡不著的夜裡停在窗邊。牠不催促，也不打斷，只陪著人們，把心裡折起來的話，一句一句展開。" : "마이까치의 작은 까치는 누군가 잠들지 못하는 밤이면 창가에 내려앉아요. 재촉하지 않고, 말을 끊지 않고, 마음속에 접어둔 이야기가 한 문장씩 펼쳐지기를 기다립니다."}</p>
         <p className="story-emphasis">{zh ? "我們也想這樣聽你說。以八字為起點，陪你梳理此刻的困惑，看見下一步的方向。" : "우리의 상담도 그렇게 시작해요. 사주를 실마리 삼아 지금의 마음을 듣고, 내일의 선택을 함께 살피는 일. 그 시간이 당신에게 작은 쉼이 되었으면 합니다."}</p>
@@ -95,7 +96,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <form className="mini-form" onSubmit={event=>{event.preventDefault();try{sessionStorage.setItem("luun-start-birth",birth);}catch{}window.location.assign(localPath(locale,"/read"));}}><label className="form-intro" htmlFor="quick-birth">{zh ? "陽曆出生日期" : "양력 생년월일"}<span className="pill">FREE</span></label><div className="mini-form-row"><input id="quick-birth" type="date" value={birth} onChange={e=>setBirth(e.target.value)} min="1970-01-01" max={new Date().toISOString().slice(0,10)} required /><button className="primary-button" type="submit">{zh ? "免費看我的八字" : "무료로 내 사주 보기"}</button></div><p className="privacy-hint"><LockKeyhole size={13} />{zh ? "不需註冊 · 生日僅在瀏覽器中處理" : "회원가입 없이 · 생년월일은 내 브라우저에서만"}</p></form>
       </div><div className="reading-grid">{cards.map((c,i)=>{const Icon=Icons[i];return <a className="reading-tile" key={c[0]} href={localPath(locale,`/read?focus=${["self","love","work","daily"][i]}`)}><div className="tile-meta"><span>0{i+1} / {c[2]}</span><ArrowUpRight size={15} /></div><div className="tile-icon"><Icon /></div><h3>{c[0]}</h3><p>{c[1]}</p></a>;})}</div></section>
       <section className="section journal-section"><div className="section-heading"><div><p className="tiny-label muted">LETTERS FROM KKACHI</p><h2>{zh ? "喜鵲寄來的日常筆記" : "까치가 건네는 일상의 편지"}</h2></div><a href={localPath(locale,"/journal")} className="text-link"><BookOpen size={15} />{zh ? "閱讀全部" : "편지 모두 읽기"}</a></div><div className="journal-grid">{journals.map((j,i)=><a href={localPath(locale,`/journal/${j[0]}`)} className="journal-card" key={j[0]}><div className={`journal-cover c${i}`}><span className="tiny-label">MY KKACHI / LETTER 0{i+1}</span><span className="serif">{j[2]}</span><span className="cover-character">{j[1]}</span></div><h3>{j[3]}</h3><p>{j[4]} · {zh ? "3 分鐘閱讀" : "3분 읽기"}</p></a>)}</div></section>
-      <section className="closing-note"><img src="/brand/mykkachi-mark.svg" width="50" height="50" alt="" /><p>{zh ? "願你離開時，心裡多一點餘裕。" : "돌아가는 마음에, 작은 여유가 남기를."}</p><span className="tiny-label">WITH LOVE, MY KKACHI</span></section>
+      <section className="closing-note"><BrandMascot size={128} className="closing-mascot" /><p>{zh ? "願你離開時，心裡多一點餘裕。" : "돌아가는 마음에, 작은 여유가 남기를."}</p><span className="tiny-label">WITH LOVE, MY KKACHI</span></section>
     </div>
   </main><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteSchema).replace(/</g,"\\u003c")}} /><SiteFooter locale={locale} /></>;
 }

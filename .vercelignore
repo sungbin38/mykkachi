@@ -4,3 +4,7 @@ outputs
 .wrangler
 .sites-runtime
 .env*
+
+.agents
+.claude
+skills-lock.json

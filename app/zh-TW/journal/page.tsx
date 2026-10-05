@@ -1,5 +1,6 @@
 import { Journal } from "@/components/journal";
 import { articles } from "@/lib/editorial";
+import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "MY KKACHI 專欄 — 五行、八字與日常",
@@ -12,6 +13,7 @@ export const metadata = {
     title: "MY KKACHI 專欄",
     description: "讓八字，走進日常。",
     locale: "zh_TW",
+    images: [MASCOT_OG_IMAGE],
   },
 };
 export default async function Page() {

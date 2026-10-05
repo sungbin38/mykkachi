@@ -1,4 +1,5 @@
 import { ReadingPage } from "@/components/reading";
+import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const metadata = {
   title: "免費八字排盤・五行比例",
   description:
@@ -11,6 +12,7 @@ export const metadata = {
     title: "MY KKACHI 免費八字排盤",
     description: "了解你的日主與五行比例",
     locale: "zh_TW",
+    images: [MASCOT_OG_IMAGE],
   },
 };
 export default function Page() {

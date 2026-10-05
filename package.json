@@ -12,11 +12,16 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test": "node --import tsx --test tests/core.test.ts",
     "test:e2e": "node tests/vercel-smoke.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "node --env-file=.env --import tsx scripts/db-migrate.ts",
+    "test:db": "node --env-file=.env --import tsx --test tests/db.test.ts",
+    "test:admin": "node --env-file=.env --import tsx tests/admin-integration.ts",
+    "test:auth": "node --env-file=.env tests/login-integration.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^5.7.1",
+    "@neondatabase/serverless": "^1.2.0",
     "@shadcn/react": "^0.3.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -37,6 +42,7 @@
     "react-hook-form": "^7.85.0",
     "react-resizable-panels": "^4.12.2",
     "recharts": "^3.8.0",
+    "server-only": "^0.0.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "3.6.0",
     "vaul": "^1.1.2",

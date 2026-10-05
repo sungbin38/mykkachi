@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/site";
+import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const metadata: Metadata = {
   title: "MY KKACHI｜一對一八字諮詢・免費五行解析",
   description:
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     title: "MY KKACHI — 聽你說故事，陪你看明天",
     description: "一隻小喜鵲，陪在你身旁。一對一八字諮詢介紹與免費五行解讀。",
     locale: "zh_TW",
+    images: [MASCOT_OG_IMAGE],
   },
 };
 export default function Page() {

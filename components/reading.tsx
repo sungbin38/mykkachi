@@ -11,6 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toaster, toast } from "sonner";
 import { SiteHeader, SiteFooter } from "./site";
+import { BrandMascot } from "./brand-mascot";
 import {
   calculateSaju,
   ELEMENTS,
@@ -298,7 +299,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
           >
             {!result || !e ? (
               <div className="result-empty">
-                <span className="empty-symbol">我</span>
+                <BrandMascot size={200} className="reading-mascot" />
                 <span className="tiny-label">A LITTLE BIRD, BY YOUR SIDE</span>
                 <h2>
                   {zh

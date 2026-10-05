@@ -9,12 +9,35 @@
 - 저장소: https://github.com/sungbin38/mykkachi
 - 고객용 사이트: Next.js, Vercel 프로젝트 `mykkachi` (`sungbin3833@gmail.com` 개인 계정)
 - 공개 주소: https://mykkachi.vercel.app
-- `/admin`은 기존 비공개 Sites 관리자 화면으로 이동합니다. 해당 사이트의 로그인과 권한 검사를 그대로 사용합니다.
-- `studio/`에는 기존 Sites 애플리케이션의 소스를 보관했습니다. Vercel 빌드·업로드 대상이 아닙니다.
+- 관리자: https://mykkachi.vercel.app/admin — 기존에 설정한 관리자 비밀번호로 로그인합니다.
+- 데이터베이스: Neon PostgreSQL **Free** 요금제, `mykkachi-db` (개인 Vercel 팀 소유).
+- DB 관리 화면: https://vercel.com/d/dashboard/integrations/neon/icfg_zuO0VD8MxWpFAiWguP6hsFnI/resources/store_eyd7BfF6w8ny1l8Q
+- `studio/`에는 이전 Sites 소스만 보관하며 현재 빌드·업로드 대상에서 제외합니다.
 
-고객용 사이트에는 Cloudflare D1이나 ChatGPT 인증 헤더를 연결하지 않습니다. 데이터베이스·관리자 기능은 기존 Sites에 유지됩니다. **기존 관리자에서 발행한 새 원고는 Vercel에 자동 동기화되지 않습니다.** Vercel 저널은 `lib/knowledge.ts`의 원고를 Git으로 관리하며 배포 시 갱신됩니다. 이전 시점에 기존 운영 데이터베이스의 콘텐츠 테이블은 비어 있었습니다.
+## 데이터베이스
 
-Vercel 사이트에서는 기존 Sites 방문 이벤트 집계를 실행하지 않습니다. 사주 입력은 브라우저 안에서만 처리합니다.
+운영 DB 호스트: `ep-shiny-rain-b8xp5u84-pooler.c-14.us-east-1.aws.neon.tech`, DB명: `neondb`.
+Vercel 함수와 같은 미국 동부 리전을 사용합니다. [Neon 요금제](https://neon.com/pricing)의 무료 한도 내에서 사용하며 유료 요금제는 활성화하지 않았습니다.
+
+실제 접속 URL·사용자·비밀번호는 저장소 루트의 **`.env`와 `.env.local`**에만 저장합니다. 두 파일은 Git 및 Vercel 소스 업로드에서 제외하고 파일 권한을 `600`으로 설정했습니다. `.env.example`은 비밀 값 없는 양식입니다. Vercel 운영 환경에는 Neon 연동이 `DATABASE_URL` 등을 관리하고 관리자 인증 변수는 별도로 등록합니다. `NEXT_PUBLIC_` 접두사로 DB 정보를 설정하지 마세요.
+
+- `DATABASE_URL`: 연결 풀을 사용하는 서버용 접속 URL
+- `DATABASE_URL_UNPOOLED`: 직접 연결 URL
+- `PGHOST`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`: 개별 접속 정보
+- `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET`: 비밀번호 검증과 관리자 세션 서명
+
+```sh
+npm run db:migrate  # 테이블 생성, 없는 기본 저널만 추가; 기존 수정 내용 유지
+npm run test:db     # 실제 DB의 바인딩·트랜잭션 롤백 확인
+# 로컬 서버 실행 후
+npm run test:admin  # 관리자 권한, 저장, 검토/발행, 초안 격리 확인
+```
+
+`db/001_initial.sql`에 콘텐츠·운영 설정·실행 이력·로그인 시도 제한 테이블을 정의합니다. 기존 한국어·번체 저널 12개를 이관했습니다. 관리자가 검토 완료한 글을 발행하면 재배포 없이 공개 저널에 반영됩니다. 발행 후 초안을 수정해도 마지막 발행본만 공개됩니다. 동시 수정은 충돌로 안내합니다.
+
+사주 입력(생년월일·출생시간·닉네임)은 계속 브라우저에서만 계산하며 DB에 수집하지 않습니다. 방문 집계·SNS 직접 게시·정기 실행기는 아직 연결하지 않았습니다. 자동화 규칙 저장과 수동 실행은 지원합니다. 로그인 시도는 원본 IP 대신 키를 사용해 15분 동안 제한하며, 관리자 API는 세션 인증과 동일 출처 확인을 적용합니다.
+
+기존 관리자 비밀번호 해시를 사용합니다. `scripts/admin-password.mjs`로 새 해시를 만들 수 있습니다. 비밀번호 변경 시 로컬 파일과 Vercel의 `ADMIN_PASSWORD_HASH`를 함께 갱신하고, 기존 세션을 끊으려면 `ADMIN_SESSION_SECRET`도 새 무작위 값으로 변경한 뒤 재배포하세요.
 
 ## 개발 및 확인
 

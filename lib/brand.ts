@@ -1,6 +1,5 @@
 export type Locale = "ko" | "zh-TW";
 export const ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL || "https://mykkachi.vercel.app").replace(/\/$/, "");
-export const STUDIO_ORIGIN = "https://luun-saju.luke3833.chatgpt.site";
 export const homePath = (locale: Locale) => (locale === "ko" ? "/" : "/zh-TW");
 export const localPath = (locale: Locale, path: string) =>
   `${locale === "ko" ? "" : "/zh-TW"}${path}`;
