@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Banknote, CalendarDays, Check, Clock3, Copy, Loader2, LockKeyhole, Mail, Lightbulb, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Banknote, CalendarDays, Check, Clock3, Copy, Loader2, LockKeyhole, Mail, Lightbulb, UserRound } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site";
 import { BirthFields, BirthTimeField } from "@/components/birth-fields";
 import { BANK, DURATION_TEXT, HOLD_MINUTES, CONTACT_CONSENT_TEXT, MARKETING_CONSENT_TEXT, STORY_EXAMPLES, BOOKING_PRODUCTS, type BookingProduct, bankAccountDigits, bankAccountDisplay, bankConfigured, formatWon, priceFor } from "@/lib/booking-shared";
@@ -26,6 +26,34 @@ export function BankBox({ depositName, amount }: { depositName?: string; amount:
       <p className="bank-box-account"><strong>{BANK.name} <span className="bank-account-number">{bankAccountDisplay()}</span></strong><button type="button" className="bank-copy" aria-label="계좌번호 숫자만 복사" onClick={() => { navigator.clipboard?.writeText(bankAccountDigits()).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? "복사됨" : "복사"}</button></p>
       <p className="bank-box-sub">예금주 {BANK.holder || "마이까치"} · 금액 {formatWon(amount)}{depositName ? ` · 입금자명 ${depositName}` : ""}</p>
     </> : <p className="bank-box-sub">{BANK.name} 계좌번호는 예약 확인 메일로 안내드려요. 금액 {formatWon(amount)}.</p>}
+  </div>;
+}
+
+function BookingCalendar({ byDate, date, onSelect }: { byDate: Map<string, Slot[]>; date: string; onSelect: (date: string) => void }) {
+  const dates = [...byDate.keys()].sort();
+  const firstMonth = dates[0].slice(0, 7);
+  const lastMonth = dates[dates.length - 1].slice(0, 7);
+  const [month, setMonth] = useState(() => date.slice(0, 7) || firstMonth);
+  const visibleMonth = month < firstMonth || month > lastMonth ? firstMonth : month;
+  const [year, monthNumber] = visibleMonth.split("-").map(Number);
+  const offset = new Date(Date.UTC(year, monthNumber - 1, 1)).getUTCDay();
+  const days = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+  const move = (delta: number) => { setMonth(new Date(Date.UTC(year, monthNumber - 1 + delta, 1)).toISOString().slice(0, 7)); onSelect(""); };
+  return <div className="booking-calendar">
+    <div className="booking-calendar-heading">
+      <h3 aria-live="polite">{year}년 {monthNumber}월</h3>
+      <div><button type="button" aria-label="이전 달" disabled={visibleMonth <= firstMonth} onClick={() => move(-1)}><ChevronLeft size={18} /></button><button type="button" aria-label="다음 달" disabled={visibleMonth >= lastMonth} onClick={() => move(1)}><ChevronRight size={18} /></button></div>
+    </div>
+    <div className="booking-calendar-week" aria-hidden="true">{["일", "월", "화", "수", "목", "금", "토"].map(day => <span key={day}>{day}</span>)}</div>
+    <div className="booking-calendar-days" role="group" aria-label={`${year}년 ${monthNumber}월 날짜 선택`}>
+      {Array.from({ length: offset }, (_, i) => <span key={`blank-${i}`} aria-hidden="true" />)}
+      {Array.from({ length: days }, (_, i) => {
+        const value = `${visibleMonth}-${String(i + 1).padStart(2, "0")}`;
+        const count = byDate.get(value)?.length || 0;
+        return <button type="button" key={value} disabled={!count} aria-pressed={date === value} aria-label={`${dayLabel(value)}, ${count ? `예약 가능 ${count}자리` : "예약 불가"}`} onClick={() => onSelect(value)}><strong>{i + 1}</strong><span>{count ? `${count}자리` : "—"}</span></button>;
+      })}
+    </div>
+    <p className="booking-calendar-help">{date ? `${dayLabel(date)} · 아래에서 시간을 골라주세요.` : "예약 가능한 날짜를 선택하면 시간을 볼 수 있어요."}</p>
   </div>;
 }
 
@@ -116,8 +144,8 @@ export function BookingPage({ initialProduct = "consultation" }: { initialProduc
         {slots === null ? <p className="booking-empty"><Loader2 size={16} className="animate-spin" />가능한 시간을 불러오고 있어요.</p>
           : dates.length === 0 ? <p className="booking-empty">지금은 열린 상담 시간이 없어요. 곧 새 일정이 열리니 조금만 기다려 주세요.</p>
           : <>
-            <div className="booking-dates" role="radiogroup" aria-label="날짜 선택">{dates.map((d) => <button type="button" key={d} role="radio" aria-checked={date === d} className={`booking-chip${date === d ? " on" : ""}`} onClick={() => { setDate(d); setSlot(null); }}>{dayLabel(d)}<span>{byDate.get(d)!.length}자리</span></button>)}</div>
-            {date && <div className="booking-hours" role="radiogroup" aria-label="시간 선택">{byDate.get(date)!.map((s) => <button type="button" key={s.id} role="radio" aria-checked={slot?.id === s.id} className={`booking-chip hour${slot?.id === s.id ? " on" : ""}`} onClick={() => { setSlot(s); track("slot_selected", { date: s.date, hour: s.hour }); }}><Clock3 size={14} />{hourLabel(s.hour)}–{hourLabel(s.hour + 1)}</button>)}</div>}
+            <BookingCalendar byDate={byDate} date={date} onSelect={(value) => { setDate(value); setSlot(null); }} />
+            {date && <div className="booking-hours" role="radiogroup" aria-label="시간 선택">{(byDate.get(date) || []).map((s) => <button type="button" key={s.id} role="radio" aria-checked={slot?.id === s.id} className={`booking-chip hour${slot?.id === s.id ? " on" : ""}`} onClick={() => { setSlot(s); track("slot_selected", { date: s.date, hour: s.hour }); }}><Clock3 size={14} />{hourLabel(s.hour)}–{hourLabel(s.hour + 1)}</button>)}</div>}
             {slot && <p className="booking-selected"><Check size={15} />{dayLabel(slot.date)} {hourLabel(slot.hour)}–{hourLabel(slot.hour + 1)} 선택됨</p>}
           </>}
       </section>}

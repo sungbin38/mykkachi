@@ -244,9 +244,9 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
 .booking-heading h1 { font-size: clamp(31px, 3.5vw, 44px); line-height: 1.5; }
 .booking-heading > p { color: var(--muted-foreground); }
 .booking-heading > .tiny-label { display: none; }
-.booking-page .booking-products { gap: 20px; margin-block: 34px 44px; }
-.booking-page .booking-products > button { background: var(--card); border-radius: 20px; border-color: var(--input); color: var(--ink); padding: 27px; }
-.booking-page .booking-products > button[aria-pressed=true] { background: var(--soft); border-color: var(--primary); padding: 26px; }
+.booking-page .booking-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-block: 34px 44px; }
+.booking-page .booking-products > button { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; border: 1px solid; text-align: left; cursor: pointer; background: var(--card); border-radius: 20px; border-color: var(--input); color: var(--ink); padding: 27px; }
+.booking-page .booking-products > button[aria-pressed=true] { border-width: 2px; background: var(--soft); border-color: var(--primary); padding: 26px; }
 .booking-page .booking-products span, .booking-page .booking-products small { color: var(--muted-foreground); }
 .booking-page .booking-products b { font-weight: 500; font-size: 29px; font-variant-numeric: tabular-nums; }
 .booking-page .booking-products .booking-product-condition { color: var(--primary); font-size: 14px; font-weight: 650; margin-top: 13px; }
@@ -442,4 +442,29 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
   html { scroll-behavior: auto; }
   .site-header *, #main-content *, .site-footer * { animation: none !important; transition: none !important; }
   .text-link:hover svg, .primary-button:hover svg, .outline-button:hover svg, .illustrated-letter:hover .illustrated-cover img { transform: none; }
+}
+
+/* Keep the booking choices self-contained across production CSS chunks. */
+.booking-page .booking-products > button > strong { font-size: 20px; line-height: 1.5; }
+.booking-page .booking-products > button > span:not(.booking-product-price) { display: block; font-size: 14px; line-height: 1.8; word-break: keep-all; }
+.booking-page .booking-products > button > small { font-size: 13px; line-height: 1.7; }
+.booking-page .booking-products > button:focus-visible, .booking-calendar button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.booking-calendar-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.booking-calendar-heading h3 { font-size: 19px; font-weight: 600; }
+.booking-calendar-heading > div { display: flex; gap: 6px; }
+.booking-calendar-heading button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; background: var(--card); color: var(--ink); cursor: pointer; }
+.booking-calendar-heading button:disabled { opacity: .3; cursor: default; }
+.booking-calendar-week, .booking-calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.booking-calendar-week { margin-bottom: 8px; text-align: center; font-size: 12px; color: var(--muted-foreground); }
+.booking-calendar-days button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 62px; padding: 7px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--ink); cursor: pointer; }
+.booking-calendar-days button strong { font-size: 15px; font-weight: 550; }
+.booking-calendar-days button span { font-size: 10px; color: var(--muted-foreground); }
+.booking-calendar-days button:disabled { border-color: transparent; color: var(--muted-foreground); opacity: .45; cursor: default; }
+.booking-calendar-days button:not(:disabled):hover { border-color: var(--primary); background: var(--soft); }
+.booking-calendar-days button[aria-pressed=true], .booking-calendar-days button[aria-pressed=true]:hover { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.booking-calendar-days button[aria-pressed=true] span { color: inherit; }
+.booking-calendar-help { margin-top: 18px; font-size: 13px; color: var(--muted-foreground); line-height: 1.7; }
+@media (max-width: 640px) {
+  .booking-calendar-week, .booking-calendar-days { gap: 4px; }
+  .booking-calendar-days button { min-height: 52px; border-radius: 8px; }
 }
