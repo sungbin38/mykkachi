@@ -28,6 +28,8 @@ import {
   ShieldCheck,
   Link2,
   LogOut,
+  CalendarCheck,
+  Activity,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -88,10 +90,14 @@ import { ORIGIN, localPath, type Locale } from "@/lib/brand";
 import { downloadCarousel, type CardSlide } from "@/lib/cards";
 import { SocialProfile } from "./social-profile";
 import { MASCOT_IMAGE } from "@/lib/brand-assets";
+import { BookingsPanel } from "@/components/admin-bookings";
+import { TrafficPanel } from "@/components/admin-traffic";
 import "./admin.css";
 
 type Section =
   | "overview"
+  | "bookings"
+  | "traffic"
   | "content"
   | "calendar"
   | "automation"
@@ -125,6 +131,8 @@ type Overview = {
 };
 const NAV = [
   { id: "overview", label: "대시보드", icon: LayoutDashboard },
+  { id: "bookings", label: "상담 예약", icon: CalendarCheck },
+  { id: "traffic", label: "방문 분석", icon: Activity },
   { id: "content", label: "콘텐츠 스튜디오", icon: Files },
   { id: "calendar", label: "콘텐츠 캘린더", icon: CalendarDays },
   { id: "automation", label: "자동화 워크플로", icon: Workflow },
@@ -252,6 +260,7 @@ export function AdminDashboard({ name }: { name: string }) {
     [selected, setSelected] = useState<ContentItem | null>(null),
     [settings, setSettings] = useState<Automation>(blank.settings),
     [busy, setBusy] = useState(false),
+    [unseen, setUnseen] = useState(0),
     [month, setMonth] = useState(
       () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     );
@@ -265,6 +274,7 @@ export function AdminDashboard({ name }: { name: string }) {
       setItems(c.items);
       setData(o);
       setSettings(o.settings);
+      api<{ unseen: number }>("/api/admin/bookings?summary=1").then((b) => setUnseen(b.unseen)).catch(() => {});
     }).catch((e: unknown) => {
       if (signal?.aborted) return;
       setItems([]);
@@ -385,7 +395,7 @@ export function AdminDashboard({ name }: { name: string }) {
           <SidebarGroup>
             <SidebarGroupLabel>WORKSPACE</SidebarGroupLabel>
             <SidebarMenu>
-              {NAV.slice(0, 5).map((n) => (
+              {NAV.slice(0, 7).map((n) => (
                 <SidebarMenuItem key={n.id}>
                   <SidebarMenuButton
                     isActive={section === n.id}
@@ -397,6 +407,9 @@ export function AdminDashboard({ name }: { name: string }) {
                     {n.id === "content" && items.length > 0 && (
                       <span className="nav-count">{items.length}</span>
                     )}
+                    {n.id === "bookings" && unseen > 0 && (
+                      <span className="nav-count">{unseen}</span>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -405,7 +418,7 @@ export function AdminDashboard({ name }: { name: string }) {
           <SidebarGroup>
             <SidebarGroupLabel>GROWTH & SETTINGS</SidebarGroupLabel>
             <SidebarMenu>
-              {NAV.slice(5).map((n) => (
+              {NAV.slice(7).map((n) => (
                 <SidebarMenuItem key={n.id}>
                   <SidebarMenuButton
                     isActive={section === n.id}
@@ -485,6 +498,8 @@ export function AdminDashboard({ name }: { name: string }) {
                 {
                   {
                     overview: "콘텐츠를 쌓고, 새로운 인연을 연결하세요.",
+                    bookings: "상담 시간을 열고, 입금을 확인하고, 들어온 이야기를 살피세요.",
+                    traffic: "누가 언제 어디서 들어와 어떻게 예약까지 갔는지 보세요.",
                     content:
                       "하나의 이야기, 세 개의 채널. 마이까치의 목소리로 전해요.",
                     calendar: "발행을 준비하는 콘텐츠의 일정을 확인하세요.",
@@ -1136,6 +1151,8 @@ export function AdminDashboard({ name }: { name: string }) {
                   </section>
                 </>
               )}
+              {section === "bookings" && <BookingsPanel onSeen={() => setUnseen(0)} />}
+              {section === "traffic" && <TrafficPanel />}
               {section === "brand" && <BrandPanel />}
               {section === "settings" && (
                 <>

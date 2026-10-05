@@ -1473,3 +1473,94 @@
 .studio-brand { gap: 10px; padding: 18px; }
 .brand-strategy-hero .wordmark img, .instagram-preview .wordmark img { background: #f8f5ed; border-radius: 50%; padding: 3px; }
 @media(max-width: 600px) { .brand-palette { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- Bookings ---------- */
+.bookings-metrics .metric-inline { display: inline-flex; align-items: center; height: 1.2em; }
+.slot-date-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin: 14px 0 10px; }
+.slot-date-row .input-control { height: 42px; }
+.slot-date-row .outline-button { white-space: nowrap; }
+.slot-day-label { font-size: 13px; color: #6c7567; margin-bottom: 10px; }
+.slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 7px; }
+.slot-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border); background: #f5f5f0; cursor: pointer; font-family: inherit; text-align: left; transition: all .15s; }
+.slot-cell span { font-size: 13.5px; font-weight: 600; }
+.slot-cell small { font-size: 11px; color: #8b8e7c; }
+.slot-cell.open { background: #e9ede2; border-color: #9fbcae; color: #204f54; }
+.slot-cell.open small { color: #517c73; }
+.slot-cell.booked { background: #fff0e2; border-color: #e4c3a2; color: #a66a38; cursor: default; }
+.slot-cell.booked small { color: #b56d4d; }
+.slot-cell:disabled { opacity: .8; }
+.slot-summary { margin-top: 22px; border-top: 1px solid #edf1e5; padding-top: 16px; }
+.slot-summary h3 { font-size: 13px; font-weight: 600; color: #587248; margin-bottom: 8px; }
+.slot-summary ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; max-height: 220px; overflow: auto; }
+.slot-summary li { display: flex; justify-content: space-between; font-size: 13px; }
+.slot-summary li button { background: none; border: 0; padding: 0; font: inherit; color: #315f58; cursor: pointer; text-decoration: underline dotted; }
+.slot-summary li span { color: #8b8e7c; }
+.quiet-text { font-size: 13px; color: #8b8e7c; }
+.booking-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.booking-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 6px 12px; align-items: center; width: 100%; text-align: left; padding: 13px 14px; border: 1px solid var(--border); border-radius: 12px; background: #fff; font-family: inherit; cursor: pointer; }
+.booking-row:hover { border-color: #9fbcae; }
+.booking-when, .booking-who { display: grid; gap: 2px; min-width: 0; grid-column: 1; }
+.booking-when { display: flex; gap: 8px; align-items: baseline; }
+.booking-when strong, .booking-who strong { white-space: nowrap; word-break: keep-all; overflow: hidden; text-overflow: ellipsis; }
+.booking-when strong { font-size: 13.5px; }
+.booking-when span, .booking-who span { font-size: 12px; color: #8b8e7c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.booking-who strong { font-size: 14.5px; }
+.booking-flags { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
+.booking-dialog { max-width: 640px; }
+.booking-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin: 6px 0 14px; }
+.booking-detail div { display: grid; gap: 2px; }
+.booking-detail dt { font-size: 11.5px; letter-spacing: .6px; color: #8b8e7c; text-transform: uppercase; }
+.booking-detail dd { font-size: 14px; }
+.booking-story-box { background: #f8f5ed; border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+.booking-story-box h3 { font-size: 12px; color: #587248; margin-bottom: 6px; }
+.booking-story-box p { font-size: 14px; line-height: 1.8; white-space: pre-wrap; word-break: keep-all; }
+.booking-actions { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.booking-dialog .field { margin-bottom: 8px; }
+.booking-dialog .booking-story { height: auto; min-height: 90px; resize: vertical; }
+@media (max-width: 760px) { .booking-detail { grid-template-columns: 1fr; } .slot-date-row { grid-template-columns: 1fr; } }
+
+/* ---------- Bookings: payment + journey ---------- */
+.booking-pay-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: #f8f5ed; border-radius: 10px; padding: 12px 14px; margin: 8px 0 14px; }
+.booking-pay-row strong { font-family: "Gowun Batang", serif; font-size: 20px; display: block; }
+.booking-pay-row span { font-size: 12.5px; color: #6c7567; }
+.primary-button.small { padding: 9px 14px; font-size: 13.5px; }
+.journey { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+.journey h3 { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #587248; margin-bottom: 10px; }
+.journey-facts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 14px; margin-bottom: 12px; }
+.journey-facts div { display: grid; gap: 1px; }
+.journey-facts dt { font-size: 10.5px; letter-spacing: .6px; color: #8b8e7c; text-transform: uppercase; }
+.journey-facts dd { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+.journey-steps { list-style: none; padding: 0; margin: 0; max-height: 220px; overflow: auto; border-top: 1px solid #edf1e5; }
+.journey-steps li { display: grid; grid-template-columns: 70px 110px 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f3ec; font-size: 12.5px; align-items: baseline; }
+.journey-time { color: #8b8e7c; font-family: "DM Sans", sans-serif; font-variant-numeric: tabular-nums; }
+.journey-event { font-weight: 600; color: #4a5a55; }
+.journey-event.cta_click, .journey-event.slot_selected, .journey-event.booking_submit { color: #a66a38; }
+.journey-event.booking_created { color: #2f6b5f; }
+.journey-path { color: #5d6b63; word-break: break-all; }
+/* ---------- Traffic ---------- */
+.traffic-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.day-bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; padding-top: 10px; }
+.day-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+.day-bar > span { position: relative; width: 100%; max-width: 26px; background: #c9d6c9; border-radius: 4px 4px 0 0; }
+.day-bar > span i { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 10px; color: #2f6b5f; font-weight: 700; }
+.day-bar small { font-size: 9px; color: #8b8e7c; margin-top: 4px; white-space: nowrap; overflow: hidden; }
+.funnel { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.funnel li { display: grid; grid-template-columns: 110px 1fr 40px 50px; gap: 10px; align-items: center; font-size: 13px; }
+.funnel-track { height: 10px; background: #f0f1ec; border-radius: 6px; overflow: hidden; }
+.funnel-track span { display: block; height: 100%; background: #517c73; border-radius: 6px; }
+.funnel strong { text-align: right; }
+.funnel small { color: #8b8e7c; }
+.traffic-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.traffic-table th { text-align: left; font-size: 11px; letter-spacing: .5px; color: #8b8e7c; font-weight: 500; padding: 4px 0; border-bottom: 1px solid #edf1e5; }
+.traffic-table td { padding: 7px 0; border-bottom: 1px solid #f1f3ec; }
+.traffic-table td:not(:first-child), .traffic-table th:not(:first-child) { text-align: right; width: 56px; }
+.device-row { display: flex; gap: 14px; margin-top: 14px; font-size: 12.5px; color: #6c7567; }
+.device-row span { display: inline-flex; align-items: center; gap: 4px; }
+.session-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.session-list li { padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+.session-list li.booked { border-color: #9fbcae; background: #f4f8f3; }
+.session-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+.session-meta { display: inline-flex; align-items: center; gap: 4px; color: #6c7567; font-size: 12px; }
+.session-trail { font-size: 12.5px; color: #4a5a55; margin-top: 6px; word-break: break-all; font-family: "DM Sans", sans-serif; }
+.session-ref { font-size: 11.5px; color: #8b8e7c; margin-top: 2px; word-break: break-all; }
+@media (max-width: 760px) { .journey-facts { grid-template-columns: 1fr 1fr; } .journey-steps li { grid-template-columns: 60px 1fr; } .journey-path { grid-column: 2; } .funnel li { grid-template-columns: 90px 1fr 36px 44px; } }

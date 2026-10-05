@@ -1254,6 +1254,7 @@ h3 {
 }
 .closing-mascot { display: block; margin: 0 auto 18px; }
 .result-empty .reading-mascot { margin: 0 auto 16px; }
+.closing-mascot, .reading-mascot { border-radius: 50%; overflow: hidden; }
 @media (max-width: 1100px) {
   .site-nav { gap: 17px; }
   .header-tools .outline-button { display: none; }
@@ -1331,4 +1332,128 @@ h3 {
   .closing-note { padding: 50px 0; }
   .closing-note p { font-size: 20px; }
   .footer-links { font-size: 14px; }
+}
+
+/* ---------- Home: why a person / process / report ---------- */
+.hero-footnotes { list-style: none; padding: 0; }
+.hero-footnotes li { display: flex; gap: 5px; align-items: center; }
+.hero-footnotes li svg { color: #517c73; }
+.why-section { padding: 78px 0; background: #243b3b; color: #f3efe4; }
+.why-heading { max-width: 640px; margin-bottom: 44px; }
+.why-heading .tiny-label { color: #a9c0b4; }
+.why-heading h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-weight: 400; font-size: 34px; line-height: 1.4; margin: 14px 0 18px; }
+.why-heading p { font-size: 16px; line-height: 1.95; color: #c8d3c9; word-break: keep-all; }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.why-col { border-radius: 18px; padding: 28px; }
+.why-col.ai { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.why-col.ours { background: #f8f5ed; color: var(--ink); }
+.why-col-label { display: flex; align-items: center; gap: 7px; font-family: "DM Sans", sans-serif; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 22px; }
+.why-col.ai .why-col-label { color: #a9c0b4; }
+.why-col.ours .why-col-label { color: #517c73; }
+.why-chat { padding: 16px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.why-q { font-size: 14px; color: #a9c0b4; margin-bottom: 8px; }
+.why-a { font-size: 15px; line-height: 1.75; background: rgba(255,255,255,0.08); border-radius: 4px 14px 14px 14px; padding: 11px 14px; display: inline-block; max-width: 92%; word-break: keep-all; }
+.why-note { font-size: 13px; color: #e2a58a; margin-top: 9px; }
+.why-footnote { font-size: 12px; color: #8ea39a; margin-top: 16px; }
+.why-col.ours article { padding: 18px 0; border-top: 1px solid var(--border); }
+.why-col.ours article:first-of-type { border-top: 0; padding-top: 0; }
+.why-col.ours h3 { font-size: 17px; font-weight: 600; margin: 10px 0 8px; }
+.why-col.ours p { font-size: 15px; line-height: 1.85; color: #5d6b63; word-break: keep-all; }
+.consultation-chip span { opacity: 0.5; }
+.consultation-steps.four { grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.report-section { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: center; padding-top: 86px; padding-bottom: 40px; }
+.report-intro h2 { font-family: "Gowun Batang", "Noto Sans TC", serif; font-weight: 400; font-size: 32px; line-height: 1.4; margin: 14px 0 16px; }
+.report-intro > p { font-size: 16px; line-height: 1.95; color: #5d7061; max-width: 480px; word-break: keep-all; }
+.report-parts { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+.report-parts li { display: grid; gap: 3px; padding: 13px 0; border-top: 1px solid var(--border); }
+.report-parts strong { font-family: "Gowun Batang", serif; font-weight: 700; font-size: 16px; color: #2f4a46; }
+.report-parts span { font-size: 13.5px; color: #6c7567; line-height: 1.6; word-break: keep-all; }
+.report-preview { margin: 0; }
+.report-page { position: relative; background: #fff; border: 1px solid #e3e1d6; border-radius: 6px; padding: 38px 36px 54px; box-shadow: 0 24px 60px -30px rgba(36,59,59,0.35); overflow: hidden; }
+.report-page .tiny-label { color: #517c73; }
+.report-page h3 { font-family: "Gowun Batang", serif; font-weight: 700; font-size: 22px; margin: 12px 0 18px; }
+.report-label { font-size: 12px; letter-spacing: 1.2px; color: #b56d4d; margin: 18px 0 6px; font-weight: 600; }
+.report-page > p:not(.report-label) { font-size: 14.5px; line-height: 1.9; color: #4a5a55; word-break: keep-all; }
+.report-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
+.report-preview figcaption { font-size: 12.5px; color: #8b8e7c; margin-top: 12px; text-align: center; }
+
+/* ---------- Booking page ---------- */
+.booking-page { padding-top: 34px; padding-bottom: 80px; }
+.booking-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #6c7f6d; margin-bottom: 28px; }
+.booking-heading { max-width: 640px; margin-bottom: 36px; }
+.booking-heading h1 { font-family: "Gowun Batang", serif; font-weight: 400; font-size: 36px; margin: 12px 0 14px; }
+.booking-heading p { font-size: 16px; line-height: 1.9; color: #5d7061; word-break: keep-all; }
+.booking-layout { display: grid; gap: 22px; max-width: 760px; }
+.booking-step { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+.booking-step h2 { display: flex; flex-direction: column; gap: 6px; font-size: 20px; font-weight: 600; margin-bottom: 22px; }
+.booking-empty { display: flex; gap: 8px; align-items: center; color: #6c7567; font-size: 14.5px; }
+.booking-dates, .booking-hours { display: flex; flex-wrap: wrap; gap: 9px; }
+.booking-hours { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
+.booking-chip { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; background: #fbfaf5; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; font-family: inherit; }
+.booking-chip span { font-size: 11.5px; color: #8b8e7c; font-weight: 400; }
+.booking-chip.hour { flex-direction: row; align-items: center; gap: 6px; }
+.booking-chip:hover { border-color: #90b8a3; }
+.booking-chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.booking-chip.on span { color: #c8dcd4; }
+.booking-selected { display: flex; gap: 6px; align-items: center; margin-top: 16px; font-size: 14px; color: #315f58; font-weight: 500; }
+.booking-toggle { display: flex; gap: 6px; }
+.booking-toggle.wrap { flex-wrap: wrap; }
+.booking-toggle button { padding: 0 14px; height: 47px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font-family: inherit; font-size: 14.5px; cursor: pointer; }
+.booking-toggle.wrap button { height: 40px; border-radius: 30px; }
+.booking-toggle button.on { background: #e9ede2; border-color: #517c73; color: #204f54; font-weight: 600; }
+.booking-check { align-self: end; margin-bottom: 20px; }
+.booking-check input { width: 17px; height: 17px; flex: none; }
+.booking-story { height: auto; min-height: 150px; resize: vertical; line-height: 1.7; }
+.field-label small { font-weight: 400; color: #8b8e7c; margin-left: 6px; }
+.booking-submit { width: 100%; justify-content: center; margin-top: 6px; }
+.booking-submit:disabled { opacity: .55; cursor: not-allowed; }
+.booking-done { max-width: 620px; margin: 40px auto 20px; text-align: center; }
+.booking-done-icon { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; background: #e9ede2; color: #315f58; align-items: center; justify-content: center; margin-bottom: 18px; }
+.booking-done h1 { font-family: "Gowun Batang", serif; font-weight: 400; font-size: 32px; margin: 10px 0 14px; word-break: keep-all; }
+.booking-done-slot { display: inline-flex; gap: 7px; align-items: center; padding: 9px 16px; border-radius: 30px; background: #fff; border: 1px solid var(--border); font-size: 14.5px; font-weight: 500; }
+.booking-next { text-align: left; list-style: none; padding: 0; margin: 32px 0; display: grid; gap: 14px; counter-reset: next; }
+.booking-next li { position: relative; padding: 16px 18px 16px 52px; background: #fff; border: 1px solid var(--border); border-radius: 12px; font-size: 14.5px; line-height: 1.8; color: #5d6b63; word-break: keep-all; }
+.booking-next li::before { counter-increment: next; content: counter(next, decimal-leading-zero); position: absolute; left: 18px; top: 17px; font-family: "DM Sans", sans-serif; font-size: 12px; letter-spacing: 1px; color: #b56d4d; }
+.booking-next strong { color: var(--ink); display: block; }
+.booking-next em { font-style: normal; color: #315f58; }
+.booking-done .hero-actions { justify-content: center; }
+@media (max-width: 900px) {
+  .why-grid, .report-section { grid-template-columns: 1fr; }
+  .consultation-steps.four { grid-template-columns: 1fr 1fr; }
+  .report-section { gap: 36px; padding-top: 64px; }
+}
+@media (max-width: 640px) {
+  .why-section { padding: 56px 0; }
+  .why-heading h2, .report-intro h2 { font-size: 27px; }
+  .consultation-steps.four { grid-template-columns: 1fr; }
+  .report-parts { grid-template-columns: 1fr; }
+  .booking-step { padding: 20px; }
+  .booking-heading h1 { font-size: 29px; }
+  .field-row { grid-template-columns: 1fr; gap: 0; }
+}
+
+/* ---------- Birth fields / payment ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.birth-fields { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; }
+.birth-fields label { display: block; margin: 0; }
+.birth-fields select.input-control, select.input-control { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23517c73' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.birth-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.birth-row .booking-toggle button { height: 47px; }
+.mini-form .birth-fields { flex: 1; }
+.mini-form-row .birth-fields select { height: 52px; }
+.booking-price { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.booking-price strong { font-family: "Gowun Batang", serif; font-size: 28px; color: #2f4a46; }
+.booking-price span { font-size: 14px; color: #6c7567; }
+.bank-box { background: #f8f5ed; border: 1px dashed #c7d2c0; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; text-align: left; }
+.bank-box-label { display: flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: 1px; color: #517c73; font-weight: 600; margin-bottom: 8px; }
+.bank-box-account { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 17px; margin-bottom: 4px; }
+.bank-copy { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border: 1px solid var(--border); border-radius: 30px; background: #fff; font-family: inherit; font-size: 12px; cursor: pointer; }
+.bank-box-sub { font-size: 13.5px; color: #5d6b63; }
+.booking-hint { font-size: 14px; line-height: 1.8; color: #5d6b63; margin-bottom: 16px; word-break: keep-all; }
+.booking-deadline { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: #b56d4d; margin-top: 4px; }
+.booking-done .bank-box { margin: 22px auto 8px; max-width: 460px; }
+@media (max-width: 640px) {
+  .birth-row { grid-template-columns: 1fr; }
+  .mini-form-row { flex-direction: column; }
+  .mini-form-row .birth-fields select { height: 47px; }
 }

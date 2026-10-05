@@ -1,10 +1,15 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { sqlClient, db } from "../lib/db";
 import { allArticles, articleBody } from "../lib/knowledge";
 
 const sql = sqlClient();
-const schema = await readFile(new URL('../db/001_initial.sql', import.meta.url), 'utf8');
-await sql.transaction(schema.split(';').map(s => s.trim()).filter(Boolean).map(s => sql.query(s)));
+// Apply every db/*.sql in name order. All statements are idempotent (IF NOT EXISTS).
+const dir = new URL('../db/', import.meta.url);
+for (const file of (await readdir(dir)).filter(f => f.endsWith('.sql')).sort()) {
+  const schema = await readFile(new URL(file, dir), 'utf8');
+  await sql.transaction(schema.split(';').map(s => s.trim()).filter(Boolean).map(s => sql.query(s)));
+  console.log('applied', file);
+}
 // Only seed missing articles. Re-running never overwrites editorial changes.
 const now = new Date().toISOString();
 const items = ['ko', 'zh-TW'].flatMap(locale => allArticles(locale as 'ko' | 'zh-TW'));

@@ -1,4 +1,5 @@
 "use client";
+import { BirthFields, BirthTimeField } from "@/components/birth-fields";
 import { useState, useEffect, useRef } from "react";
 import { Sparkles, Download, Copy, LockKeyhole, Loader2 } from "lucide-react";
 import {
@@ -223,29 +224,14 @@ export function ReadingPage({ locale }: { locale: Locale }) {
               <span className="field-label">
                 {zh ? "出生日期 · 陽曆" : "생년월일 · 양력"}
               </span>
-              <input
-                className="input-control"
-                type="date"
-                required
-                min="1970-01-01"
-                max={new Date().toISOString().slice(0, 10)}
-                value={input.date}
-                onChange={(e) => setInput({ ...input, date: e.target.value })}
-              />
+              <BirthFields value={input.date} onChange={(d) => setInput({ ...input, date: d })} zh={zh} minYear={1970} />
             </label>
             <div className="field-row">
               <label className="field">
                 <span className="field-label">
                   {zh ? "出生時間" : "태어난 시간"}
                 </span>
-                <input
-                  className="input-control"
-                  type="time"
-                  required={!input.unknown}
-                  disabled={input.unknown}
-                  value={input.time}
-                  onChange={(e) => setInput({ ...input, time: e.target.value })}
-                />
+                <BirthTimeField value={input.time} onChange={(t) => setInput({ ...input, time: t })} disabled={input.unknown} zh={zh} />
               </label>
               <div className="field">
                 <label className="field-label" htmlFor="birth-region">
@@ -299,7 +285,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
           >
             {!result || !e ? (
               <div className="result-empty">
-                <BrandMascot size={200} className="reading-mascot" />
+                <BrandMascot size={200} className="reading-mascot" priority />
                 <span className="tiny-label">A LITTLE BIRD, BY YOUR SIDE</span>
                 <h2>
                   {zh
