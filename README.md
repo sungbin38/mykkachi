@@ -7,7 +7,7 @@
 ## 배포 구조
 
 - 저장소: https://github.com/sungbin38/mykkachi
-- 고객용 사이트: Next.js, Vercel 프로젝트 `mykkachi` (ADAPT 팀)
+- 고객용 사이트: Next.js, Vercel 프로젝트 `mykkachi` (`sungbin3833@gmail.com` 개인 계정)
 - 공개 주소: https://mykkachi.vercel.app
 - `/admin`은 기존 비공개 Sites 관리자 화면으로 이동합니다. 해당 사이트의 로그인과 권한 검사를 그대로 사용합니다.
 - `studio/`에는 기존 Sites 애플리케이션의 소스를 보관했습니다. Vercel 빌드·업로드 대상이 아닙니다.
