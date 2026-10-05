@@ -19,7 +19,7 @@ try {
     await p.locator('.booking-calendar-days button:not(:disabled)').first().click();
     assert.ok((await p.locator('.booking-hours').innerText()).includes('17:00–18:00'));
     assert.ok((await p.locator('.booking-hours').innerText()).includes('21:00–22:00'));
-    assert.ok(await p.locator('a[href="mailto:hello@mykkachi.com"]').count() > 0);
+    assert.ok(await p.locator('a[href="https://pf.kakao.com/_xfeQxiX/chat"]').count() > 0);
     assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     await p.screenshot({ path: `outputs/taiwan-booking/${width}.png`, fullPage: true });
   }
@@ -53,7 +53,8 @@ try {
   assert.ok((await p.locator('.booking-hours').innerText()).includes('18:00–19:00'));
   await p.goto(origin + '/zh-TW', { waitUntil: 'networkidle' });
   assert.ok(await p.locator('a[href="/zh-TW/book?product=report"]').count() > 0);
-  assert.ok(await p.locator('a[href="mailto:hello@mykkachi.com"]').count() >= 2);
+  assert.ok(await p.locator('a[href="https://pf.kakao.com/_xfeQxiX/chat"]').count() >= 2);
+  assert.equal(await p.locator('a[href^="mailto:"]').count(), 0);
   assert.deepEqual(errors, []);
   console.log('PASS Taiwan/Korea time conversion, form payload, localized completion/deadline, report prices, responsive layouts, contact links; requests mocked, no reservations or emails sent');
 } finally { await browser.close(); }

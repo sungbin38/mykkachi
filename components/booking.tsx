@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Banknote, CalendarDay
 import { SiteHeader, SiteFooter } from "@/components/site";
 import { BirthFields, BirthTimeField } from "@/components/birth-fields";
 import { BANK, DURATION_TEXT, HOLD_MINUTES, CONTACT_CONSENT_TEXT, MARKETING_CONSENT_TEXT, STORY_EXAMPLES, BOOKING_PRODUCTS, type BookingProduct, bankAccountDigits, bankAccountDisplay, bankConfigured, priceFor } from "@/lib/booking-shared";
-import { FREE_READING_ENABLED, homePath, localPath, CONTACT_EMAIL, type Locale } from "@/lib/brand";
+import { FREE_READING_ENABLED, homePath, localPath, KAKAO_URL, type Locale } from "@/lib/brand";
 import { ids, track } from "@/lib/track-client";
 
 import { bookingText } from "@/lib/booking-copy";
@@ -27,7 +27,7 @@ export function BankBox({ depositName, amount, locale = "ko" }: { depositName?: 
       <p className="bank-box-account"><strong>{zh ? "Hana Bank（하나은행）" : BANK.name} <span className="bank-account-number">{bankAccountDisplay()}</span></strong><button type="button" className="bank-copy" aria-label={t("계좌번호 숫자만 복사")} onClick={() => { navigator.clipboard?.writeText(bankAccountDigits()).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? t("복사됨") : t("복사")}</button></p>
       <p className="bank-box-sub">{zh ? "戶名" : "예금주"} {BANK.holder || t("마이까치")} · {zh ? "金額" : "금액"} {formatWon(amount)}{depositName ? ` · ${zh ? "匯款人" : "입금자명"} ${depositName}` : ""}</p>
     </> : <p className="bank-box-sub">{zh ? "Hana Bank（하나은행）" : BANK.name} {zh ? "帳號將透過預約通知信提供。金額" : "계좌번호는 예약 확인 메일로 안내드려요. 금액"} {formatWon(amount)}.</p>}
-    <p className="booking-contact">{zh ? "付款或預約問題：" : "입금·예약 문의: "}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+    <p className="booking-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}{" "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p>
   </div>;
 }
 
@@ -196,6 +196,7 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
         {error && <p className="error-message" role="alert">{error}</p>}
         <button className="primary-button booking-submit" type="submit" disabled={busy || (!reportOnly && !slot)}>{busy ? <Loader2 size={17} className="animate-spin" /> : <Mail size={17} />}{reportOnly ? t("리포트 신청하기") : slot ? t("이 시간으로 예약 요청하기") : t("시간을 먼저 골라주세요")}</button>
         <p className="privacy-hint"><LockKeyhole size={13} />{t("사이트에서 결제하지 않아요. 계좌이체 입금을 확인한 뒤 상담자가 직접 확정 안내를 드립니다.")}</p>
+        {KAKAO_URL && <p className="privacy-hint"><Mail size={13} />{zh ? "預約前有疑問？" : "예약 전에 궁금한 점이 있다면 "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "用 KakaoTalk 問我們" : "카카오톡으로 편하게 물어보세요"}</a></p>}
       </section>
     </form>
   </main><SiteFooter locale={locale} /></>;

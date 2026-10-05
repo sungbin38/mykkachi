@@ -13,9 +13,9 @@ export const BRAND = {
   chinese: "聽你說故事，陪你看明天",
 };
 
-// Add the owner's verified public KakaoTalk URL when supplied. Never use a
-// guessed account or show a working booking button before it is connected.
-export const KAKAO_URL: string = "";
+// Owner's KakaoTalk channel (마이까치). KAKAO_URL opens the 1:1 chat directly; the channel home is KAKAO_CHANNEL_URL.
+export const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_xfeQxiX";
+export const KAKAO_URL: string = `${KAKAO_CHANNEL_URL}/chat`;
 
 export const websiteSchema = {
   "@context": "https://schema.org",

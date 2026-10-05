@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowUpRight, Leaf, Heart, Compass, Moon, Globe2, LockKeyhole, BookOpen, Menu, ArrowRight, ChevronDown, Bot, UserRound, Clock3, Mail } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose, SheetDescription } from "@/components/ui/sheet";
-import { BRAND, CONTACT_EMAIL, FREE_READING_ENABLED, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
+import { BRAND, FREE_READING_ENABLED, KAKAO_URL, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
 import { BrandMascot } from "./brand-mascot";
 import { FeaturedReviews } from "./reviews";
 import { BirthFields } from "./birth-fields";
@@ -56,7 +56,7 @@ export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
   return <><footer className="site-footer"><div className="shell">
     <div className="footer-top"><a href={homePath(locale)} aria-label={zh ? "마이까치 MY KKACHI 首頁" : "마이까치 MY KKACHI 홈"}><Logo /></a>
       <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "까치의 편지"}</a><a href={homePath(locale)+"#story"}>{zh ? "品牌故事" : "마이까치 이야기"}</a><a href={localPath(locale, "/book")}>{zh ? "預約諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
-    </div><p className="site-contact">{zh ? "客服・預約與付款問題" : "고객 문의 · 예약 및 입금 안내"}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p><div className="footer-bottom"><span>© {new Date().getFullYear()} MY KKACHI. A little bird, by your side.</span></div>
+    </div><p className="site-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><div className="footer-bottom"><span>© {new Date().getFullYear()} MY KKACHI. A little bird, by your side.</span></div>
   </div></footer><Dialog open={!!policy} onOpenChange={() => setPolicy("")}><DialogContent><DialogTitle>{policy === "privacy" ? (zh ? "隱私說明" : "개인정보 안내") : (zh ? "使用說明" : "이용 안내")}</DialogTitle><DialogDescription className="dialog-copy">{policy === "privacy" ? privacy : terms}</DialogDescription></DialogContent></Dialog></>;
 }
 export function HomePage({ locale, featuredArticles }: { locale: Locale; featuredArticles: JournalCardData[] }) {
@@ -156,7 +156,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
         </article>
       </div>
       <p className="service-footnote">{zh ? "單獨報告不含一對一對話。確認付款後由老師親自分析與撰寫，約需一天，再以電子郵件寄送。預約時段以台灣標準時間（UTC+8）顯示，費用以韓元計價，轉帳至 Hana Bank（韓國韓亞銀行）帳戶。" : "리포트 단독 상품에는 1:1 상담이 포함되지 않아요. 입금 확인 후 상담자가 직접 분석하고 작성하며, 약 하루 뒤 이메일로 보내드려요."}</p>
-      <p className="site-contact">{zh ? "服務或付款有疑問嗎？" : "상담·리포트 또는 입금이 궁금하신가요?"}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p><details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
+      <p className="site-contact">{zh ? "諮詢、報告或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "상담·리포트 신청이나 입금에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
     </div></section>
     <FeaturedReviews locale={locale} />
     <section id="report" className="shell report-section" data-reveal aria-labelledby="report-title">
