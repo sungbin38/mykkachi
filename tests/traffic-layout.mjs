@@ -25,7 +25,9 @@ try {
   await page.goto(origin+'/admin');
   await page.locator('.metric-card strong').first().waitFor();
   assert.equal(await page.locator('.metric-card strong').first().innerText(),'17');
+  if(width<768) await page.getByRole('button',{name:'Toggle Sidebar',exact:true}).click();
   await page.getByRole('button',{name:'방문 분석',exact:true}).click();
+  if(width<768) await page.keyboard.press('Escape');
   await page.locator('.traffic-table').first().waitFor();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'viewport overflow at '+width);
   assert.ok(await page.locator('.traffic-table').evaluateAll(tables=>tables.every(t=>t.getBoundingClientRect().right<=t.closest('.studio-panel').getBoundingClientRect().right)),'table outside card at '+width);
