@@ -1,0 +1,6 @@
+studio
+outputs
+.git
+.wrangler
+.sites-runtime
+.env*
