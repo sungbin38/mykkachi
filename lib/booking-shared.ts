@@ -41,8 +41,8 @@ export const formatWon = (n: number) => `${n.toLocaleString("ko-KR")}원`;
 // Bank details are shown to customers after booking, so NEXT_PUBLIC_ is intentional.
 export const BANK = {
   name: process.env.NEXT_PUBLIC_BANK_NAME || "하나은행",
-  account: process.env.NEXT_PUBLIC_BANK_ACCOUNT || "",
-  holder: process.env.NEXT_PUBLIC_BANK_HOLDER || "",
+  account: process.env.NEXT_PUBLIC_BANK_ACCOUNT || "56991041952707",
+  holder: process.env.NEXT_PUBLIC_BANK_HOLDER || "안성빈",
 };
 export const bankConfigured = () => BANK.account.length > 0;
 // Digits only, for clipboard and bank-app paste.
