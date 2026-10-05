@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowUpRight, Leaf, Heart, Compass, Moon, Globe2, LockKeyhole, BookOpen, Menu, ArrowRight, ChevronDown, Bot, UserRound, Clock3, Mail } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose, SheetDescription } from "@/components/ui/sheet";
-import { BRAND, FREE_READING_ENABLED, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
+import { BRAND, CONTACT_EMAIL, FREE_READING_ENABLED, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
 import { BrandMascot } from "./brand-mascot";
 import { FeaturedReviews } from "./reviews";
 import { BirthFields } from "./birth-fields";
@@ -21,13 +21,13 @@ export function SiteHeader({ locale = "ko" }: { locale?: Locale }) {
   const zh = locale === "zh-TW";
   const pathname = usePathname();
   const otherLocale = zh ? "ko" : "zh-TW";
-  const languageHref = (pathname === localPath(locale, "/reviews") || pathname === localPath(locale, "/journal") || pathname.startsWith(localPath(locale, "/journal/")))
+  const languageHref = (pathname === localPath(locale, "/book") || pathname === localPath(locale, "/reviews") || pathname === localPath(locale, "/journal") || pathname.startsWith(localPath(locale, "/journal/")))
     ? localPath(otherLocale, zh ? pathname.slice(6) : pathname)
     : homePath(otherLocale);
   const nav = [
     [homePath(locale) + "#story", zh ? "品牌故事" : "마이까치 이야기"],
     [homePath(locale) + "#consultation", zh ? "諮詢方式" : "상담 안내"],
-    ...(!zh ? [["/book", "상담 예약"]] : []),
+    [localPath(locale, "/book"), zh ? "預約諮詢" : "상담 예약"],
     [localPath(locale, "/reviews"), zh ? "諮詢故事" : "상담 이야기"],
     ...(FREE_READING_ENABLED ? [[localPath(locale, "/read"), zh ? "免費八字" : "무료 사주"]] : []),
     [localPath(locale, "/journal"), zh ? "日常專欄" : "까치의 편지"],
@@ -37,7 +37,7 @@ export function SiteHeader({ locale = "ko" }: { locale?: Locale }) {
     <nav className="site-nav" aria-label={zh ? "主要導覽" : "주 메뉴"}>{nav.map(([href, label]) => <a key={href} href={href} aria-current={pathname === href ? "page" : undefined}>{label}</a>)}</nav>
     <div className="header-tools">
       <a className="language" href={languageHref} aria-label={zh ? "한국어, 切換至韓文" : "繁體中文, 대만 번체 중국어로 변경"}><Globe2 size={16} />{zh ? "한국어" : "繁體中文"}</a>
-      <a className="outline-button" href={zh ? "/zh-TW#consultation" : "/book"}>{zh ? "一對一諮詢" : "상담 예약"}<ArrowUpRight size={15} /></a>
+      <a className="outline-button" href={localPath(locale, "/book")}>{zh ? "一對一諮詢" : "상담 예약"}<ArrowUpRight size={15} /></a>
       <Sheet><SheetTrigger className="mobile-menu" aria-label={zh ? "開啟選單" : "메뉴 열기"}><Menu size={21} /></SheetTrigger>
         <SheetContent><SheetTitle className="px-6 pt-8">{BRAND.english}</SheetTitle><SheetDescription className="px-6">{zh ? BRAND.chinese : BRAND.slogan}</SheetDescription><nav className="mobile-nav">{nav.map(([href,label]) => <SheetClose asChild key={href}><a href={href} aria-current={pathname === href ? "page" : undefined}>{label}</a></SheetClose>)}</nav></SheetContent>
       </Sheet>
@@ -55,8 +55,8 @@ export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
     : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 상담자가 직접 진행하며 회당 최대 1시간이고 이야기가 정리되면 더 일찍 끝날 수 있습니다. 비용은 20만원, 상담 이야기의 익명 후기·콘텐츠 활용에 동의하면 15만원이며, 진행 방법·취소 및 환불 기준은 예약 확인 메일로 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 상담 후 리포트가 포함됩니다. 상담 없이 리포트만 받는 상품은 10만원, 사연과 풀이의 익명 마케팅 활용에 동의하면 5만원입니다. 리포트는 약 10페이지 분량의 PDF로 이메일 발송합니다. 상담자가 직접 분석하고 작성해 약 하루가 걸리며, 리포트 단독 상품은 입금 확인 후 제작을 시작합니다. 사이트 내 자동 결제는 제공하지 않습니다.";
   return <><footer className="site-footer"><div className="shell">
     <div className="footer-top"><a href={homePath(locale)} aria-label={zh ? "마이까치 MY KKACHI 首頁" : "마이까치 MY KKACHI 홈"}><Logo /></a>
-      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "까치의 편지"}</a><a href={homePath(locale)+"#story"}>{zh ? "品牌故事" : "마이까치 이야기"}</a>{!zh && <a href="/book">상담 예약</a>}<a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
-    </div><div className="footer-bottom"><span>© {new Date().getFullYear()} MY KKACHI. A little bird, by your side.</span></div>
+      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "까치의 편지"}</a><a href={homePath(locale)+"#story"}>{zh ? "品牌故事" : "마이까치 이야기"}</a><a href={localPath(locale, "/book")}>{zh ? "預約諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
+    </div><p className="site-contact">{zh ? "客服・預約與付款問題" : "고객 문의 · 예약 및 입금 안내"}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p><div className="footer-bottom"><span>© {new Date().getFullYear()} MY KKACHI. A little bird, by your side.</span></div>
   </div></footer><Dialog open={!!policy} onOpenChange={() => setPolicy("")}><DialogContent><DialogTitle>{policy === "privacy" ? (zh ? "隱私說明" : "개인정보 안내") : (zh ? "使用說明" : "이용 안내")}</DialogTitle><DialogDescription className="dialog-copy">{policy === "privacy" ? privacy : terms}</DialogDescription></DialogContent></Dialog></>;
 }
 export function HomePage({ locale, featuredArticles }: { locale: Locale; featuredArticles: JournalCardData[] }) {
@@ -98,7 +98,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
       <div className="hero-copy"><p className="eyebrow">{zh ? "由人親自解讀的一對一八字諮詢" : "AI가 아닌, 사람이 직접 읽는 1:1 사주 상담"}</p>
         <h1>{zh ? "從即將面對的難關，到不願你錯過的機會。" : "다가올 고비와 놓치지 않았으면 하는 기회까지."}</h1>
         <p className="hero-description">{zh ? <>就算多花些時間，也會好好為你看。<br />老師親自解讀八字，諮詢後寄送專屬報告。</> : <>시간이 걸리더라도, 제대로 봐드리겠습니다.<br />당신의 이야기와 사주를 사람이 직접 읽고, 한 편의 리포트로 전해드려요.</>}</p>
-        <div className="hero-actions"><a className="primary-button" href={zh ? "#consultation" : "/book"}>{zh ? "了解一對一諮詢" : "상담 예약하기"}<ArrowUpRight size={18} /></a>{FREE_READING_ENABLED && <a className="text-link" href="#free-reading">{zh ? "先免費看八字" : "내 사주 먼저 살펴보기"}<ArrowRight size={16} /></a>}</div>
+        <div className="hero-actions"><a className="primary-button" href={localPath(locale, "/book")}>{zh ? "預約諮詢" : "상담 예약하기"}<ArrowUpRight size={18} /></a>{FREE_READING_ENABLED && <a className="text-link" href="#free-reading">{zh ? "先免費看八字" : "내 사주 먼저 살펴보기"}<ArrowRight size={16} /></a>}</div>
       </div>
       <figure className="hero-art watercolor-hero">
         <Image
@@ -142,7 +142,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
           <p className="service-base-price">{zh ? "基本費用 20 萬韓元・最長一小時" : "기본가 20만원 · 최대 1시간"}</p>
           <p className="service-discount">{zh ? "同意將故事與解讀隱去姓名及個資後，用於行銷心得與內容，即可享有折扣。" : "이름·개인정보를 가린 사연과 풀이를 마케팅 후기·콘텐츠로 활용하는 데 동의하면 적용돼요."}</p>
           <ul className="service-includes"><li>{zh ? "由老師親自一對一解讀" : "상담자와 직접 나누는 1:1 대화"}</li><li>{zh ? "針對你的故事與問題解讀" : "내 사연과 질문에 맞춘 사주 풀이"}</li><li>{zh ? "包含約 10 頁的 PDF 報告" : "상담 후 약 10페이지 PDF 리포트 포함"}</li></ul>
-          {!zh && <a className="primary-button" href="/book?product=consultation">1:1 상담 예약하기<ArrowUpRight size={18} /></a>}
+          <a className="primary-button" href={`${localPath(locale, "/book")}?product=consultation`}>{zh ? "預約一對一諮詢" : "1:1 상담 예약하기"}<ArrowUpRight size={18} /></a>
         </article>
         <article className="service-offer service-report">
           <div className="service-title"><Mail size={25} strokeWidth={1.5} aria-hidden="true" /><h3>{zh ? "只購買八字報告" : "사주 리포트만 받기"}</h3></div>
@@ -152,11 +152,11 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
           <p className="service-base-price">{zh ? "基本費用 10 萬韓元・PDF 電子郵件寄送" : "기본가 10만원 · PDF 이메일 발송"}</p>
           <p className="service-discount">{zh ? "同意將故事與解讀隱去姓名及個資後，用於行銷心得與內容，即可享有折扣。" : "이름·개인정보를 가린 사연과 풀이를 마케팅 후기·콘텐츠로 활용하는 데 동의하면 적용돼요."}</p>
           <ul className="service-includes"><li>{zh ? "不需預約諮詢時間" : "상담 시간 선택 없이 신청"}</li><li>{zh ? "由老師親自分析與撰寫，約需一天" : "사람이 직접 분석·작성, 약 하루 소요"}</li><li>{zh ? "約 10 頁的 PDF 報告寄到你的信箱" : "약 10페이지 PDF 리포트 이메일 수령"}</li></ul>
-          {!zh && <a className="outline-button" href="/book?product=report">리포트만 신청하기<ArrowUpRight size={18} /></a>}
+          <a className="outline-button" href={`${localPath(locale, "/book")}?product=report`}>{zh ? "只申請八字報告" : "리포트만 신청하기"}<ArrowUpRight size={18} /></a>
         </article>
       </div>
-      <p className="service-footnote">{zh ? "單獨報告不含一對一對話。確認付款後由老師親自分析與撰寫，約需一天，再以電子郵件寄送。目前僅提供韓文諮詢與報告。" : "리포트 단독 상품에는 1:1 상담이 포함되지 않아요. 입금 확인 후 상담자가 직접 분석하고 작성하며, 약 하루 뒤 이메일로 보내드려요."}</p>
-      <details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
+      <p className="service-footnote">{zh ? "單獨報告不含一對一對話。確認付款後由老師親自分析與撰寫，約需一天，再以電子郵件寄送。預約時段以台灣標準時間（UTC+8）顯示，費用以韓元計價，轉帳至 Hana Bank（韓國韓亞銀行）帳戶。" : "리포트 단독 상품에는 1:1 상담이 포함되지 않아요. 입금 확인 후 상담자가 직접 분석하고 작성하며, 약 하루 뒤 이메일로 보내드려요."}</p>
+      <p className="site-contact">{zh ? "服務或付款有疑問嗎？" : "상담·리포트 또는 입금이 궁금하신가요?"}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p><details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
     </div></section>
     <FeaturedReviews locale={locale} />
     <section id="report" className="shell report-section" data-reveal aria-labelledby="report-title">
@@ -168,7 +168,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
       <form className="mini-form" onSubmit={event=>{event.preventDefault();try{sessionStorage.setItem("luun-start-birth",birth);}catch{}window.location.assign(localPath(locale,"/read"));}}><label className="form-intro" htmlFor="quick-birth-year">{zh ? "陽曆出生日期" : "양력 생년월일"}<span className="pill">FREE</span></label><div className="mini-form-row"><BirthFields value={birth} onChange={setBirth} zh={zh} idPrefix="quick-birth" /><button className="primary-button" type="submit">{zh ? "免費看我的八字" : "무료로 내 사주 보기"}</button></div><p className="privacy-hint"><LockKeyhole size={13} />{zh ? "不需註冊 · 生日僅在瀏覽器中處理" : "회원가입 없이 · 생년월일은 내 브라우저에서만"}</p></form>
       </div><div className="reading-grid">{cards.map((c,i)=>{const Icon=Icons[i];return <a className="reading-tile" key={c[0]} href={localPath(locale,`/read?focus=${["self","love","work","daily"][i]}`)}><div className="tile-meta"><span>0{i+1} / {c[2]}</span><ArrowUpRight size={15} /></div><div className="tile-icon"><Icon /></div><h3>{c[0]}</h3><p>{c[1]}</p></a>;})}</div></section>}
       <section className="section journal-section" data-reveal><div className="section-heading"><div><h2>{zh ? "喜鵲寄來的日常筆記" : "까치가 건네는 일상의 편지"}</h2></div><a href={localPath(locale,"/journal")} className="text-link"><BookOpen size={15} />{zh ? "閱讀全部" : "편지 모두 읽기"}</a></div><div className="journal-grid">{featuredArticles.map((article, index)=><JournalCard key={article.slug} article={article} locale={locale} sizes={index === 0 ? "(max-width: 767px) 90vw, 640px" : "(max-width: 767px) 90vw, (max-width: 1100px) 40vw, 260px"} />)}</div></section>
-      <section className="closing-note" data-reveal><BrandMascot size={128} className="closing-mascot" /><p>{zh ? "願你離開時，心裡多一點餘裕。" : "돌아가는 마음에, 작은 여유가 남기를."}</p><a className="text-link" href={zh ? "#consultation" : "/book"}>{zh ? "了解一對一諮詢" : "상담 예약하기"}<ArrowUpRight size={17} /></a></section>
+      <section className="closing-note" data-reveal><BrandMascot size={128} className="closing-mascot" /><p>{zh ? "願你離開時，心裡多一點餘裕。" : "돌아가는 마음에, 작은 여유가 남기를."}</p><a className="text-link" href={localPath(locale, "/book")}>{zh ? "預約諮詢" : "상담 예약하기"}<ArrowUpRight size={17} /></a></section>
     </div>
   </main><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteSchema).replace(/</g,"\\u003c")}} /><SiteFooter locale={locale} /></>;
 }

@@ -1,4 +1,6 @@
 import "server-only";
+import { CONTACT_EMAIL, type Locale } from "./brand";
+import { bookingSlotLabel, bookingMoney } from "./booking-locale";
 import { db, HttpError, runtime } from "./server";
 import { BANK, BOOKING_HOURS, bankAccountDisplay, BOOKING_STATUSES, HOLD_MINUTES, formatWon, priceFor, BOOKING_PRODUCTS, type BookingProduct, type BookingStatus } from "./booking-shared";
 import { recordEvent, sessionSnapshot } from "./tracking";
@@ -11,14 +13,14 @@ export type BookingSource = {
   device?: string | null; country?: string | null; city?: string | null; startedAt?: string | null; pageViews?: number | null; visits?: number | null;
 };
 export type Booking = {
-  id: string; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
+  id: string; locale: Locale; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
   topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus;
   holdUntil: string | null; paidAt: string | null; note: string | null; reportSentAt: string | null; seenAt: string | null;
   visitorId: string | null; sessionId: string | null; source: BookingSource | null; createdAt: string; updatedAt: string;
 };
 type Row = {
-  id: string; product: BookingProduct; slot_id: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
+  id: string; locale: Locale; product: BookingProduct; slot_id: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birth_date: string; birth_time: string | null; birth_unknown: boolean; calendar: string; gender: string | null;
   topic: string | null; story: string | null; deposit_name: string | null; amount: number; marketing_consent: boolean; status: string; hold_until: string | Date | null;
   paid_at: string | Date | null; note: string | null; report_sent_at: string | Date | null; seen_at: string | Date | null;
@@ -26,7 +28,7 @@ type Row = {
 };
 const iso = (v: string | Date | null) => (v == null ? null : v instanceof Date ? v.toISOString() : new Date(v).toISOString());
 const fromRow = (r: Row): Booking => ({
-  id: r.id, product: r.product ?? "consultation", slotId: r.slot_id, date: r.date, hour: r.hour, name: r.name, email: r.email, phone: r.phone,
+  id: r.id, locale: r.locale ?? "ko", product: r.product ?? "consultation", slotId: r.slot_id, date: r.date, hour: r.hour, name: r.name, email: r.email, phone: r.phone,
   birthDate: r.birth_date, birthTime: r.birth_time, birthUnknown: !!r.birth_unknown,
   calendar: r.calendar === "lunar" ? "lunar" : "solar", gender: r.gender, topic: r.topic, story: r.story,
   depositName: r.deposit_name, amount: r.amount, marketingConsent: !!r.marketing_consent, status: r.status as BookingStatus, holdUntil: iso(r.hold_until), paidAt: iso(r.paid_at),
@@ -82,11 +84,12 @@ export async function setSlots(date: unknown, hours: unknown, action: unknown) {
 }
 
 export type BookingInput = {
-  product: BookingProduct; slotId: string | null; name: string; email: string; phone?: string; birthDate: string; birthTime?: string; birthUnknown: boolean;
+  locale?: Locale; product: BookingProduct; slotId: string | null; name: string; email: string; phone?: string; birthDate: string; birthTime?: string; birthUnknown: boolean;
   calendar: "solar" | "lunar"; gender?: string; topic?: string; story?: string; depositName?: string; marketingConsent: boolean; visitorId?: string; sessionId?: string;
 };
 export function validateBooking(p: Record<string, unknown>): BookingInput {
   const str = (v: unknown, max: number) => (typeof v === "string" && v.trim().length <= max ? v.trim() : null);
+  if (p.locale !== undefined && p.locale !== "ko" && p.locale !== "zh-TW") throw new HttpError(400, "지원하지 않는 언어입니다.");
   const product = p.product === undefined ? "consultation" : p.product;
   if (product !== "consultation" && product !== "report") throw new HttpError(400, "상품을 확인해 주세요.");
   const name = str(p.name, 40), email = str(p.email, 120), slotId = product === "report" ? null : str(p.slotId, 64), topic = str(p.topic, 40) || undefined;
@@ -104,28 +107,28 @@ export function validateBooking(p: Record<string, unknown>): BookingInput {
   const gender = ["female", "male"].includes(p.gender as string) ? (p.gender as string) : undefined;
   if (!gender) throw new HttpError(400, "성별을 골라 주세요.");
   const id = (v: unknown) => (typeof v === "string" && /^[A-Za-z0-9_-]{8,64}$/.test(v) ? v : undefined);
-  return { product, slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, marketingConsent: p.marketingConsent === true, visitorId: id(p.visitorId), sessionId: id(p.sessionId) };
+  return { locale: p.locale === "zh-TW" ? "zh-TW" : "ko", product, slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, marketingConsent: p.marketingConsent === true, visitorId: id(p.visitorId), sessionId: id(p.sessionId) };
 }
 
 export async function createBooking(input: BookingInput): Promise<Booking> {
   await releaseExpired();
   const id = crypto.randomUUID();
   const source = input.sessionId ? await sessionSnapshot(input.sessionId, input.visitorId) : null;
-  const columns = "id,product,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,marketing_consent,status,hold_until,visitor_id,session_id,source";
+  const columns = "id,product,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,marketing_consent,status,hold_until,visitor_id,session_id,source,locale";
   const values = [id, input.product, input.name, input.email, input.phone ?? null, input.birthDate, input.birthTime ?? null,
     input.birthUnknown, input.calendar, input.gender ?? null, input.topic ?? null, input.story ?? null,
     input.depositName ?? null, priceFor(input.marketingConsent, input.product), input.marketingConsent,
-    HOLD_MINUTES, input.visitorId ?? null, input.sessionId ?? null, source ? JSON.stringify(source) : null];
+    HOLD_MINUTES, input.visitorId ?? null, input.sessionId ?? null, source ? JSON.stringify(source) : null, input.locale ?? "ko"];
   // A report never claims a consultation slot. Claim + insert are atomic for consultations.
   const row = input.product === "report"
     ? await db().prepare(`INSERT INTO bookings (${columns})
-        VALUES (?,?,NULL,NULL,NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(mins => ?),?,?,?::jsonb) RETURNING *`)
+        VALUES (?,?,NULL,NULL,NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(mins => ?),?,?,?::jsonb,?) RETURNING *`)
         .bind(...values).first<Row>()
     : await db().prepare(`WITH claimed AS (
         UPDATE booking_slots SET status='booked' WHERE id=? AND status='open'
           AND (date>? OR (date=? AND hour>?)) RETURNING id,date,hour
       ) INSERT INTO bookings (${columns})
-        SELECT ?,?,claimed.id,claimed.date,claimed.hour,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(mins => ?),?,?,?::jsonb
+        SELECT ?,?,claimed.id,claimed.date,claimed.hour,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',now()+make_interval(mins => ?),?,?,?::jsonb,?
         FROM claimed RETURNING *`)
         .bind(input.slotId, todaySeoul(), todaySeoul(), hourNowSeoul(), ...values).first<Row>();
   if (!row) throw new HttpError(409, "이 시간은 방금 마감되었어요. 다른 시간을 골라 주세요.");
@@ -197,7 +200,7 @@ async function sendMail(to: string, subject: string, text: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${r.RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: r.FROM_EMAIL || "MY KKACHI <onboarding@resend.dev>", to: [to], reply_to: r.REPLY_TO_EMAIL || r.NOTIFY_EMAIL || undefined, subject, text }),
+    body: JSON.stringify({ from: r.FROM_EMAIL || "MY KKACHI <onboarding@resend.dev>", to: [to], reply_to: r.REPLY_TO_EMAIL || CONTACT_EMAIL, subject, text }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   return true;
@@ -211,14 +214,27 @@ async function notifyOwner(b: Booking) {
   const src = b.source;
   const route = src ? [src.utmSource || src.referrerHost || "직접 방문", src.utmCampaign, src.landingPath].filter(Boolean).join(" · ") : "추적 정보 없음";
   const owner = [
-    `새 ${productName} 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``, `상품: ${productName}`, `진행: ${when}`, `이름: ${b.name} / 입금자명: ${b.depositName || b.name}`, `이메일: ${b.email}`, `연락처: ${b.phone || "-"}`,
+    `새 ${productName} 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``, `상품: ${productName}`, `신청 언어: ${b.locale === "zh-TW" ? "대만 번체 (고객 시간 UTC+8 / 관리자 KST)" : "한국어"}`, `진행: ${when}`, `이름: ${b.name} / 입금자명: ${b.depositName || b.name}`, `이메일: ${b.email}`, `연락처: ${b.phone || "-"}`,
     `생년월일: ${b.birthDate} (${b.calendar === "lunar" ? "음력" : "양력"}) ${b.birthUnknown ? "시간 모름" : b.birthTime}`, `금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인)" : ""} · 입금 기한 ${HOLD_MINUTES}분`,
     `유입: ${route}`, ``, `사연:`, b.story || "(없음)", ``, `스튜디오에서 확인: /admin`,
   ];
   if (r.NOTIFY_EMAIL) await sendMail(r.NOTIFY_EMAIL, `[마이까치] 새 예약 요청 · ${when} · ${b.name}`, owner.join("\n"));
+  if (b.locale === "zh-TW") {
+    const customerWhen = b.date !== null && b.hour !== null ? bookingSlotLabel(b.date, b.hour, "zh-TW") : "八字 PDF 報告・電子郵件寄送";
+    const cutoff = b.holdUntil ? new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(b.holdUntil)) : "30 分鐘內";
+    await sendMail(b.email, `[MY KKACHI] 已收到你的申請・${customerWhen}`, [
+      `${b.name}，謝謝你將故事交給 MY KKACHI。`, `申請服務：${reportOnly ? "八字報告" : "一對一八字諮詢"}`, `時間：${customerWhen}`,
+      `應付金額：${bookingMoney(b.amount, "zh-TW")}${b.marketingConsent ? "（已套用匿名行銷使用折扣）" : ""}`,
+      `轉帳帳戶：Hana Bank（하나은행） ${bankAccountDisplay()}`, `戶名：${BANK.holder}`, `匯款人：${b.depositName || b.name}`,
+      `請於 ${cutoff}（台灣標準時間 UTC+8）前完成轉帳。申請後 ${HOLD_MINUTES} 分鐘內未確認入帳，申請將自動失效。確認入帳後，再通知你正式確認。`,
+      reportOnly ? "確認入帳後，由老師親自分析與撰寫約 10 頁 PDF，約一天後寄到此信箱。" : "諮詢最長一小時，可能提前結束。諮詢後由老師親自撰寫約 10 頁 PDF，約一天後寄到此信箱。",
+      `預約與付款問題：${CONTACT_EMAIL}`, "MY KKACHI",
+    ].join("\n")).catch(() => false);
+    return;
+  }
   await sendMail(b.email, `[마이까치] 예약 요청을 받았어요 · ${when}`, [
     `${b.name}님, 마이까치에 이야기를 건네주셔서 고마워요.`, ``, reportOnly ? `신청 상품: ${productName} (상담 없이 PDF를 이메일로 보내드려요)` : `요청하신 상담 시간: ${when} (최대 1시간, 이야기가 정리되면 더 일찍 끝날 수 있어요)`, `이용 금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인 적용)" : ""}`, `입금 계좌: ${bankLine()}`, `입금자명: ${b.depositName || b.name}`, ``,
     `신청 뒤 ${HOLD_MINUTES}분 안에 입금해 주세요. 기한 안에 입금이 확인되지 않으면 신청이 자동 만료돼요. 입금 확인 뒤 진행 안내를 보내드려요.`,
-    reportOnly ? `입금 확인 후 상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``, `마이까치 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
+    reportOnly ? `입금 확인 후 상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``, `예약·입금 문의: ${CONTACT_EMAIL}`, `마이까치 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
   ].join("\n")).catch(() => false);
 }

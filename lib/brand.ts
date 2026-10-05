@@ -1,8 +1,9 @@
 export type Locale = "ko" | "zh-TW";
-export const ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL || "https://mykkachi.vercel.app").replace(/\/$/, "");
+export const ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL || "https://mykkachi.com").replace(/\/$/, "");
 export const homePath = (locale: Locale) => (locale === "ko" ? "/" : "/zh-TW");
 export const localPath = (locale: Locale, path: string) =>
   `${locale === "ko" ? "" : "/zh-TW"}${path}`;
+export const CONTACT_EMAIL = "hello@mykkachi.com";
 export const BRAND = {
   name: "마이까치",
   english: "MY KKACHI",

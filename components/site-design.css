@@ -468,3 +468,9 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
   .booking-calendar-week, .booking-calendar-days { gap: 4px; }
   .booking-calendar-days button { min-height: 52px; border-radius: 8px; }
 }
+
+.booking-timezone { margin: -12px 0 22px; font-size: 13px; color: var(--primary); }
+.booking-contact { margin-top: 14px; font-size: 12px; line-height: 1.8; color: var(--muted-foreground); }
+.booking-contact a, .site-contact a { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.site-contact { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; line-height: 1.8; color: var(--muted-foreground); margin: 25px 0; }
+.booking-page .booking-done-slot { flex-wrap: wrap; justify-content: center; }

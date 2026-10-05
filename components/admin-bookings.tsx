@@ -7,7 +7,7 @@ import { BOOKING_HOURS, BOOKING_STATUSES, bookingStatusLabel, defaultHoursFor, D
 type Slot = { id: string; date: string; hour: number; status: "open" | "booked" | "closed" };
 type Source = { landingPath?: string | null; referrer?: string | null; referrerHost?: string | null; utmSource?: string | null; utmMedium?: string | null; utmCampaign?: string | null; utmContent?: string | null; device?: string | null; country?: string | null; city?: string | null; startedAt?: string | null; pageViews?: number | null; visits?: number | null };
 type Booking = {
-  id: string; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
+  id: string; locale?: "ko" | "zh-TW"; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
   topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
   note: string | null; reportSentAt: string | null; seenAt: string | null; visitorId: string | null; sessionId: string | null; source: Source | null; createdAt: string; updatedAt: string;
@@ -152,7 +152,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
             {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />입금 확인 · 확정</button>}
           </div>
           <dl className="booking-detail">
-            <div><dt>상품</dt><dd>{BOOKING_PRODUCTS[selected.product].name}</dd></div>
+            <div><dt>신청 언어 / 시간 기준</dt><dd>{selected.locale === "zh-TW" ? "대만 번체 · 고객 UTC+8 / 관리자 한국 시간(KST)" : "한국어 · 한국 시간(KST)"}</dd></div><div><dt>상품</dt><dd>{BOOKING_PRODUCTS[selected.product].name}</dd></div>
             <div><dt>이메일</dt><dd><a href={`mailto:${selected.email}`}>{selected.email}</a></dd></div>
             <div><dt>연락처</dt><dd>{selected.phone || "-"}</dd></div>
             <div><dt>생년월일</dt><dd>{selected.birthDate} ({selected.calendar === "lunar" ? "음력" : "양력"})</dd></div>

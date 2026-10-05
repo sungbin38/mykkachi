@@ -1,0 +1,59 @@
+import { chromium } from '@playwright/test';
+import assert from 'node:assert/strict';
+const origin = process.env.TEST_ORIGIN || 'http://localhost:3102';
+const browser = await chromium.launch({ channel: 'chrome' });
+const p = await browser.newPage();
+const errors = []; p.on('pageerror', e => errors.push(e.message));
+await p.route('**/api/track', r => r.fulfill({ status: 204 }));
+await p.route('**/api/booking/slots', r => r.fulfill({ json: { slots: [{ id: 'kst-18', date: '2030-01-10', hour: 18 }, { id: 'kst-22', date: '2030-01-10', hour: 22 }] } }));
+let submitted;
+await p.route('**/api/booking', r => {
+  submitted = r.request().postDataJSON();
+  return r.fulfill({ json: { id: 'test-booking', product: submitted.product, date: submitted.product === 'report' ? null : '2030-01-10', hour: submitted.product === 'report' ? null : 18, name: submitted.name, email: submitted.email, amount: submitted.marketingConsent ? (submitted.product === 'report' ? 50000 : 150000) : (submitted.product === 'report' ? 100000 : 200000), marketingConsent: submitted.marketingConsent, holdUntil: '2030-01-10T09:30:00Z', depositName: submitted.name } });
+});
+try {
+  for (const width of [1440, 390]) {
+    await p.setViewportSize({ width, height: 960 });
+    await p.goto(origin + '/zh-TW/book', { waitUntil: 'networkidle' });
+    assert.ok((await p.locator('.booking-timezone').innerText()).includes('UTC+8'));
+    await p.locator('.booking-calendar-days button:not(:disabled)').first().click();
+    assert.ok((await p.locator('.booking-hours').innerText()).includes('17:00–18:00'));
+    assert.ok((await p.locator('.booking-hours').innerText()).includes('21:00–22:00'));
+    assert.ok(await p.locator('a[href="mailto:hello@mykkachi.com"]').count() > 0);
+    assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+    await p.screenshot({ path: `outputs/taiwan-booking/${width}.png`, fullPage: true });
+  }
+  await p.locator('.booking-hours button').first().click();
+  await p.getByPlaceholder('該怎麼稱呼你？').fill('測試');
+  await p.getByPlaceholder('name@example.com').fill('test@example.invalid');
+  await p.getByPlaceholder('+886 912 345 678').fill('+886 912 345 678');
+  await p.locator('#birth-year').selectOption('1990');
+  await p.locator('#birth-month').selectOption('1');
+  await p.locator('#birth-day').selectOption('1');
+  await p.getByRole('checkbox', { name: '不確定出生時間' }).check();
+  await p.getByRole('radio', { name: '女性', exact: true }).click();
+  await p.locator('textarea').fill('我想了解接下來的工作方向以及適合轉職的時機。');
+  await p.locator('.consent-card input').check();
+  await p.locator('.booking-check input').last().check();
+  await p.locator('.booking-submit').click();
+  await p.locator('.booking-done').waitFor();
+  assert.equal(submitted.locale, 'zh-TW');
+  assert.equal(submitted.slotId, 'kst-18');
+  assert.equal(submitted.birthDate, '1990-01-01');
+  assert.ok((await p.locator('.booking-done-slot').innerText()).includes('17:00–18:00'));
+  assert.ok((await p.locator('.booking-deadline').innerText()).includes('17:30'));
+  assert.ok((await p.locator('.booking-done-amount').innerText()).includes('150,000 韓元'));
+  await p.goto(origin + '/zh-TW/book?product=report', { waitUntil: 'networkidle' });
+  assert.equal(await p.locator('.booking-calendar').count(), 0);
+  assert.ok((await p.locator('.booking-price').innerText()).includes('100,000 韓元'));
+  await p.locator('.consent-card input').check();
+  assert.ok((await p.locator('.booking-price').innerText()).includes('50,000 韓元'));
+  await p.goto(origin + '/book', { waitUntil: 'networkidle' });
+  await p.locator('.booking-calendar-days button:not(:disabled)').first().click();
+  assert.ok((await p.locator('.booking-hours').innerText()).includes('18:00–19:00'));
+  await p.goto(origin + '/zh-TW', { waitUntil: 'networkidle' });
+  assert.ok(await p.locator('a[href="/zh-TW/book?product=report"]').count() > 0);
+  assert.ok(await p.locator('a[href="mailto:hello@mykkachi.com"]').count() >= 2);
+  assert.deepEqual(errors, []);
+  console.log('PASS Taiwan/Korea time conversion, form payload, localized completion/deadline, report prices, responsive layouts, contact links; requests mocked, no reservations or emails sent');
+} finally { await browser.close(); }

@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const collections = await Promise.all(locales.map((locale) => articles(locale)));
   return locales.flatMap((locale, index) => {
     const counterpart = new Set(collections[1 - index].map((a) => a.slug));
-    const pages: MetadataRoute.Sitemap = ["", ...(FREE_READING_ENABLED ? ["/read"] : []), "/journal"].map((path) => ({
+    const pages: MetadataRoute.Sitemap = ["", ...(FREE_READING_ENABLED ? ["/read"] : []), "/journal", "/book"].map((path) => ({
       url: ORIGIN + (localPath(locale, path) || "/"),
       changeFrequency: "weekly", priority: path ? 0.7 : 1,
       alternates: { languages: { "ko-KR": ORIGIN + (path || "/"), "zh-TW": ORIGIN + "/zh-TW" + path, "x-default": ORIGIN + (path || "/") } },
