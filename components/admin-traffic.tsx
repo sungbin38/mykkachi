@@ -35,7 +35,7 @@ export function TrafficPanel() {
         <ul className="funnel">{r.funnel.map(([label, n], i) => <li key={label}><span className="funnel-label">{label}</span><span className="funnel-track"><span style={{ width: `${r.funnel[0][1] ? Math.max(2, (n / r.funnel[0][1]) * 100) : 0}%` }} /></span><strong>{n}</strong><small>{i === 0 ? "세션" : pct(n, r.funnel[0][1])}</small></li>)}</ul></section>
       <section className="studio-panel"><div className="panel-heading"><h2>어디서 들어왔나</h2></div>
         {r.bySource.length === 0 ? <p className="quiet-text">아직 기록이 없어요.</p> : <table className="traffic-table"><thead><tr><th>유입</th><th>세션</th><th>예약</th><th>전환</th></tr></thead><tbody>{r.bySource.map((s) => <tr key={s.source}><td>{s.source}</td><td>{s.sessions}</td><td>{s.booked}</td><td>{pct(s.booked, s.sessions)}</td></tr>)}</tbody></table>}
-        <div className="panel-heading" style={{ marginTop: 22 }}><h2>첫 페이지</h2></div>
+        <div className="panel-heading" style={{ marginTop: 22 }}><h2>첫 페이지</h2><span className="quiet-text">추적값을 제외한 경로별 집계</span></div>
         {r.byLanding.length === 0 ? <p className="quiet-text">아직 기록이 없어요.</p> : <table className="traffic-table"><thead><tr><th>경로</th><th>세션</th><th>예약</th></tr></thead><tbody>{r.byLanding.map((s) => <tr key={s.path}><td>{s.path}</td><td>{s.sessions}</td><td>{s.booked}</td></tr>)}</tbody></table>}
         <p className="device-row">{r.byDevice.map((d) => <span key={d.device}><DeviceIcon device={d.device} /> {d.device} {d.sessions}</span>)}</p>
       </section>

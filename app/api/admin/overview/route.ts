@@ -1,13 +1,10 @@
-import { admin, db, getSettings, apiError, runtime } from "@/lib/server";
+import { overviewMetrics } from "@/lib/tracking";
+import { admin, db, getSettings, apiError } from "@/lib/server";
 export async function GET() {
   try {
     await admin();
     const [metrics, jobs, settings] = await Promise.all([
-      db()
-        .prepare(
-          "SELECT day,event,source,locale,count FROM event_totals WHERE day>=to_char(CURRENT_DATE - 29, 'YYYY-MM-DD') ORDER BY day",
-        )
-        .all(),
+      overviewMetrics(),
       db()
         .prepare("SELECT * FROM job_runs ORDER BY started_at DESC LIMIT 10")
         .all(),
@@ -15,13 +12,13 @@ export async function GET() {
     ]);
     return Response.json(
       {
-        metrics: metrics.results,
+        metrics,
         jobs: jobs.results,
         settings,
         connections: {
           scheduler: false,
           database: true,
-          analytics: false,
+          analytics: true,
           threads: false,
           instagram: false,
         },

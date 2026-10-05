@@ -117,7 +117,7 @@ export async function trafficReport(days = 30) {
   const [totals, bySource, byLanding, byDevice, byDay, recent, funnel] = await Promise.all([
     db().prepare("SELECT count(*)::int AS sessions, count(DISTINCT visitor_id)::int AS visitors, count(booked_at)::int AS booked, coalesce(sum(page_views),0)::int AS page_views FROM sessions WHERE started_at>=?").bind(since).first<{ sessions: number; visitors: number; booked: number; page_views: number }>(),
     db().prepare("SELECT coalesce(utm_source, referrer_host, 'direct') AS source, count(*)::int AS sessions, count(booked_at)::int AS booked FROM sessions WHERE started_at>=? GROUP BY 1 ORDER BY 2 DESC LIMIT 12").bind(since).all<{ source: string; sessions: number; booked: number }>(),
-    db().prepare("SELECT coalesce(landing_path,'-') AS path, count(*)::int AS sessions, count(booked_at)::int AS booked FROM sessions WHERE started_at>=? GROUP BY 1 ORDER BY 2 DESC LIMIT 10").bind(since).all<{ path: string; sessions: number; booked: number }>(),
+    db().prepare("SELECT coalesce(nullif(regexp_replace(landing_path, ?, ''), ''), '/') AS path, count(*)::int AS sessions, count(booked_at)::int AS booked FROM sessions WHERE started_at>=? GROUP BY 1 ORDER BY 2 DESC LIMIT 10").bind("[?#].*$", since).all<{ path: string; sessions: number; booked: number }>(),
     db().prepare("SELECT coalesce(device,'unknown') AS device, count(*)::int AS sessions FROM sessions WHERE started_at>=? GROUP BY 1 ORDER BY 2 DESC").bind(since).all<{ device: string; sessions: number }>(),
     db().prepare("SELECT to_char(started_at AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD') AS day, count(*)::int AS sessions, count(booked_at)::int AS booked FROM sessions WHERE started_at>=? GROUP BY 1 ORDER BY 1").bind(since).all<{ day: string; sessions: number; booked: number }>(),
     db().prepare(`SELECT s.*, v.sessions AS visits, (SELECT string_agg(coalesce(e.path,'·'), ' → ' ORDER BY e.created_at, e.id) FROM track_events e WHERE e.session_id=s.id AND e.event='page_view') AS trail
@@ -132,4 +132,25 @@ export async function trafficReport(days = 30) {
     funnel: [["방문", funnelMap.page_view || 0], ["예약 버튼 클릭", funnelMap.cta_click || 0], ["시간 선택", funnelMap.slot_selected || 0], ["예약 제출", funnelMap.booking_submit || 0], ["예약 완료", funnelMap.booking_created || 0]] as [string, number][],
     recent: recent.results.map((r) => ({ ...shapeSession(r), trail: r.trail })),
   };
+}
+
+// Use the same recorded events as the visitor journey, not the legacy event_totals table.
+export async function overviewMetrics() {
+  const since = new Date(Date.now() - 30 * 86400000).toISOString();
+  return (await db().prepare(`
+    SELECT to_char(e.created_at AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD') AS day,
+      e.event,
+      CASE
+        WHEN lower(coalesce(s.utm_source, s.referrer_host, 'direct')) ~ '(^|[.])google([.]|$)' THEN 'google'
+        WHEN lower(coalesce(s.utm_source, s.referrer_host, 'direct')) ~ '(^|[.])naver([.]|$)' THEN 'naver'
+        WHEN lower(coalesce(s.utm_source, s.referrer_host, 'direct')) ~ '(^|[.])threads([.]|$)' THEN 'threads'
+        WHEN lower(coalesce(s.utm_source, s.referrer_host, 'direct')) ~ '(^|[.])instagram([.]|$)' THEN 'instagram'
+        ELSE 'direct'
+      END AS source,
+      CASE WHEN e.path ~ ? THEN 'zh-TW' ELSE 'ko' END AS locale,
+      count(*)::int AS count
+    FROM track_events e LEFT JOIN sessions s ON s.id=e.session_id
+    WHERE e.created_at>=? AND e.event IN ('page_view', 'reading_complete')
+    GROUP BY 1,2,3,4 ORDER BY 1
+  `).bind("^/zh-TW([/?#]|$)", since).all<{ day: string; event: string; source: string; locale: string; count: number }>()).results;
 }

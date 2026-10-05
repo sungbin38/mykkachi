@@ -679,7 +679,7 @@ export function AdminDashboard({ name }: { name: string }) {
                         })}
                       </div>
                       <p className="panel-footnote">
-                        {counts.views ? "UTM 기반 조회 집계입니다. 고유 방문자 수와 다를 수 있어요." : "실제 조회 기록이 쌓이면 채널별 유입을 표시합니다."}
+                        {counts.views ? "UTM·리퍼러 기반 조회 집계입니다. 고유 방문자 수와 다를 수 있어요." : "실제 조회 기록이 쌓이면 채널별 유입을 표시합니다."}
                       </p>
                       </> : (
                         <div className="quiet-empty">
