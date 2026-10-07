@@ -192,7 +192,7 @@ export const formatSlot = (date: string, hour: number) => {
 };
 export function notificationConfigured() {
   const r = runtime();
-  return !!(r.RESEND_API_KEY && r.NOTIFY_EMAIL);
+  return !!r.RESEND_API_KEY;
 }
 async function sendMail(to: string, subject: string, text: string) {
   const r = runtime();
@@ -207,7 +207,7 @@ async function sendMail(to: string, subject: string, text: string) {
   return true;
 }
 const bankLine = () => (BANK.account ? `${BANK.name} ${bankAccountDisplay()} (예금주 ${BANK.holder || "마이까치"})` : "계좌는 확인 메일로 따로 안내드려요.");
-async function notifyOwner(b: Booking) {
+export async function notifyOwner(b: Booking) {
   const r = runtime();
   const reportOnly = b.product === "report";
   const when = b.date !== null && b.hour !== null ? formatSlot(b.date, b.hour) : "PDF 리포트 · 이메일 수령";
@@ -215,11 +215,21 @@ async function notifyOwner(b: Booking) {
   const src = b.source;
   const route = src ? [src.utmSource || src.referrerHost || "직접 방문", src.utmCampaign, src.landingPath].filter(Boolean).join(" · ") : "추적 정보 없음";
   const owner = [
-    `새 ${productName} 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``, `상품: ${productName}`, `신청 언어: ${b.locale === "zh-TW" ? "대만 번체 (고객 시간 UTC+8 / 관리자 KST)" : "한국어"}`, `진행: ${when}`, `이름: ${b.name} / 입금자명: ${b.depositName || b.name}`, `이메일: ${b.email}`, `연락처: ${b.phone || "-"}`,
-    `생년월일: ${b.birthDate} (${b.calendar === "lunar" ? "음력" : "양력"}) ${b.birthUnknown ? "시간 모름" : b.birthTime}`, `금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인)" : ""} · 입금 기한 ${HOLD_MINUTES}분`,
-    `유입: ${route}`, ``, `사연:`, b.story || "(없음)", ``, `스튜디오에서 확인: /admin`,
+    `새 ${productName} 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``,
+    `예약번호: ${b.id}`, `접수 시각: ${b.createdAt}`, `상품: ${productName}`,
+    `신청 언어: ${b.locale === "zh-TW" ? "대만 번체 (고객 시간 UTC+8 / 관리자 KST)" : "한국어"}`,
+    `진행: ${b.date ? `${b.date} · ` : ""}${when}${b.date ? " (한국시간 KST)" : ""}`, ``,
+    `이름: ${b.name}`, `이메일: ${b.email}`, `연락처: ${b.phone || "미입력"}`,
+    `성별: ${b.gender === "female" ? "여성" : b.gender === "male" ? "남성" : b.gender || "미입력"}`,
+    `생년월일: ${b.birthDate}`, `양력/음력: ${b.calendar === "lunar" ? "음력" : "양력"}`,
+    `태어난 시간: ${b.birthUnknown ? "시간 모름" : b.birthTime || "미입력"}`,
+    `상담 주제: ${b.topic || "미입력"}`, ``, `사연:`, b.story || "(없음)", ``,
+    `입금자명: ${b.depositName || b.name}`, `금액: ${formatWon(b.amount)}`,
+    `후기 활용 동의: ${b.marketingConsent ? "동의 (할인 적용)" : "미동의"}`,
+    `입금 기한: ${b.holdUntil || `신청 후 ${HOLD_MINUTES}분`}`, ``,
+    `유입: ${route}`, ``, `스튜디오에서 확인: https://mykkachi.com/admin`,
   ];
-  if (r.NOTIFY_EMAIL) await sendMail(r.NOTIFY_EMAIL, `[돈쌤] 새 예약 요청 · ${when} · ${b.name}`, owner.join("\n"));
+  await sendMail(r.NOTIFY_EMAIL || "sungbin3833@gmail.com", `[돈쌤] 새 예약 요청 · ${when} · ${b.name}`, owner.join("\n"));
   if (b.locale === "zh-TW") {
     const customerWhen = b.date !== null && b.hour !== null ? bookingSlotLabel(b.date, b.hour, "zh-TW") : "八字 PDF 報告・電子郵件寄送";
     const cutoff = b.holdUntil ? new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(b.holdUntil)) : "30 分鐘內";

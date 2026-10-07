@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "node --env-file=.env --import tsx scripts/db-migrate.ts",
     "test:booking": "node --env-file=.env --conditions=react-server --import tsx tests/booking-products.ts",
+    "test:booking-email": "node --conditions=react-server --import tsx --test tests/booking-email.test.ts",
     "test:db": "node --env-file=.env --import tsx --test tests/db.test.ts",
     "test:admin": "node --env-file=.env --import tsx tests/admin-integration.ts",
     "test:auth": "node --env-file=.env tests/login-integration.mjs"
