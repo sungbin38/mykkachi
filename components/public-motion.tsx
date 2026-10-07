@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-// DESIGN_VARIANCE 7 / MOTION_INTENSITY 5 / VISUAL_DENSITY 3.
+// DESIGN_VARIANCE 7 / MOTION_INTENSITY 4 / VISUAL_DENSITY 3.
 // One-time reveals establish reading order; native scrolling stays in control.
 export function PublicMotion() {
   const pathname = usePathname();

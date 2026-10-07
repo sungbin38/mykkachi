@@ -11,10 +11,10 @@ export async function prepareForward(raw: ArrayBuffer, subject: string) {
   const parsed = await PostalMime.parse(raw, { attachmentEncoding: "base64" });
   if (parsed.headers.some(h => h.key.toLowerCase() === "x-mykkachi-forwarded")) return null;
   return {
-    from: `마이까치 문의 <${CONTACT_EMAIL}>`,
+    from: `돈쌤 문의 <${CONTACT_EMAIL}>`,
     to: [INBOUND_FORWARD_TO],
     replyTo: parsed.from?.address,
-    subject: `[마이까치 문의] ${(subject || "(제목 없음)").replace(/[\r\n]/g, " ").slice(0, 240)}`,
+    subject: `[돈쌤 문의] ${(subject || "(제목 없음)").replace(/[\r\n]/g, " ").slice(0, 240)}`,
     text: parsed.text || (parsed.html ? "" : "(본문 없음)"),
     html: parsed.html || undefined,
     headers: { "X-MyKkachi-Forwarded": "1" },

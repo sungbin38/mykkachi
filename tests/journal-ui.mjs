@@ -26,7 +26,7 @@ try {
     await page.evaluate(() => scrollTo(0, 0));
     const paths = await page.locator('.journal-card').evaluateAll((cards) => cards.map((c) => c.getAttribute('href')));
     urls.push(...paths);
-    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://mykkachi.vercel.app' + route);
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://mykkachi.com' + route);
     const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
     assert.equal(schema.mainEntity.numberOfItems, 30);
     await page.screenshot({ path: `${output}/${prefix ? 'taiwan' : 'korean'}-desktop.png`, fullPage: true });
@@ -50,7 +50,7 @@ try {
     assert.ok(await page.locator('.article-art img').evaluate((img) => img.complete && img.naturalWidth > 0));
     const [post, crumbs] = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
     assert.equal(post['@type'], 'BlogPosting');
-    assert.equal(post.url, 'https://mykkachi.vercel.app' + route);
+    assert.equal(post.url, 'https://mykkachi.com' + route);
     assert.equal(crumbs.itemListElement.length, 3);
     assert.equal(await page.locator('meta[property="og:image"]').getAttribute('content'), post.image.url);
     assert.equal(await page.locator('meta[name="twitter:card"]').getAttribute('content'), 'summary_large_image');
@@ -82,7 +82,7 @@ try {
   }
   assert.equal((await page.request.get(origin + '/journal/not-a-real-letter')).status(), 404);
   const sitemap = await (await page.request.get(origin + '/sitemap.xml')).text();
-  for (const route of urls) assert.ok(sitemap.includes('https://mykkachi.vercel.app' + route + '<'), `sitemap ${route}`);
+  for (const route of urls) assert.ok(sitemap.includes('https://mykkachi.com' + route + '<'), `sitemap ${route}`);
   assert.equal((sitemap.match(/<image:image>/g) || []).length, 60);
   assert.deepEqual(errors, []);
   console.log('PASS 60 SSR article routes, two locales, images, article SEO, TOC, related cards, responsive layouts, 404, and image sitemap');

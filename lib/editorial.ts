@@ -10,10 +10,14 @@ import { cache } from "react";
 export type Editorial = Article & { body: string };
 // Keep saved editorial snapshots intact while presenting the current brand.
 const currentBrandCopy = (text: string) => text
-  .replaceAll("루운은", "마이까치는")
-  .replaceAll("루운으로", "마이까치로")
-  .replaceAll("루운", "마이까치")
-  .replaceAll("LUUN", "MY KKACHI");
+  .replaceAll("마이까치는", "돈쌤은")
+  .replaceAll("마이까치로", "돈쌤으로")
+  .replaceAll("마이까치", "돈쌤")
+  .replaceAll("MY KKACHI", "DON SSAEM")
+  .replaceAll("루운은", "돈쌤은")
+  .replaceAll("루운으로", "돈쌤으로")
+  .replaceAll("루운", "돈쌤")
+  .replaceAll("LUUN", "DON SSAEM");
 export const articles = cache(async (locale: Locale): Promise<Editorial[]> => {
   const base = allArticles(locale).map((a) => ({ ...a, body: articleBody(a) }));
   try {

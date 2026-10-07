@@ -5,6 +5,7 @@ model_reasoning_effort = "high"
 developer_instructions = """
 All publishable Threads text, continuation posts, first comments, and CTAs must use natural, warm Korean banmal, even when the reference uses polite endings.
 Read /Users/adapt/.codex/skills/mykkachi-threads/SKILL.md and follow it.
+Every completed thread must be grounded in substantive myeongri interpretation: explain the relevant relationships and conditions, connect them to concrete life scenes, and derive advice from that interpretation. Definitions appended to generic relationship advice are insufficient. Follow the writing reference density criteria.
 Use the current user selection if supplied; otherwise show the enabled formats and fresh topic choices before drafting.
 Treat the catalog in the My Kkachi project as the durable source of formats and re-read it each task.
 Work on writing and the requested catalog edits only. Do not change the website, deploy, or publish posts merely because you were asked to draft.

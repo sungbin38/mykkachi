@@ -20,11 +20,11 @@ export async function ArticlePage({ slug, locale }: { slug: string; locale: Loca
   const related = [...others.filter((item) => item.category === a.category), ...others.filter((item) => item.category !== a.category)].slice(0, 3);
   return <><SiteHeader locale={locale} /><main id="main-content" tabIndex={-1} className="shell">
     <article className="article-body illustrated-article">
-      <nav className="article-breadcrumb" aria-label={zh ? "導覽路徑" : "현재 위치"}><a href={homePath(locale)}>{zh ? "首頁" : "홈"}</a><span aria-hidden="true">/</span><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "까치의 편지"}</a><span aria-hidden="true">/</span><span>{a.category}</span></nav>
-      <header className="article-heading"><p className="tiny-label muted">A LETTER FROM KKACHI · {a.category}</p><h1>{a.title}</h1>
-        <p className="article-meta">{zh ? "MY KKACHI 編輯" : "마이까치 편집부"}<span>·</span><time dateTime={a.date}>{a.date}</time><span>·</span>{readingMinutes(a.body, locale)}{zh ? " 分鐘閱讀" : "분 읽기"}</p>
+      <nav className="article-breadcrumb" aria-label={zh ? "導覽路徑" : "현재 위치"}><a href={homePath(locale)}>{zh ? "首頁" : "홈"}</a><span aria-hidden="true">/</span><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><span aria-hidden="true">/</span><span>{a.category}</span></nav>
+      <header className="article-heading"><p className="tiny-label muted">NOTES FROM DON SSAEM · {a.category}</p><h1>{a.title}</h1>
+        <p className="article-meta">{zh ? "DON SSAEM 編輯" : "돈쌤 편집부"}<span>·</span><time dateTime={a.date}>{a.date}</time><span>·</span>{readingMinutes(a.body, locale)}{zh ? " 分鐘閱讀" : "분 읽기"}</p>
       </header>
-      <figure className="article-art"><Image src={a.image.src} alt={a.image.alt} width={a.image.width} height={a.image.height} sizes="(max-width: 800px) 100vw, 800px" preload /><figcaption>{zh ? "小喜鵲陪你，把命理讀成生活。" : "내 곁의 작은 까치와 함께 읽는 사주 이야기."}</figcaption></figure>
+      <figure className="article-art"><Image src={a.image.src} alt={a.image.alt} width={a.image.width} height={a.image.height} sizes="(max-width: 800px) 100vw, 800px" preload /><figcaption>{zh ? "Don 老師陪你，把命理讀成生活。" : "돈쌤과 함께, 내 삶에 대입해 읽는 사주 이야기."}</figcaption></figure>
       {headings.length > 0 && <nav className="article-toc" aria-label={zh ? "文章目錄" : "이 글의 목차"}><p className="tiny-label">{zh ? "這封信裡" : "이 편지에 담긴 이야기"}</p><ol>{headings.map((b) => <li key={b.index}><a href={`#section-${b.index}`}>{b.text.slice(3)}</a></li>)}</ol></nav>}
       <div className="article-prose">{blocks.map((text, index) => text.startsWith("## ")
         ? <h2 id={`section-${index}`} key={index}>{text.slice(3)}</h2>
@@ -44,7 +44,7 @@ export async function articleMetadata(slug: string, locale: Locale): Promise<Met
   return {
     title: a.title, description: a.excerpt,
     alternates: { canonical: url, languages: languageAlternates(`/journal/${slug}`) },
-    openGraph: { title: a.title, description: a.excerpt, url, siteName: "MY KKACHI", type: "article", locale: locale === "ko" ? "ko_KR" : "zh_TW", publishedTime: "2026-10-05", modifiedTime: a.date, images: [{ url: a.image.src, width: a.image.width, height: a.image.height, alt: a.image.alt }] },
+    openGraph: { title: a.title, description: a.excerpt, url, siteName: "DON SSAEM", type: "article", locale: locale === "ko" ? "ko_KR" : "zh_TW", publishedTime: "2026-10-05", modifiedTime: a.date, images: [{ url: a.image.src, width: a.image.width, height: a.image.height, alt: a.image.alt }] },
     twitter: { card: "summary_large_image", title: a.title, description: a.excerpt, images: [a.image.src] },
   };
 }

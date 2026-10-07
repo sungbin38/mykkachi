@@ -50,7 +50,7 @@ export function generatePackage(topic: string, locale: Locale): ContentItem[] {
     {
       title: a.hook,
       body: a.excerpt,
-      label: zh ? "MY KKACHI 五行筆記" : "MY KKACHI 사주 노트",
+      label: zh ? "DON SSAEM 五行筆記" : "DON SSAEM 사주 노트",
       footer: zh
         ? "收藏這份筆記，慢慢讀懂自己。"
         : "저장해두고, 조금씩 나를 알아가요.",
@@ -73,7 +73,7 @@ export function generatePackage(topic: string, locale: Locale): ContentItem[] {
         ? "從個人檔案連結，免費查看你的八字與五行。\n追蹤 @mykkachi.tw，聽你說故事，陪你看明天。"
         : "프로필 링크에서 내 사주와 오행을 무료로 확인하세요.\n@mykkachi · 시간이 걸리더라도, 제대로 봐드리겠습니다.",
       label: "A LITTLE BIRD, BY YOUR SIDE",
-      footer: zh ? "MY KKACHI · 不需註冊" : "MY KKACHI · 회원가입 없이 무료",
+      footer: zh ? "DON SSAEM · 不需註冊" : "DON SSAEM · 회원가입 없이 무료",
       index: a.sections.length + 1,
     },
   ];
@@ -87,7 +87,7 @@ export function generatePackage(topic: string, locale: Locale): ContentItem[] {
         ? articleBody(a)
         : channel === "threads"
           ? `${a.hook}\n\n${takeaways.map((t, i) => `${i + 1}. ${t}${zh ? "。" : "."}`).join("\n")}\n\n${zh ? "你最有共鳴的是哪一句？" : "어떤 문장이 가장 와닿나요?"}\n${url("threads")}`
-          : `${a.hook}\n\n${a.excerpt}\n\n${zh ? "收藏起來，下次再讀。免費八字在個人檔案連結。" : "저장해두고 천천히 읽어보세요. 무료 사주는 프로필 링크에서."}\n\n${zh ? "#八字 #五行 #自我探索 #MYKKACHI" : "#사주 #오행 #무료사주 #나를알아가는시간 #마이까치"}\n\n${url("instagram")}`,
+          : `${a.hook}\n\n${a.excerpt}\n\n${zh ? "收藏起來，下次再讀。免費八字在個人檔案連結。" : "저장해두고 천천히 읽어보세요. 무료 사주는 프로필 링크에서."}\n\n${zh ? "#八字 #五行 #自我探索 #DONSSAEM" : "#사주 #오행 #무료사주 #나를알아가는시간 #돈쌤"}\n\n${url("instagram")}`,
   }));
 }
 export function seoChecks(

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Download, Plus, Workflow } from "lucide-react";
-import { MASCOT_IMAGE } from "@/lib/brand-assets";
+import { MASCOT_PROFILE_IMAGE } from "@/lib/brand-assets";
 
 export function SocialProfile({
   onCreate,
@@ -13,20 +13,20 @@ export function SocialProfile({
     <section className="studio-panel social-profile-panel">
       <Image
         className="social-profile-image"
-        src={MASCOT_IMAGE}
-        alt="크림색 바탕에서 청록색 날개를 흔드는 동글동글한 3D 마이까치 캐릭터"
+        src={MASCOT_PROFILE_IMAGE}
+        alt="책을 든 카피바라 사주 선생님 돈쌤의 3D 캐릭터"
         width={144}
         height={144}
       />
       <div className="social-profile-copy">
         <span className="tiny-label">THREADS · INSTAGRAM</span>
-        <h2>마이까치의 소셜 콘텐츠 준비</h2>
+        <h2>돈쌤의 소셜 콘텐츠 준비</h2>
         <p>프로필을 내려받고, Threads 글과 인스타 카드뉴스를 준비하세요.</p>
         <div className="inline-actions">
           <a
             className="outline-button"
-            href={MASCOT_IMAGE}
-            download="mykkachi-social-profile.png"
+            href={MASCOT_PROFILE_IMAGE}
+            download="donssaem-social-profile.png"
           >
             <Download size={15} /> 프로필 사진 PNG
           </a>

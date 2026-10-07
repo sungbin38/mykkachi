@@ -10,7 +10,7 @@ import { BrandMascot } from "./brand-mascot";
 function Conversation({ story, locale }: { story: ReviewStory; locale: Locale }) {
   const zh = locale === "zh-TW";
   const messages = story.messages.filter(message => message.preview);
-  return <div className={`review-chat review-chat-${story.theme}`} aria-label={zh ? `${story.clientName} 與喜鵲老師的諮詢對話` : `${story.clientName}님과 까치 선생님의 상담 대화`}>
+  return <div className={`review-chat review-chat-${story.theme}`} aria-label={zh ? `${story.clientName} 與Don 老師的諮詢對話` : `${story.clientName}님과 돈쌤의 상담 대화`}>
     <div className="review-chat-header">
       <ChevronLeft size={22} aria-hidden="true" />
       <span className="review-avatar" aria-hidden="true">{story.clientName[0]}</span>
@@ -21,7 +21,7 @@ function Conversation({ story, locale }: { story: ReviewStory; locale: Locale })
       {messages.map((message, index) => {
         const startsGroup = index === 0 || messages[index - 1].role !== message.role;
         return <div key={index} className={`review-message review-message-${message.role}${startsGroup ? " review-message-first" : ""}`}>
-          {startsGroup && <span className="review-sender">{message.role === "client" ? story.clientName : zh ? "喜鵲老師" : "까치 선생님"}</span>}
+          {startsGroup && <span className="review-sender">{message.role === "client" ? story.clientName : zh ? "Don 老師" : "돈쌤"}</span>}
           <div className="review-bubble-row"><p className="review-bubble">{message.text}</p>{message.time && <span className="review-message-time">{message.time}</span>}</div>
         </div>;
       })}
@@ -46,11 +46,10 @@ function ReviewCard({ story, locale, preview = false }: { story: ReviewStory; lo
 
 export function FeaturedReviews({ locale = "ko" }: { locale?: Locale }) {
   const zh = locale === "zh-TW";
-  const stories = getReviewStories(locale);
   return <section id="reviews" className="reviews-featured" aria-labelledby="reviews-heading" lang={zh ? "zh-Hant-TW" : "ko"}>
     <div className="shell">
       <div className="reviews-section-heading" data-reveal>
-        <div><h2 id="reviews-heading">{zh ? <>面對選擇時，<br />一起聊聊心裡的事。</> : <>선택 앞에서,<br />함께 나누는 이야기.</>}</h2></div>
+        <div><h2 id="reviews-heading">{zh ? <>面對選擇時，<br />一起聊聊心裡的事。</> : <>선택 앞에서,<br />함께 나누는 이야기.</>}</h2></div><Link className="text-link" href={localPath(locale, "/reviews")}>{zh ? "閱讀所有故事" : "상담 이야기 더 보기"}<ArrowUpRight size={16} /></Link>
       </div>
       <div className="reviews-grid">{getFeaturedReviews(locale).map(story => <ReviewCard preview key={story.id} story={story} locale={locale} />)}</div>
     </div>
@@ -65,8 +64,8 @@ export function ReviewsCollection({ locale = "ko" }: { locale?: Locale }) {
   return <main id="main-content" tabIndex={-1} className="reviews-page shell" lang={zh ? "zh-Hant-TW" : "ko"}>
     <Link href={`${homePath(locale)}#reviews`} className="reviews-back">{zh ? "返回首頁" : "메인으로 돌아가기"}</Link>
     <header className="reviews-page-heading">
-      <p className="review-eyebrow">DEAR KKACHI / OUR CONVERSATIONS</p>
-      <h1>{zh ? <>你的煩惱，<br /><em>喜鵲的回信。</em></> : <>당신의 고민,<br /><em>까치의 답장.</em></>}</h1>
+      <p className="review-eyebrow">DON SSAEM / OUR CONVERSATIONS</p>
+      <h1>{zh ? <>你的煩惱，<br /><em>Don 老師的回信。</em></> : <>당신의 고민,<br /><em>돈쌤의 답장.</em></>}</h1>
     </header>
     <div className="reviews-filters" role="group" aria-label={zh ? "依領域篩選" : "상담 분야별 필터"}>
       {reviewCategories.map(item => <button key={item.id} type="button" aria-pressed={category === item.id} aria-controls="reviews-results" onClick={() => setCategory(item.id)}>
@@ -75,6 +74,6 @@ export function ReviewsCollection({ locale = "ko" }: { locale?: Locale }) {
     </div>
     <div className="reviews-collection-label"><h2>{reviewCategories.find(item => item.id === category)?.[locale]} {zh ? "故事" : "이야기"}</h2><span role="status" aria-live="polite">{visibleStories.length}{zh ? " 篇" : "편"}</span></div>
     <div key={category} id="reviews-results" className="reviews-grid reviews-collection">{visibleStories.map(story => <ReviewCard key={story.id} story={story} locale={locale} />)}</div>
-    <div className="reviews-closing"><BrandMascot portrait size={64} /><p>{zh ? "你的故事，也可以慢慢說給我聽。" : "당신의 이야기도, 천천히 들려주세요."}</p><Link className="primary-button" href={`${homePath(locale)}#consultation`}>{zh ? "了解喜鵲老師的諮詢方式" : "까치 선생님 상담 안내"}</Link></div>
+    <div className="reviews-closing"><BrandMascot portrait size={64} /><p>{zh ? "你的故事，也可以慢慢說給我聽。" : "당신의 이야기도, 천천히 들려주세요."}</p><Link className="primary-button" href={`${homePath(locale)}#consultation`}>{zh ? "了解Don 老師的諮詢方式" : "돈쌤 상담 안내"}</Link></div>
   </main>;
 }

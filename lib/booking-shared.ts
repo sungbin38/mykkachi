@@ -28,7 +28,7 @@ export const bookingStatusLabel = (status: BookingStatus, product: BookingProduc
 /** Optional, discounted: lets us reuse the consultation story anonymously. Marketing contact itself is part of the required agreement (CONTACT_CONSENT_TEXT). */
 export const MARKETING_CONSENT_TEXT = "상담 또는 리포트에 담긴 사연과 풀이를 이름과 개인정보 없이 마케팅용 후기·콘텐츠에 활용하는 데 동의합니다.";
 /** Required for every booking: data use plus marketing email/phone contact from My Kkachi. */
-export const CONTACT_CONSENT_TEXT = "입력한 정보는 상담 예약·리포트 신청·입금 확인·리포트 발송에 사용하고, 남긴 이메일과 연락처로 마이까치의 소식·이벤트 안내를 보내드려요. 안내 수신은 언제든 답장으로 거절할 수 있고, 이용 뒤 요청하시면 정보를 지워드려요. 동의합니다. *";
+export const CONTACT_CONSENT_TEXT = "입력한 정보는 상담 예약·리포트 신청·입금 확인·리포트 발송에 사용하고, 남긴 이메일과 연락처로 돈쌤의 소식·이벤트 안내를 보내드려요. 안내 수신은 언제든 답장으로 거절할 수 있고, 이용 뒤 요청하시면 정보를 지워드려요. 동의합니다. *";
 export const DURATION_TEXT = "최대 1시간 (이야기가 정리되면 더 일찍 끝날 수도 있어요)";
 export const HOLD_MINUTES = 30;
 export const STORY_EXAMPLES: { title: string; text: string }[] = [

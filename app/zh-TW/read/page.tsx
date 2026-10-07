@@ -9,7 +9,7 @@ export const metadata = {
     languages: { "ko-KR": "/read", "zh-TW": "/zh-TW/read" },
   },
   openGraph: {
-    title: "MY KKACHI 免費八字排盤",
+    title: "DON SSAEM 免費八字排盤",
     description: "了解你的日主與五行比例",
     locale: "zh_TW",
     images: [MASCOT_OG_IMAGE],

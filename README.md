@@ -8,9 +8,9 @@
 
 - 저장소: https://github.com/sungbin38/mykkachi
 - 고객용 사이트: Next.js, Vercel 프로젝트 `mykkachi` (`sungbin3833@gmail.com` 개인 계정)
-- 공개 주소: https://mykkachi.vercel.app
-- 상담 예약: https://mykkachi.vercel.app/book
-- 관리자: https://mykkachi.vercel.app/admin — 관리자 비밀번호로 로그인합니다. 사이트 메뉴에는 노출하지 않습니다.
+- 공개 주소: https://mykkachi.com
+- 상담 예약: https://mykkachi.com/book
+- 관리자: https://mykkachi.com/admin — 관리자 비밀번호로 로그인합니다. 사이트 메뉴에는 노출하지 않습니다.
 - 데이터베이스: Neon PostgreSQL **Free** 요금제, `mykkachi-db` (개인 Vercel 팀 소유).
 - DB 관리 화면: https://vercel.com/d/dashboard/integrations/neon/icfg_zuO0VD8MxWpFAiWguP6hsFnI/resources/store_eyd7BfF6w8ny1l8Q
 - `studio/`에는 이전 Sites 소스만 보관하며 현재 빌드·업로드 대상에서 제외합니다.

@@ -45,13 +45,13 @@ export async function cardBlob(slide: CardSlide): Promise<Blob> {
   c.fillRect(0, 0, 1080, 1350);
   c.fillStyle = fg;
   c.font = "600 43px Pretendard, sans-serif";
-  c.fillText("마이까치", 85, 115);
+  c.fillText("돈쌤", 85, 115);
   c.font = "16px DM Sans, sans-serif";
-  c.fillText("MY KKACHI", 86, 143);
+  c.fillText("DON SSAEM", 86, 143);
   c.font = "18px Pretendard, sans-serif";
   c.textAlign = "right";
   c.fillText(
-    `${String(slide.index + 1).padStart(2, "0")} / MY KKACHI JOURNAL`,
+    `${String(slide.index + 1).padStart(2, "0")} / DON SSAEM JOURNAL`,
     995,
     110,
   );

@@ -93,7 +93,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
         context.registerTool(
           {
             name: "calculate_luun_reading",
-            title: "마이까치 사주 계산",
+            title: "돈쌤 사주 계산",
             description:
               "Calculate a free birth chart and show the reading. Birth data stays in the browser.",
             inputSchema: {
@@ -139,7 +139,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
     if (!result || !e) return;
     try {
       await navigator.clipboard.writeText(
-        `MY KKACHI · ${e.title[zh ? 1 : 0]}\n${blocks[0].text}\n${location.origin}${zh ? "/zh-TW" : ""}/read`,
+        `DON SSAEM · ${e.title[zh ? 1 : 0]}\n${blocks[0].text}\n${location.origin}${zh ? "/zh-TW" : ""}/read`,
       );
       toast.success(
         zh
@@ -163,7 +163,7 @@ export function ReadingPage({ locale }: { locale: Locale }) {
           title: e.title[zh ? 1 : 0],
           body: e.description[zh ? 1 : 0],
           label: zh ? `我的五行 · ${e.han}` : `나의 오행 · ${e.ko}(${e.han})`,
-          footer: "MY KKACHI · A little bird, by your side.",
+          footer: "DON SSAEM · Take your time. Find your way.",
           index: 0,
         },
         "mykkachi-my-reading.png",

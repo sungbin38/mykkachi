@@ -4,16 +4,16 @@ import type { Metadata } from "next";
 import { HomePage } from "@/components/site";
 import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const metadata: Metadata = {
-  title: { absolute: "MY KKACHI｜一對一八字諮詢・免費五行解析" },
+  title: { absolute: "DON SSAEM｜一對一八字諮詢・專屬八字報告" },
   description:
-    "MY KKACHI 聽你說故事，陪你看明天。了解 KakaoTalk 一對一八字諮詢，或先免費探索你的八字與五行，從感情、工作到日常，慢慢認識自己。",
+    "DON SSAEM 陪你慢慢說，找到自己的選擇。由老師親自閱讀命盤與故事，可選擇 KakaoTalk 一對一諮詢，或只申請約 10 頁的 PDF 八字報告。",
   alternates: {
     canonical: "/zh-TW",
     languages: { "ko-KR": "/", "zh-TW": "/zh-TW" },
   },
   openGraph: {
-    title: "MY KKACHI — 聽你說故事，陪你看明天",
-    description: "一隻小喜鵲，陪在你身旁。一對一八字諮詢介紹與免費五行解讀。",
+    title: "DON SSAEM — 聽你說故事，陪你看明天",
+    description: "水豚 Don 老師，陪你梳理眼前的選擇。由人親自解讀的八字諮詢與專屬報告。",
     locale: "zh_TW",
     images: [MASCOT_OG_IMAGE],
   },

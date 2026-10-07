@@ -377,7 +377,7 @@ export function AdminDashboard({ name }: { name: string }) {
     >
       <Sidebar className="studio-sidebar">
         <SidebarHeader className="studio-brand">
-          <Link href="/" aria-label="마이까치 홈페이지">
+          <Link href="/" aria-label="돈쌤 홈페이지">
             <Logo />
           </Link>
           <span className="studio-word">STUDIO</span>
@@ -388,7 +388,7 @@ export function AdminDashboard({ name }: { name: string }) {
               <Leaf size={19} />
             </span>
             <div>
-              <strong>마이까치 워크스페이스</strong>
+              <strong>돈쌤 워크스페이스</strong>
               <p>시간이 걸리더라도, 제대로 봐드리겠습니다</p>
             </div>
           </div>
@@ -487,11 +487,11 @@ export function AdminDashboard({ name }: { name: string }) {
               <span className="tiny-label muted">
                 {section === "overview"
                   ? "YOUR BRAND, IN BLOOM"
-                  : "MY KKACHI CONTENT STUDIO"}
+                  : "DON SSAEM CONTENT STUDIO"}
               </span>
               <h1>
                 {section === "overview"
-                  ? "마이까치의 오늘을 한눈에."
+                  ? "돈쌤의 오늘을 한눈에."
                   : NAV.find((n) => n.id === section)?.label}
               </h1>
               <p>
@@ -501,7 +501,7 @@ export function AdminDashboard({ name }: { name: string }) {
                     bookings: "상담 시간을 열고, 입금을 확인하고, 들어온 이야기를 살피세요.",
                     traffic: "누가 언제 어디서 들어와 어떻게 예약까지 갔는지 보세요.",
                     content:
-                      "하나의 이야기, 세 개의 채널. 마이까치의 목소리로 전해요.",
+                      "하나의 이야기, 세 개의 채널. 돈쌤의 목소리로 전해요.",
                     calendar: "발행을 준비하는 콘텐츠의 일정을 확인하세요.",
                     automation:
                       "반복되는 준비는 줄이고, 중요한 검토에 집중하세요.",
@@ -546,7 +546,7 @@ export function AdminDashboard({ name }: { name: string }) {
           {loading ? (
             <div className="studio-empty">
               <Loader2 className="loading-ring" />
-              <p>마이까치의 기록을 불러오고 있어요.</p>
+              <p>돈쌤의 기록을 불러오고 있어요.</p>
             </div>
           ) : error && section !== "brand" ? (
             <>
@@ -574,7 +574,7 @@ export function AdminDashboard({ name }: { name: string }) {
                       <h2>
                         {items.length
                           ? "준비한 이야기를, 세상과 만날 이야기로."
-                          : "마이까치의 첫 이야기를 시작해볼까요?"}
+                          : "돈쌤의 첫 이야기를 시작해볼까요?"}
                       </h2>
                       <p>
                         {items.length
@@ -1159,7 +1159,7 @@ export function AdminDashboard({ name }: { name: string }) {
                   <div className="connection-grid">
                     {[
                       {
-                        name: "마이까치 SEO 저널",
+                        name: "돈쌤 SEO 저널",
                         icon: BookOpen,
                         status: "사이트 연결됨",
                         copy: "검토 완료한 콘텐츠를 저널에 바로 발행할 수 있어요.",
@@ -1257,7 +1257,7 @@ export function AdminDashboard({ name }: { name: string }) {
             </>
           )}
           <footer className="studio-footer">
-            <span>MY KKACHI STUDIO · 작은 이야기들이, 더 큰 인연으로.</span>
+            <span>DON SSAEM STUDIO · 작은 이야기들이, 더 큰 인연으로.</span>
             <span>Asia/Seoul · 실제 기록만 표시</span>
           </footer>
         </main>
@@ -1267,7 +1267,7 @@ export function AdminDashboard({ name }: { name: string }) {
           <DialogHeader>
             <DialogTitle>하나의 주제, 세 개의 이야기.</DialogTitle>
             <DialogDescription>
-              마이까치 편집부의 주제별 원고를 바탕으로 채널에 맞는 초안을 만듭니다.
+              돈쌤 편집부의 주제별 원고를 바탕으로 채널에 맞는 초안을 만듭니다.
             </DialogDescription>
           </DialogHeader>
           <label className="field-label" htmlFor="generate-topic">
@@ -1552,7 +1552,7 @@ function ContentEditor({
             ) : (
               <div className="content-preview">
                 <span className="tiny-label">
-                  {edit.channel === "seo" ? "MY KKACHI JOURNAL" : "@MYKKACHI"}
+                  {edit.channel === "seo" ? "DON SSAEM JOURNAL" : "@MYKKACHI"}
                 </span>
                 <h2>{edit.title}</h2>
                 {edit.body
@@ -1582,7 +1582,7 @@ function ContentEditor({
               <span>
                 {ORIGIN}/journal/{edit.slug}
               </span>
-              <h3>{edit.title} | 마이까치 MY KKACHI</h3>
+              <h3>{edit.title} | 돈쌤 DON SSAEM</h3>
               <p>{edit.excerpt}</p>
             </div>
           </TabsContent>
@@ -1692,7 +1692,7 @@ function ContentEditor({
 function BrandPanel() {
   const [copied, setCopied] = useState(false);
   const bio =
-    "내 곁의 작은 까치, 마이까치\n시간이 걸리더라도, 제대로 봐드리겠습니다.\n1:1 카카오톡 사주 상담 · 무료 오행 풀이 ↓";
+    "고민은 천천히, 선택은 나답게. 돈쌤\n시간이 걸리더라도, 제대로 봐드리겠습니다.\n사람이 직접 읽는 1:1 사주 상담 · 사주 리포트 ↓";
   return (
     <>
       <SocialProfile />
@@ -1700,27 +1700,26 @@ function BrandPanel() {
         <Logo />
         <span className="tiny-label">시간이 걸리더라도, 제대로 봐드리겠습니다</span>
         <h2>
-          좋은 소식을 기다리는
+          고민은 천천히,
           <br />
-          마음 곁으로.
+          선택은 나답게.
         </h2>
         <p>
-          MY는 나를 위한 상담, KKACHI는 반가운 소식을 전하는 까치.
+          카피바라의 중국어 이름 水豚(shuǐtún)의 마지막 소리에서 온 돈, 편하게 부르는 선생님의 쌤.
           내 이야기를 충분히 듣고 다음 선택을 함께 살피는 1:1 상담 브랜드입니다.
         </p>
       </div>
       <section className="studio-panel" style={{ marginBottom: 24 }}>
-        <div className="panel-heading"><h2>마이까치 브랜드 이야기</h2><span>MY KKACHI</span></div>
+        <div className="panel-heading"><h2>돈쌤 브랜드 이야기</h2><span>DON SSAEM</span></div>
         <p style={{ lineHeight: 2, marginBottom: 16 }}>
-          잠들지 못하는 밤, 작은 까치가 창가에 내려앉습니다. 재촉하지 않고 말을 끊지 않고,
-          마음속에 접어둔 이야기가 한 문장씩 펼쳐지기를 기다립니다. 마이까치의 상담도 그렇게 시작해요.
-          사주를 실마리 삼아 지금의 마음을 듣고, 내일의 선택을 함께 살피는 일.
-          돌아가는 마음에 작은 여유가 남기를 바랍니다.
+          우리는 늘 선택 앞에 서요. 그럴 때 누군가 먼저 ‘지금 가장 중요한 건 뭐예요?’ 하고 물어봐 주면 좋겠다는 생각에서 돈쌤을 시작했어요.
+          느긋한 카피바라처럼 곁에 앉아 이야기를 끝까지 듣고, 명식과 지금의 삶을 함께 살펴요.
+          내가 지키고 싶은 것과 내게 맞는 선택을 함께 정리하는 사주 상담 브랜드입니다.
         </p>
-        <p className="panel-footnote">한국의 까치 상징에서 영감을 얻은 브랜드 창작입니다. 실제 전래 설화나 상담 사례로 소개하지 않습니다.</p>
-        <div className="brand-palette">{[["크림", "#F8F5ED"], ["먹색", "#243B3B"], ["청록", "#517C73"], ["살구", "#D9936E"]].map(([name,hex]) => <div key={hex}><span style={{ background: hex }} /><strong>{name}</strong><code>{hex}</code></div>)}</div>
+        <p className="panel-footnote">이름: 水豚(shuǐtún)의 마지막 소리 → 돈 + 쌤. 캐릭터는 카피바라, 상담과 리포트는 사람이 직접 진행합니다.</p>
+        <div className="brand-palette">{[["포슬린", "#F7FAF9"], ["딥 틸", "#173D3A"], ["청록", "#195C53"], ["민트", "#D7E9E2"]].map(([name,hex]) => <div key={hex}><span style={{ background: hex }} /><strong>{name}</strong><code>{hex}</code></div>)}</div>
         <p className="panel-footnote">목소리: 차분하게 듣고, 쉬운 말로 설명하기. 결과를 단정하거나 불안을 자극하는 표현은 사용하지 않습니다. 후기에는 실제 동의를 받은 경험만 사용합니다.</p>
-        <div className="result-actions"><a className="outline-button" href="/brand/mykkachi-logo.svg" download><Download size={15} />로고 SVG</a><a className="outline-button" href="/brand/mykkachi-mark.svg" download><Download size={15} />까치 심볼 SVG</a><a className="outline-button" href={MASCOT_IMAGE} download><Download size={15} />3D 까치 PNG</a></div>
+        <div className="result-actions"><a className="outline-button" href="/brand/donssaem/approved-v1.png" download><Download size={15} />프로필 PNG</a><a className="outline-button" href="/brand/donssaem/mascot-v1.png" download><Download size={15} />배경 없는 캐릭터 PNG</a><a className="outline-button" href={MASCOT_IMAGE} download><Download size={15} />3D 카피바라 WebP</a></div>
       </section>
       <div className="studio-two-col">
         <section className="studio-panel">
@@ -1730,7 +1729,7 @@ function BrandPanel() {
           </div>
           <div className="handle-card">
             <strong>@mykkachi</strong>
-            <span>Instagram · Threads 추천</span>
+            <span>Instagram · Threads 기존 계정</span>
           </div>
           <pre className="bio-copy">{bio}</pre>
           <button
@@ -1761,7 +1760,7 @@ function BrandPanel() {
           </div>
           <div className="handle-card">
             <strong>@mykkachi.tw</strong>
-            <span>MY KKACHI 八字 · 聽你說故事，陪你看明天</span>
+            <span>DON SSAEM 八字 · 聽你說故事，陪你看明天</span>
           </div>
           <div className="strategy-list">
             <p>
@@ -1805,7 +1804,7 @@ function BrandPanel() {
             <TableRow>
               <TableHead>서비스</TableHead>
               <TableHead>확인한 강점</TableHead>
-              <TableHead>마이까치에 반영한 점</TableHead>
+              <TableHead>돈쌤에 반영한 점</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

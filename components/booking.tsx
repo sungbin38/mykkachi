@@ -26,7 +26,7 @@ export function BankBox({ depositName, amount, locale = "ko", product }: { depos
     <p className="bank-box-label"><Banknote size={15} />{t("입금 계좌")}</p>
     {bankConfigured() ? <>
       <p className="bank-box-account"><strong>{zh ? "Hana Bank（하나은행）" : BANK.name} <span className="bank-account-number">{bankAccountDisplay()}</span></strong><button type="button" className="bank-copy" aria-label={t("계좌번호 숫자만 복사")} onClick={() => { navigator.clipboard?.writeText(bankAccountDigits()).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? t("복사됨") : t("복사")}</button></p>
-      <p className="bank-box-sub">{zh ? "戶名" : "예금주"} {BANK.holder || t("마이까치")} · {zh ? "金額" : "금액"} {formatWon(amount)}{depositName ? ` · ${zh ? "匯款人" : "입금자명"} ${depositName}` : ""}</p>
+      <p className="bank-box-sub">{zh ? "戶名" : "예금주"} {BANK.holder || "마이까치"} · {zh ? "金額" : "금액"} {formatWon(amount)}{depositName ? ` · ${zh ? "匯款人" : "입금자명"} ${depositName}` : ""}</p>
     </> : <p className="bank-box-sub">{zh ? "Hana Bank（하나은행）" : BANK.name} {zh ? "帳號將透過預約通知信提供。金額" : "계좌번호는 예약 확인 메일로 안내드려요. 금액"} {formatWon(amount)}.</p>}
     {product === "consultation" && <KakaoConsultationNotice locale={locale} />}
     <p className="booking-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}{" "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p>
@@ -194,7 +194,7 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
         <BankBox product={product} locale={locale} amount={priceFor(form.marketingConsent, product)} />
         <label className="field"><span className="field-label">{t("입금자명")}{" "}<small>{t("이름과 다르면 적어주세요")}</small></span><input className="input-control" maxLength={40} value={form.depositName} onChange={(e) => set("depositName", e.target.value)} placeholder={form.name || t("입금할 때 쓰는 이름")} /></label>
         <p className="booking-hint"><strong>{t("신청 뒤 바로 입금해 주세요.")}</strong> {zh ? `${HOLD_MINUTES} 分鐘內未確認入帳，申請將自動失效。` : `${HOLD_MINUTES}분 안에 입금이 확인되지 않으면 신청이 자동 만료돼요.`} {reportOnly ? t("입금 확인 후 제작을 시작하며, 약 하루 뒤 리포트를 이메일로 보내드려요.") : t("입금이 확인되면 확정 메일을 보내드립니다.")}</p>
-        <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} />{zh ? "我同意將填寫資料用於預約、報告申請、入帳確認與寄送報告，並透過電子郵件與電話接收 MY KKACHI 的消息及活動通知。可隨時回覆拒收，使用服務後也可要求刪除資料。*" : CONTACT_CONSENT_TEXT}</label>
+        <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} />{zh ? "我同意將填寫資料用於預約、報告申請、入帳確認與寄送報告，並透過電子郵件與電話接收 DON SSAEM 的消息及活動通知。可隨時回覆拒收，使用服務後也可要求刪除資料。*" : CONTACT_CONSENT_TEXT}</label>
         {error && <p className="error-message" role="alert">{error}</p>}
         <button className="primary-button booking-submit" type="submit" disabled={busy || (!reportOnly && !slot)}>{busy ? <Loader2 size={17} className="animate-spin" /> : <Mail size={17} />}{reportOnly ? t("리포트 신청하기") : slot ? t("이 시간으로 예약 요청하기") : t("시간을 먼저 골라주세요")}</button>
         <p className="privacy-hint"><LockKeyhole size={13} />{t("사이트에서 결제하지 않아요. 계좌이체 입금을 확인한 뒤 상담자가 직접 확정 안내를 드립니다.")}</p>

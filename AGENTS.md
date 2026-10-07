@@ -8,7 +8,7 @@ Use the project-specific credentials; never change the default Vercel login or g
 npx vercel@latest --prod --yes --scope sungbin38s-projects --global-config "$HOME/.codex/auth/mykkachi-vercel-personal"
 ```
 
-Production URL: https://mykkachi.vercel.app
+Production URL: https://mykkachi.com (Vercel fallback: https://mykkachi.vercel.app)
 
 ## Database
 

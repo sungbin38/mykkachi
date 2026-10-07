@@ -15,7 +15,7 @@ export function JournalCard({ article, locale, priority = false, sizes = "(max-w
         <span className="letter-category">{article.category}</span>
         <div className="journal-meta"><time dateTime={article.date}>{article.date.replaceAll("-", ".")}</time><span>{article.minutes}{zh ? " 分鐘閱讀" : "분 읽기"}</span></div>
         <h3>{article.title}</h3><p>{article.excerpt}</p>
-        <span className="letter-read">{zh ? "讀這封信" : "이 편지 읽기"}<ArrowUpRight size={16} aria-hidden="true" /></span>
+        <span className="letter-read">{zh ? "讀這封信" : "이 노트 읽기"}<ArrowUpRight size={16} aria-hidden="true" /></span>
       </div>
     </a>
   );

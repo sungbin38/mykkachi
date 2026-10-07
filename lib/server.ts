@@ -42,7 +42,7 @@ export function apiError(error: unknown) {
   if (error instanceof HttpError)
     return Response.json({ error: error.message }, { status: error.status });
   console.error(
-    "MY KKACHI request failed",
+    "DON SSAEM request failed",
     error instanceof Error ? error.name : "Unknown",
   );
   return Response.json(

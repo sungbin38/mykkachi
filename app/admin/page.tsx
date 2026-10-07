@@ -3,7 +3,7 @@ import { hasAdminSession } from "@/lib/admin-auth";
 import { AdminDashboard } from "@/components/admin";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "MY KKACHI Studio — 콘텐츠 운영",
+  title: "DON SSAEM Studio — 콘텐츠 운영",
   robots: { index: false, follow: false },
   alternates: { canonical: "/admin" },
 };
