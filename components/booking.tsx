@@ -56,8 +56,8 @@ function BookingCalendar({ byDate, date, onSelect, locale }: { locale: Locale; b
       {Array.from({ length: offset }, (_, i) => <span key={`blank-${i}`} aria-hidden="true" />)}
       {Array.from({ length: days }, (_, i) => {
         const value = `${visibleMonth}-${String(i + 1).padStart(2, "0")}`;
-        const count = byDate.get(value)?.length || 0;
-        return <button type="button" key={value} disabled={!count} aria-pressed={date === value} aria-label={`${dayLabel(value)}, ${count ? `${zh ? "可預約" : "예약 가능"} ${count}${zh ? "個時段" : "자리"}` : t("예약 불가")}`} onClick={() => onSelect(value)}><strong>{i + 1}</strong><span>{count ? `${count}${zh ? "時段" : "자리"}` : "—"}</span></button>;
+        const available = (byDate.get(value)?.length || 0) > 0;
+        return <button type="button" key={value} disabled={!available} aria-pressed={date === value} aria-label={`${dayLabel(value)}, ${available ? (zh ? "可預約" : "예약 가능") : t("예약 불가")}`} onClick={() => onSelect(value)}><strong>{i + 1}</strong></button>;
       })}
     </div>
     <p className="booking-calendar-help">{date ? `${dayLabel(date)} · ${zh ? "請在下方選擇時段。" : "아래에서 시간을 골라주세요."}` : t("예약 가능한 날짜를 선택하면 시간을 볼 수 있어요.")}</p>
