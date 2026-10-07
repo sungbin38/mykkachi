@@ -197,8 +197,8 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
         <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} />{zh ? "我同意將填寫資料用於預約、報告申請、入帳確認與寄送報告，並透過電子郵件與電話接收 DON SSAEM 的消息及活動通知。可隨時回覆拒收，使用服務後也可要求刪除資料。*" : CONTACT_CONSENT_TEXT}</label>
         {error && <p className="error-message" role="alert">{error}</p>}
         <button className="primary-button booking-submit" type="submit" disabled={busy || (!reportOnly && !slot)}>{busy ? <Loader2 size={17} className="animate-spin" /> : <Mail size={17} />}{reportOnly ? t("리포트 신청하기") : slot ? t("이 시간으로 예약 요청하기") : t("시간을 먼저 골라주세요")}</button>
-        <p className="privacy-hint"><LockKeyhole size={13} />{t("사이트에서 결제하지 않아요. 계좌이체 입금을 확인한 뒤 상담자가 직접 확정 안내를 드립니다.")}</p>
-        {KAKAO_URL && <p className="privacy-hint"><Mail size={13} />{zh ? "預約前有疑問？" : "예약 전에 궁금한 점이 있다면 "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "用 KakaoTalk 問我們" : "카카오톡으로 편하게 물어보세요"}</a></p>}
+        <p className="privacy-hint"><LockKeyhole size={13} /><span>{t("사이트에서 결제하지 않아요. 계좌이체 입금을 확인한 뒤 상담자가 직접 확정 안내를 드립니다.")}</span></p>
+        {KAKAO_URL && <p className="privacy-hint"><Mail size={13} /><span>{zh ? "預約前有疑問？" : "예약 전에 궁금한 점이 있다면 "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "用 KakaoTalk 問我們" : "카카오톡으로 편하게 물어보세요"}</a></span></p>}
       </section>
     </form>
   </main><SiteFooter locale={locale} /></>;

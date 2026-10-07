@@ -9,8 +9,8 @@ export const BRAND = {
   english: "DON SSAEM",
   handle: "mykkachi",
   taiwanHandle: "mykkachi.tw",
-  slogan: "시간이 걸리더라도, 제대로 봐드리겠습니다",
-  chinese: "聽你說故事，陪你看明天",
+  slogan: "나를 알고 싶을 때, 내 사주에 물어봐요.",
+  chinese: "想更了解自己時，問問自己的八字。",
 };
 
 // Owner's KakaoTalk channel (돈쌤). KAKAO_URL opens the 1:1 chat directly; the channel home is KAKAO_CHANNEL_URL.

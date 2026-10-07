@@ -18,20 +18,20 @@ export const metadata: Metadata = {
     template: "%s | 돈쌤",
   },
   description:
-    "시간이 걸리더라도, 제대로 봐드리겠습니다. 상담자가 직접 읽는 1:1 사주 상담을 예약하고, 상담 뒤 정리한 사주 리포트를 이메일로 받아보세요. 1:1 상담 또는 리포트만 신청할 수 있어요.",
+    "나를 알고 싶을 때, 내 사주에 물어봐요. 상담자가 내 상황과 사주를 함께 읽는 최대 1시간 카카오톡 1:1 상담. 상담 후 약 10페이지 PDF 리포트를 이메일로 받아보세요. 리포트만 신청할 수도 있어요.",
   alternates: {
     canonical: "/",
     languages: { "ko-KR": "/", "zh-TW": "/zh-TW", "x-default": "/" },
   },
   openGraph: {
     title: `${BRAND.name} — ${BRAND.slogan}`,
-    description: "고민은 천천히, 선택은 나답게. 사람이 직접 읽는 1:1 사주 상담과 약 10페이지 PDF 리포트.",
+    description: "나를 알고 싶을 때, 내 사주에 물어봐요. 최대 1시간 카카오톡 1:1 사주 상담과 약 10페이지 PDF 리포트.",
     type: "website",
     locale: "ko_KR",
     siteName: BRAND.name,
     images: [MASCOT_OG_IMAGE],
   },
-  twitter: { card: "summary", images: [MASCOT_OG_IMAGE.url] },
+  twitter: { card: "summary_large_image", images: [MASCOT_OG_IMAGE.url] },
   icons: {
     icon: "/brand/donssaem/icon-v1.png",
     shortcut: "/brand/donssaem/icon-v1.png",

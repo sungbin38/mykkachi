@@ -6,14 +6,14 @@ import { MASCOT_OG_IMAGE } from "@/lib/brand-assets";
 export const metadata: Metadata = {
   title: { absolute: "DON SSAEM｜一對一八字諮詢・專屬八字報告" },
   description:
-    "DON SSAEM 陪你慢慢說，找到自己的選擇。由老師親自閱讀命盤與故事，可選擇 KakaoTalk 一對一諮詢，或只申請約 10 頁的 PDF 八字報告。",
+    "想更了解自己時，問問自己的八字。與 DON SSAEM 一起認識性格、關係、工作與人生的節奏。KakaoTalk 一對一諮詢最長 1 小時，包含約 10 頁的 PDF 報告，也可單獨申請報告。",
   alternates: {
     canonical: "/zh-TW",
     languages: { "ko-KR": "/", "zh-TW": "/zh-TW" },
   },
   openGraph: {
-    title: "DON SSAEM — 聽你說故事，陪你看明天",
-    description: "水豚 Don 老師，陪你梳理眼前的選擇。由人親自解讀的八字諮詢與專屬報告。",
+    title: "DON SSAEM — 想更了解自己時，問問自己的八字。",
+    description: "從性格、關係與工作，到人生的節奏，與老師一起從八字認識自己。最長 1 小時的一對一諮詢，與一份能回頭閱讀的專屬 PDF 報告。",
     locale: "zh_TW",
     images: [MASCOT_OG_IMAGE],
   },

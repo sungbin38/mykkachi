@@ -1,7 +1,7 @@
 /* DON SSAEM: a calm, approachable guide, built around the approved 3D capybara.
    DESIGN_VARIANCE: 7; MOTION_INTENSITY: 4; VISUAL_DENSITY: 3.
-   Palette: cool porcelain, mint and deep teal. Caramel comes from the mascot.
-   Pretendard for Korean; DM Sans for Latin. System theme, reduced-motion aware. */
+   Public palette: violet starlight, warm white and lavender. Caramel comes from the mascot.
+   Pretendard for Korean; DM Sans for Latin. Static starlight, reduced-motion aware. */
 :root {
   color-scheme: light;
   --font-gowun: "Pretendard Variable";
@@ -28,7 +28,65 @@
   --ring: #237665;
   --public-ease: cubic-bezier(.16,1,.3,1);
 }
-body:has(.site-header) { background: var(--paper); color: var(--ink); }
+/* A shared night-sky palette for public pages; admin tokens stay independent. */
+:root:has(.site-header) {
+  color-scheme: dark;
+  --paper: #21183f;
+  --ink: #faf7ff;
+  --primary: #dcc8ff;
+  --primary-foreground: #291b45;
+  --muted-foreground: #d0c7e2;
+  --soft: #30254f;
+  --soft-strong: #3c2e60;
+  --card: #2a2145;
+  --border: #66567f;
+  --input: #a697bc;
+  --ring: #ecdfff;
+  --destructive: #ffb4bf;
+}
+body:has(.site-header) {
+  position: relative;
+  isolation: isolate;
+  background: var(--paper);
+  color: var(--ink);
+}
+/* Fixed, non-animated layers keep the sky continuous without moving the text. */
+body:has(.site-header)::before,
+body:has(.site-header)::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+body:has(.site-header)::before {
+  background:
+    radial-gradient(ellipse at 88% 24%, #6944ad70, transparent 52%),
+    radial-gradient(ellipse at 6% 75%, #4d34844d, transparent 50%),
+    radial-gradient(ellipse at 68% 98%, #8358a83b, transparent 48%);
+}
+body:has(.site-header)::after {
+  background:
+    radial-gradient(circle at 7% 17%, #ffe9cbcc 0 1px, #dfbfff30 2px, transparent 5px),
+    radial-gradient(circle at 21% 6%, #f0deff75 0 1px, transparent 2px),
+    radial-gradient(circle at 37% 31%, #dfc5ff65 0 1px, transparent 3px),
+    radial-gradient(circle at 61% 12%, #ffe6c9a6 0 1px, transparent 4px),
+    radial-gradient(circle at 82% 8%, #fff1d9b3 0 1px, #dfbfff33 2px, transparent 5px),
+    radial-gradient(ellipse 1.2px 7px at 95% 39%, #fff0d8aa, transparent),
+    radial-gradient(ellipse 7px 1.2px at 95% 39%, #fff0d8aa, transparent),
+    radial-gradient(circle at 95% 39%, #ffe4c5b3 0 1.5px, #dfbfff30 3px, transparent 7px),
+    radial-gradient(circle at 14% 50%, #dfc5ff73 0 1px, transparent 3px),
+    radial-gradient(circle at 46% 66%, #dfc5ff60 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 47%, #f5daff66 0 1px, transparent 3px),
+    radial-gradient(circle at 89% 71%, #ffe4c599 0 1px, #dfbfff20 2px, transparent 5px),
+    radial-gradient(ellipse 1px 5px at 5% 88%, #ffe9c799, transparent),
+    radial-gradient(ellipse 5px 1px at 5% 88%, #ffe9c799, transparent),
+    radial-gradient(circle at 5% 88%, #ffebd2a6 0 1px, transparent 5px),
+    radial-gradient(circle at 27% 91%, #dfc5ff60 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 87%, #ead2ff80 0 1px, transparent 3px),
+    radial-gradient(circle at 97% 94%, #dfc5ff66 0 1px, transparent 3px);
+}
+body:has(.site-header) ::selection { background: var(--primary); color: var(--primary-foreground); }
 .shell { max-width: 1320px; padding-inline: 48px; margin-inline: auto; }
 .site-header { height: 76px; position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--paper) 95%, transparent); backdrop-filter: blur(14px); }
 .header-inner { height: 100%; gap: 30px; }
@@ -37,7 +95,7 @@ body:has(.site-header) { background: var(--paper); color: var(--ink); }
 .wordmark-type > span { font-size: 9px; letter-spacing: .17em; }
 .brand-mascot { mix-blend-mode: normal; }
 .mascot-portrait { background: var(--soft-strong); }
-.mascot-portrait > img { transform: scale(1.7); transform-origin: 54% 24%; }
+.mascot-portrait > img { transform: none; object-fit: contain; object-position: center; }
 .wordmark .brand-mascot > img { width: 100%; height: 100%; }
 .site-nav { gap: 28px; white-space: nowrap; }
 .site-nav a { position: relative; color: var(--muted-foreground); padding-block: 12px; font-size: 14px; font-weight: 550; }
@@ -67,15 +125,21 @@ body:has(.site-header) { background: var(--paper); color: var(--ink); }
 body:has(.site-header) .muted, body:has(.site-header) .tiny-label { color: var(--muted-foreground); }
 body:has(.site-header) .input-control { background-color: var(--card); border-color: var(--input); border-radius: 10px; color: var(--ink); }
 body:has(.site-header) .input-control::placeholder { color: var(--muted-foreground); opacity: 1; }
+body:has(.site-header) .input-control:focus { outline-color: var(--ring); }
+body:has(.site-header) .choice-control { border-color: var(--input); color: var(--ink); }
 body:has(.site-header) .field-label, body:has(.site-header) .field-label small { color: var(--muted-foreground); }
+body:has(.site-header) .dialog-copy { color: var(--muted-foreground); }
+body:has(.site-header) input[type=checkbox] { accent-color: var(--primary); }
+body:has(.site-header) select.input-control { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23dcc8ff' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+body:has(.site-header) :is([data-slot=dialog-content], [data-slot=sheet-content], [data-slot=select-content]) { background: var(--card); color: var(--ink); border-color: var(--border); }
 body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard), var(--font-noto-tc), sans-serif; font-weight: 700; }
 
-/* A big, quiet introduction. The character is the only ornament. */
+/* The transparent character sits directly in the shared violet sky. */
 .brand-home { --home-section-space: clamp(72px, 8vw, 112px); }
 .brand-home :is(.hero, .story-section, .approach-layout, .report-section) > * { min-width: 0; }
 .brand-home h2 { font-size: clamp(32px, 3.2vw, 44px); line-height: 1.35; letter-spacing: -.055em; text-wrap: balance; }
 .brand-home p { text-wrap: pretty; }
-.hero-stage { background: var(--paper); overflow: clip; }
+.hero-stage { background: transparent; overflow: clip; }
 .brand-home .hero { display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: 22px; padding-top: 42px; padding-bottom: 44px; }
 .brand-home .hero-copy { padding: 12px 0 24px; position: relative; z-index: 1; }
 .brand-home .eyebrow { font-size: 14px; font-weight: 600; color: var(--primary); letter-spacing: .015em; }
@@ -85,10 +149,10 @@ body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard
 .brand-home .hero-actions { margin-top: 32px; gap: 18px; }
 .brand-home .hero-actions .primary-button { min-height: 56px; padding-inline: 25px; gap: 28px; }
 .hero-actions .text-link { font-size: 14px; }
-.brand-home .donssaem-hero { position: relative; width: 100%; aspect-ratio: 1; max-height: 550px; border: 0; border-radius: 0; background: transparent; overflow: visible; }
-.hero-orbit { position: absolute; inset: 8% 0 6%; border-radius: 50%; background: var(--soft-strong); }
-.brand-home .donssaem-hero > img { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 18px #173d3a12); }
-.donssaem-hero figcaption { position: absolute; right: 0; bottom: 7%; font-size: 14px; color: var(--primary); background: var(--card); border: 1px solid var(--border); border-radius: 18px 18px 18px 3px; padding: 14px 18px; transform: rotate(-4deg); }
+.brand-home .donssaem-hero { display: flex; flex-direction: column; gap: 14px; position: relative; width: 100%; max-width: 550px; aspect-ratio: auto; max-height: none; margin-inline: auto; border: 0; border-radius: 0; background: transparent; overflow: visible; }
+.brand-home .donssaem-hero::before { content: ""; position: absolute; inset: 15% -5% 12%; background: radial-gradient(ellipse, #ac77e140, transparent 67%); pointer-events: none; }
+.brand-home .donssaem-hero > img { display: block; position: relative; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 18px 28px #09041966); }
+.donssaem-hero figcaption { position: static; align-self: flex-end; max-width: 100%; font-size: 14px; color: var(--primary); background: var(--card); border: 1px solid var(--border); border-radius: 3px 18px 18px 18px; padding: 14px 18px; }
 .consultation-facts { display: grid; grid-template-columns: 1.1fr 1fr 1fr; border-block: 1px solid var(--border); padding: 25px 0; margin: 0; }
 .consultation-facts > div { display: grid; grid-template-columns: 24px 1fr; gap: 5px 16px; padding-inline: 30px; }
 .consultation-facts > div:first-child { padding-left: 0; }
@@ -97,7 +161,7 @@ body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard
 .consultation-facts dt { color: var(--ink); font-size: 14px; font-weight: 650; }
 .consultation-facts dd { font-size: 12px; color: var(--muted-foreground); margin: 0; }
 
-/* Brand origin is told in a short note, alongside the name's pronunciation. */
+/* Familiar questions introduce the consultation in plain language. */
 .brand-home .story-section { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; padding-block: var(--home-section-space); }
 .brand-home .story-heading h2 { margin-top: 17px; }
 .section-kicker { color: var(--primary); font-size: 13px; font-weight: 650; }
@@ -105,14 +169,13 @@ body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard
 .brand-home .story-copy > p { font-size: 16px; color: var(--muted-foreground); line-height: 1.95; margin-bottom: 22px; }
 .brand-home .story-copy > p:last-child { margin-bottom: 0; }
 .brand-home .story-copy > .story-emphasis { color: var(--ink); }
-.name-note { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 34px; padding-top: 24px; border-top: 1px solid var(--border); max-width: 350px; }
-.name-note > span, .name-note > strong { font-size: 28px; font-weight: 650; letter-spacing: -.04em; }
-.name-note > p { flex-basis: 100%; font-size: 13px; line-height: 1.8; color: var(--muted-foreground); }
-.brand-promise { padding-block: 65px; background: var(--soft-strong); }
+.story-questions { display: grid; gap: 13px; list-style: none; margin: 30px 0 0; padding: 23px 0 0; border-top: 1px solid var(--border); max-width: 400px; }
+.story-questions li { color: var(--primary); font-size: 15px; font-weight: 550; line-height: 1.8; word-break: keep-all; }
+.brand-promise { padding-block: 65px; background: color-mix(in srgb, var(--soft-strong) 78%, transparent); border-block: 1px solid var(--border); }
 .brand-promise .shell { display: flex; align-items: end; justify-content: space-between; gap: 40px; }
 .brand-promise p { font-size: clamp(30px, 3.5vw, 46px); letter-spacing: -.05em; line-height: 1.4; font-weight: 700; }
 .brand-promise span { font-size: 15px; line-height: 1.9; max-width: 270px; color: var(--muted-foreground); word-break: keep-all; }
-.approach-section { padding: 90px 0 45px; background: var(--paper); }
+.approach-section { padding: 90px 0 45px; background: transparent; }
 .approach-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; }
 .approach-heading > .tiny-label { display: none; }
 .approach-heading h2 { margin: 0 0 23px; }
@@ -134,7 +197,7 @@ body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard
 .care-promises p { color: var(--muted-foreground); font-size: 14px; line-height: 1.9; }
 
 /* Two real choices, aligned for comparison. */
-.brand-home .consultation-section { padding-block: var(--home-section-space); background: var(--paper); }
+.brand-home .consultation-section { padding-block: var(--home-section-space); background: transparent; }
 .consultation-heading { max-width: 660px; margin-bottom: 40px; }
 .consultation-heading > p { margin-top: 23px; font-size: 16px; line-height: 1.9; color: var(--muted-foreground); word-break: keep-all; }
 .consultation-offers { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -255,6 +318,13 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
 .related-letters .section-heading .tiny-label { display: none; }
 
 /* Transaction screens stay still, readable and in the original field order. */
+body:has(.site-header) .page-heading > p { color: var(--muted-foreground); }
+.reading-layout :is(.form-subtext, .result-empty p, .pillar small, .pillar span, .reading-paragraph p, .result-disclaimer) { color: var(--muted-foreground); }
+.reading-layout .panel, .reading-layout .pillar { background: var(--card); border-color: var(--border); }
+.reading-layout :is(.result-empty, .result-lead, .pillar.mine, .notice) { background: var(--soft); border-color: var(--border); }
+.reading-layout :is(.result-lead, .result-empty .empty-symbol, .notice) { color: var(--primary); }
+.reading-layout .pillar.mine { border-color: var(--primary); }
+.reading-layout .pill { background: var(--soft-strong); color: var(--primary); }
 .booking-page.shell { max-width: 1150px; padding-block: 40px 90px; }
 .booking-back { color: var(--muted-foreground); }
 .booking-heading { max-width: 790px; }
@@ -282,6 +352,10 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
 .booking-page .consent-card.on { border-color: var(--primary); background: var(--card); }
 .booking-page .consent-card strong { color: var(--ink); }
 .booking-page .consent-card small, .booking-page :is(.booking-hint, .privacy-hint, .story-note, .bank-box-sub, .booking-empty) { color: var(--muted-foreground); }
+.booking-page .privacy-hint { align-items: flex-start; line-height: 1.8; overflow-wrap: anywhere; }
+.booking-page:lang(ko) .privacy-hint { word-break: keep-all; }
+.booking-page .privacy-hint > svg { flex-shrink: 0; margin-top: 4px; }
+.booking-page .privacy-hint > span { min-width: 0; }
 .booking-page .bank-box { background: var(--card); border-color: var(--border); border-radius: 14px; padding: 17px; }
 .booking-page .bank-box-account { flex-wrap: wrap; }
 .booking-page .bank-box-account strong { color: var(--ink); font-size: 15px; }
@@ -469,11 +543,11 @@ body .letter-read { color: var(--primary); border-color: var(--border); }
 .booking-calendar-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .booking-calendar-heading h3 { font-size: 19px; font-weight: 600; }
 .booking-calendar-heading > div { display: flex; gap: 6px; }
-.booking-calendar-heading button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; background: var(--card); color: var(--ink); cursor: pointer; }
+.booking-calendar-heading button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--input); border-radius: 50%; background: var(--card); color: var(--ink); cursor: pointer; }
 .booking-calendar-heading button:disabled { opacity: .3; cursor: default; }
 .booking-calendar-week, .booking-calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
 .booking-calendar-week { margin-bottom: 8px; text-align: center; font-size: 12px; color: var(--muted-foreground); }
-.booking-calendar-days button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 62px; padding: 7px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--ink); cursor: pointer; }
+.booking-calendar-days button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 62px; padding: 7px 0; border: 1px solid var(--input); border-radius: 10px; background: var(--card); color: var(--ink); cursor: pointer; }
 .booking-calendar-days button strong { font-size: 15px; font-weight: 550; }
 .booking-calendar-days button span { font-size: 10px; color: var(--muted-foreground); }
 .booking-calendar-days button:disabled { border-color: transparent; color: var(--muted-foreground); opacity: .45; cursor: default; }
@@ -520,34 +594,26 @@ body .journal-cover.illustrated-cover { background: var(--soft); }
 .article-note, .journal-empty { background: var(--soft); border-color: var(--border); }
 .service-capacity { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.8; color: var(--primary); margin: 18px 0; }
 :where(#story,#why,#report,#consultation,#reviews) { scroll-margin-top: 100px; }
-@media (prefers-color-scheme: dark) {
-  :root:has(.site-header) {
-    color-scheme: dark;
-    --paper: #142421; --ink: #e4eeea; --primary: #a6d8c3;
-    --primary-foreground: #173a30; --muted-foreground: #afc2bb;
-    --soft: #1d332c; --soft-strong: #29463c; --card: #1a2e27;
-    --border: #385247; --input: #648275; --ring: #afe8ce;
-    --destructive: #ffa090;
-  }
-  body:has(.site-header) .dialog-copy { color: var(--muted-foreground); }
-  body:has(.site-header) .booking-story > textarea { background: var(--card); color: var(--ink); }
-}
 @media (max-width: 1100px) {
   .brand-home .hero h1 { font-size: clamp(38px, 5.4vw, 60px); }
   .brand-home .hero-actions { gap: 10px 18px; }
   .brand-home .story-section, .approach-layout { gap: 48px; }
 }
+@media (min-width: 768px) and (max-width: 1100px) {
+  .brand-home:lang(zh-Hant-TW) .hero h1 { font-size: clamp(32px, 4.8vw, 52px); }
+}
 @media (max-width: 767px) {
   .brand-home .hero { grid-template-columns: 1fr; gap: 14px; padding-top: 34px; padding-bottom: 18px; }
   .brand-home .hero-copy { padding: 0; }
-  .brand-home .hero h1 { font-size: clamp(39px, 10vw, 57px); line-height: 1.24; margin: 20px 0; }
+  .brand-home .hero h1 { font-size: clamp(30px, 8.6vw, 49px); line-height: 1.3; margin: 20px 0; }
   .brand-home .hero-description { font-size: 15px; line-height: 1.8; }
   .brand-home .hero-actions { margin-top: 23px; gap: 12px 20px; }
   .brand-home .hero-actions .primary-button { min-height: 52px; }
-  .brand-home .donssaem-hero { max-width: 400px; width: 90%; margin-inline: auto; max-height: none; }
-  .donssaem-hero figcaption { font-size: 12px; right: -3%; padding: 12px 14px; }
+  .brand-home .donssaem-hero { max-width: 400px; width: 100%; margin-inline: auto; max-height: none; }
+  .donssaem-hero figcaption { font-size: 12px; padding: 12px 14px; }
   .brand-home .story-section { grid-template-columns: 1fr; gap: 32px; }
-  .name-note { margin-top: 25px; }
+  .story-questions { margin-top: 25px; padding-top: 20px; }
+  .story-questions li { font-size: 14px; }
   .brand-promise { padding-block: 44px; }
   .brand-promise .shell { display: block; }
   .brand-promise span { display: block; max-width: none; font-size: 14px; margin-top: 24px; }
@@ -560,3 +626,12 @@ body .journal-cover.illustrated-cover { background: var(--soft); }
   .wordmark-type strong { font-size: 24px; }
   .wordmark-type > span { font-size: 8px; }
 }
+
+/* Details inherited from the original light palette follow the same night sky. */
+.review-chat-context { background: var(--card); color: var(--muted-foreground); }
+.reviews-featured .reviews-grid { scrollbar-color: var(--input) transparent; }
+.reading-layout .choice-control { background: var(--card) !important; }
+.reading-layout .choice-control[data-state=checked] { background: var(--soft-strong) !important; color: var(--ink); border-color: var(--primary); }
+.reading-layout .privacy-hint { color: var(--muted-foreground); }
+.booking-page .booking-deadline, .booking-page .booking-deadline strong { color: var(--destructive); }
+.journal-search input { color: var(--ink); }

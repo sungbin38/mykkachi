@@ -12,7 +12,7 @@ import { FeaturedReviews } from "./reviews";
 import { BirthFields } from "./birth-fields";
 import { JournalCard } from "./journal-card";
 import type { JournalCardData } from "@/lib/journal-card";
-import reportArtwork from "@/public/brand/donssaem/reading-v1.webp";
+import reportArtwork from "@/public/brand/donssaem/reading-v2.webp";
 import heroArtwork from "@/public/brand/donssaem/mascot-v1.webp";
 
 export function Logo() {
@@ -26,7 +26,7 @@ export function SiteHeader({ locale = "ko" }: { locale?: Locale }) {
     ? localPath(otherLocale, zh ? pathname.slice(6) : pathname)
     : homePath(otherLocale);
   const nav = [
-    [homePath(locale) + "#story", zh ? "品牌故事" : "돈쌤 이야기"],
+    [homePath(locale) + "#story", zh ? "從八字認識自己" : "사주로 보는 나"],
     [homePath(locale) + "#consultation", zh ? "諮詢方式" : "상담 안내"],
         [localPath(locale, "/reviews"), zh ? "諮詢故事" : "상담 이야기"],
     ...(FREE_READING_ENABLED ? [[localPath(locale, "/read"), zh ? "免費八字" : "무료 사주"]] : []),
@@ -55,7 +55,7 @@ export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
     : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 카카오톡 채팅으로 상담자가 직접 진행하며, 상담 전 카카오톡 상담 채널을 반드시 추가해야 합니다. 회당 최대 1시간이고 이야기가 정리되면 더 일찍 끝날 수 있습니다. 비용은 20만원, 상담 이야기의 익명 후기·콘텐츠 활용에 동의하면 15만원이며, 진행 방법·취소 및 환불 기준은 예약 확인 메일로 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 상담 후 리포트가 포함됩니다. 상담 없이 리포트만 받는 상품은 10만원, 사연과 풀이의 익명 마케팅 활용에 동의하면 5만원입니다. 리포트는 약 10페이지 분량의 PDF로 이메일 발송합니다. 상담자가 직접 분석하고 작성해 약 하루가 걸리며, 리포트 단독 상품은 입금 확인 후 제작을 시작합니다. 사이트 내 자동 결제는 제공하지 않습니다.";
   return <><footer className="site-footer"><div className="shell">
     <div className="footer-top"><a href={homePath(locale)} aria-label={zh ? "돈쌤 DON SSAEM 首頁" : "돈쌤 DON SSAEM 홈"}><Logo /></a>
-      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><a href={homePath(locale)+"#story"}>{zh ? "品牌故事" : "돈쌤 이야기"}</a><a href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
+      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><a href={homePath(locale)+"#story"}>{zh ? "從八字認識自己" : "사주로 보는 나"}</a><a href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
     </div><p className="site-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><div className="footer-bottom"><span>© {new Date().getFullYear()} DON SSAEM. Take your time. Find your way.</span></div>
   </div></footer><Dialog open={!!policy} onOpenChange={() => setPolicy("")}><DialogContent><DialogTitle>{policy === "privacy" ? (zh ? "隱私說明" : "개인정보 안내") : (zh ? "使用說明" : "이용 안내")}</DialogTitle><DialogDescription className="dialog-copy">{policy === "privacy" ? privacy : terms}</DialogDescription></DialogContent></Dialog></>;
 }
@@ -92,29 +92,28 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
     <section className="hero-stage"><div className="shell hero">
       <div className="hero-copy">
         <p className="eyebrow">{zh ? "DON SSAEM · 由人親自解讀的八字" : "돈쌤 · 사람이 직접 읽는 사주"}</p>
-        <h1>{zh ? <>慢慢聊，<br /><em>找到自己的選擇。</em></> : <>고민은 천천히,<br /><em>선택은 나답게.</em></>}</h1>
-        <p className="hero-description">{zh ? <>從眼前的煩惱，到不想錯過的機會。<br />你的故事與八字，由老師親自讀。</> : <>다가올 고비와 놓치지 않았으면 하는 기회까지.<br />당신의 이야기와 사주를 사람이 직접 읽어요.</>}</p>
+        <h1>{zh ? <>想更了解自己時，<br /><em>問問自己的八字。</em></> : <>나를 알고 싶을 때,<br /><em>내 사주에 물어봐요.</em></>}</h1>
+        <p className="hero-description">{zh ? <>從天生的性格，到關係、工作與人生的節奏。<br />老師親自讀你的故事，也讀你的八字。</> : <>타고난 성향부터 관계와 일, 앞으로의 흐름까지.<br />당신의 이야기와 사주를 함께 읽어요.</>}</p>
         <div className="hero-actions"><a className="primary-button" href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "1:1 상담 예약하기"}<ArrowUpRight size={18} /></a><a className="text-link" href="#report">{zh ? "先了解八字報告" : "사주 리포트 알아보기"}<ArrowRight size={16} /></a></div>
       </div>
       <figure className="hero-art donssaem-hero">
-        <span className="hero-orbit" aria-hidden="true" />
-        <Image src={heroArtwork} alt={zh ? "抱著書、穿青綠韓服的水豚 Don 老師" : "청록색 옷을 입고 책을 든 카피바라 사주 선생님, 돈쌤"} sizes="(max-width: 767px) 88vw, 550px" loading="eager" fetchPriority="high" />
-        <figcaption>{zh ? "別急，我們慢慢看。" : "서두르지 말고, 같이 봐요."}</figcaption>
+        <Image src={heroArtwork} alt={zh ? "抱著書、穿青綠韓服的水豚 Don 老師" : "청록색 옷을 입고 책을 든 카피바라 돈쌤"} sizes="(max-width: 767px) 100vw, 550px" loading="eager" fetchPriority="high" />
+        <figcaption>{zh ? "從你現在最在意的問題開始。" : "지금 가장 궁금한 것부터 이야기해요."}</figcaption>
       </figure>
     </div></section>
     <div className="shell"><dl className="consultation-facts">
-      <div><UserRound size={22} aria-hidden="true" /><dt>{zh ? "由老師親自解讀" : "사람이 직접 읽는 사주"}</dt><dd>{zh ? "以你的故事為中心" : "당신의 사연을 중심으로"}</dd></div>
-      <div><Clock3 size={22} aria-hidden="true" /><dt>{zh ? "一對一，最長一小時" : "오롯이 마주하는 한 시간"}</dt><dd>{zh ? "KakaoTalk 一對一文字諮詢，最長一小時" : "카카오톡 1:1 채팅, 최대 1시간"}</dd></div>
-      <div><Mail size={22} aria-hidden="true" /><dt>{zh ? "留下一份專屬報告" : "다시 꺼내 읽는 리포트"}</dt><dd>{zh ? "諮詢後約一天，以電子郵件寄送" : "상담 후 약 하루 뒤 이메일로 보내드려요"}</dd></div>
+      <div><UserRound size={22} aria-hidden="true" /><dt>{zh ? "最長 1 小時" : "최대 1시간"}</dt><dd>{zh ? "KakaoTalk 一對一文字諮詢" : "카카오톡으로 나누는 1:1 채팅 상담"}</dd></div>
+      <div><BookOpen size={22} aria-hidden="true" /><dt>{zh ? "約 10 頁 PDF" : "약 10페이지 PDF"}</dt><dd>{zh ? "諮詢包含老師親自撰寫的報告" : "상담 후 직접 작성한 사주 리포트 포함"}</dd></div>
+      <div><Clock3 size={22} aria-hidden="true" /><dt>{zh ? "約 1 天後寄送" : "약 하루 뒤 발송"}</dt><dd>{zh ? "諮詢後完成報告，以電子郵件寄送" : "상담 내용을 정리해 이메일로 전달"}</dd></div>
     </dl></div>
     <section id="story" className="shell story-section" data-reveal aria-labelledby="story-title">
-      <div className="story-heading"><p className="section-kicker">{zh ? "認識 DON SSAEM" : "안녕하세요, 돈쌤이에요"}</p><h2 id="story-title">{zh ? <>有些煩惱，<br />需要一起想的人。</> : <>혼자 고민하던 일에,<br />함께 생각하는 사람.</>}</h2>
-        <div className="name-note"><span lang="zh">水豚</span><ArrowRight size={18} aria-hidden="true" /><strong>{zh ? "Don + 쌤" : "돈 + 쌤"}</strong><p>{zh ? "shuǐtún，水豚。加上韓文裡親切的「老師」。" : "카피바라의 이름에, 편하게 부르는 선생님을 더했어요."}</p></div>
+      <div className="story-heading"><p className="section-kicker">{zh ? "給自己一段認識自己的時間" : "나를 알아가는 시간"}</p><h2 id="story-title">{zh ? <>從現在的自己，<br />看向未來的生活。</> : <>지금의 나부터,<br />앞으로의 나까지.</>}</h2>
+        <ul className="story-questions"><li>{zh ? "「我是一個什麼樣的人？」" : "“나는 어떤 성향을 가진 사람일까요?”"}</li><li>{zh ? "「什麼樣的關係與工作適合我？」" : "“나에게 잘 맞는 관계와 일은 무엇일까요?”"}</li><li>{zh ? "「接下來的人生會有哪些變化？」" : "“앞으로 어떤 흐름을 맞이하게 될까요?”"}</li></ul>
       </div>
       <div className="story-copy">
-        <p>{zh ? "換工作、開始一段關係，或為自己留下時間。我們總在做選擇。有時候，需要的是有人先問一句：「你最在意的是什麼？」DON SSAEM 就從這個想法開始。" : "직장을 옮길지, 새로운 관계를 시작할지, 나를 위한 시간을 남길지. 우리는 늘 선택 앞에 서요. 그럴 때 누군가 먼저 ‘지금 가장 중요한 건 뭐예요?’ 하고 물어봐 주면 좋겠다는 생각에서 돈쌤을 시작했어요."}</p>
-        <p>{zh ? "名字來自水豚的中文讀音 shuǐtún：取最後的聲音，變成韓文的「돈」，再加上親切稱呼老師的「쌤」。像這隻神情自在的水豚，讓你能安心坐下，把心裡的事慢慢說完。" : "카피바라는 중국어로 ‘水豚(shuǐtún)’이라고 해요. 마지막 소리에서 ‘돈’을, 편하게 부르는 선생님에서 ‘쌤’을 가져왔어요. 느긋한 표정의 카피바라처럼, 곁에 앉아 마음에 걸리는 이야기를 끝까지 듣고 싶어요."}</p>
-        <p className="story-emphasis">{zh ? "八字是理解自己的線索。我們把命盤與你的生活放在一起，看清該留意的時機，也一起整理你想守住的事。讓下一步，更接近你想要的生活。" : "사주는 나를 이해하는 실마리예요. 명식과 지금의 삶을 함께 놓고, 조심할 때와 기회를 살펴요. 내가 지키고 싶은 것이 무엇인지, 어떤 선택이 내 삶에 더 맞는지 함께 정리할게요."}</p>
+        <p>{zh ? "想更了解自己、梳理生活中的疑問，或看看接下來的人生節奏。不一定要有明確的煩惱，從最近的生活和對自己的好奇開始就好。" : "나를 더 잘 이해하고 싶을 때, 일상의 궁금함을 풀고 싶을 때, 앞으로의 흐름을 살펴보고 싶을 때. 뚜렷한 고민이 없어도 괜찮아요. 요즘의 이야기와 나에 대해 궁금한 점부터 나눠주세요."}</p>
+        <p>{zh ? "老師會先讀過你的故事，把八字中的性格、優勢與不同時期的變化，放回你的生活裡解讀。透過一對一對話，一起理解自己在人際關係與工作中的樣子，整理往後值得留意的事。" : "상담자가 이야기를 먼저 읽고, 사주에 나타난 성향과 강점, 시기별 흐름을 지금의 삶에 비춰 풀어요. 1:1 대화로 관계와 일에서 드러나는 나의 모습을 살피고, 앞으로 참고할 점을 함께 정리해요."}</p>
+        <p className="story-emphasis">{zh ? "談完後，重點會整理成約 10 頁 PDF，約一天後寄到信箱。之後想再了解自己時，也能隨時翻閱。" : "상담이 끝나면 풀이와 나눈 이야기를 약 10페이지 PDF로 정리해, 약 하루 뒤 이메일로 보내드려요. 시간이 지나도 나를 이해하는 참고로 꺼내 읽을 수 있도록요."}</p>
       </div>
     </section>
     <section className="brand-promise" aria-label={zh ? "我們的承諾" : "돈쌤의 약속"}><div className="shell"><p>{zh ? <>就算多花些時間，<br />也會好好為你看。</> : <>시간이 걸리더라도,<br />제대로 봐드리겠습니다.</>}</p><span>{zh ? "你的故事，值得被認真對待。" : "한 사람의 이야기는, 그만큼의 정성이 필요하니까요."}</span></div></section>
@@ -157,7 +156,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
     <section id="report" className="shell report-section" data-reveal aria-labelledby="report-title">
       <div className="report-intro"><h2 id="report-title">{zh ? <>按自己的步調，<br />隨時回頭再讀的八字報告。</> : <>내 속도로,<br />다시 꺼내 읽는 사주 리포트.</>}</h2><p>{zh ? "老師親自分析你的命盤與故事，撰寫成約 10 頁的 PDF 報告。每一份都由真人親自完成，約需一天，再寄到申請時留下的信箱。一對一諮詢包含報告，也可以單獨購買報告。" : "상담자가 당신의 명식과 사연을 직접 분석해 약 10페이지 분량의 PDF 리포트로 작성해요. 한 분 한 분 직접 분석하고 쓰기 때문에 약 하루가 걸립니다. 완성한 리포트는 신청할 때 남긴 이메일로 보내드려요. 1:1 상담에는 리포트가 포함되며, 따로 신청할 수도 있어요."}</p>
         <ul className="report-parts">{reportParts.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}</ul></div>
-      <div className="report-visual"><Image className="report-artwork" src={reportArtwork} alt={zh ? "水豚 Don 老師坐在木桌前，專心閱讀攤開的書" : "나무 책상에서 사주 책을 펼쳐 읽고 있는 카피바라 돈쌤"} sizes="(max-width: 767px) 90vw, 560px" placeholder="blur" /></div>
+      <div className="report-visual"><Image className="report-artwork" src={reportArtwork} alt={zh ? "紫色星光下，水豚 Don 老師在溫暖燈光中閱讀攤開的書" : "보라색 별빛과 따뜻한 조명 아래 사주 책을 읽는 카피바라 돈쌤"} sizes="(max-width: 767px) 90vw, 560px" placeholder="blur" /></div>
     </section>
     <div className="shell">{FREE_READING_ENABLED && <section id="free-reading" className="section free-reading-section"><div className="free-reading-intro"><div><p className="tiny-label muted">05 / A SMALL BEGINNING</p><h2>{zh ? "先從認識自己的五行開始。" : "나를 알아가는 작은 시작."}</h2><p>{zh ? "輸入生日，免費看看你的八字與五行。" : "상담 전에, 생년월일로 나의 사주와 오행을 가볍게 살펴보세요."}</p></div>
       <form className="mini-form" onSubmit={event=>{event.preventDefault();try{sessionStorage.setItem("luun-start-birth",birth);}catch{}window.location.assign(localPath(locale,"/read"));}}><label className="form-intro" htmlFor="quick-birth-year">{zh ? "陽曆出生日期" : "양력 생년월일"}<span className="pill">FREE</span></label><div className="mini-form-row"><BirthFields value={birth} onChange={setBirth} zh={zh} idPrefix="quick-birth" /><button className="primary-button" type="submit">{zh ? "免費看我的八字" : "무료로 내 사주 보기"}</button></div><p className="privacy-hint"><LockKeyhole size={13} />{zh ? "不需註冊 · 生日僅在瀏覽器中處理" : "회원가입 없이 · 생년월일은 내 브라우저에서만"}</p></form>

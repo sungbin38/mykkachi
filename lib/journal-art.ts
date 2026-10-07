@@ -1,9 +1,9 @@
 import type { Locale } from "./brand";
 
 const art = {
-  reading: ["책상에서 펼친 책을 읽는 카피바라 돈쌤", "水豚 Don 老師在桌前閱讀攤開的書"],
-  conversation: ["나무 그늘에서 다른 카피바라의 이야기를 듣는 돈쌤", "Don 老師在樹蔭下與另一隻水豚談心"],
-  journey: ["책을 품에 안고 아침의 오솔길을 걷는 카피바라 돈쌤", "Don 老師抱著書，走在晨光裡的小徑上"],
+  reading: ["보라색 별빛 아래 책상에서 책을 읽는 카피바라 돈쌤", "紫色星光下，水豚 Don 老師在桌前閱讀攤開的書"],
+  conversation: ["별이 빛나는 밤, 나무 아래 다른 카피바라의 이야기를 듣는 돈쌤", "星夜裡，Don 老師在樹下與另一隻水豚談心"],
+  journey: ["책을 품에 안고 보라색 별빛 아래 오솔길을 걷는 카피바라 돈쌤", "Don 老師抱著書，走在紫色星空下的小徑上"],
 } satisfies Record<string, [string, string]>;
 
 type ArtKey = keyof typeof art;
@@ -26,7 +26,7 @@ const artworkBySlug: Record<string, ArtKey> = {
 export function journalArtwork(slug: string, locale: Locale) {
   const key = artworkBySlug[slug] ?? "reading";
   return {
-    src: `/brand/donssaem/${key}-v1.webp`,
+    src: `/brand/donssaem/${key}-v2.webp`,
     alt: art[key][locale === "ko" ? 0 : 1],
     width: 1536,
     height: 1024,

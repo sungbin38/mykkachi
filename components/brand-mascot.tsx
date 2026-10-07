@@ -26,7 +26,7 @@ export function BrandMascot({
         src={MASCOT_IMAGE}
         alt={alt}
         fill
-        sizes={sizes || `${portrait ? Math.ceil(size * 1.5) : size}px`}
+        sizes={sizes || `${size}px`}
         loading={priority ? "eager" : undefined}
         fetchPriority={priority ? "high" : undefined}
       />
