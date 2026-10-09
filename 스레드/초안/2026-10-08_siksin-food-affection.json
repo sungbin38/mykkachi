@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-08-siksin-food-affection",
+  "account": "don.ssaem",
+  "format_id": "08",
+  "title": "좋아하는 사람 생기면 먹을 것부터 챙기는 사람",
+  "topic_key": "식신-음식으로전하는마음",
+  "created_at": "2026-10-08T01:39:34+09:00",
+  "cta_mode": "campaign",
+  "campaign_id": "free-report-50",
+  "posts": [
+    "좋아하는 사람 생기면 먹을 것부터 챙기는 사람\n\n식신의 ‘만들고 나누는 힘’을 일상에 옮기면 이런 모습이야.\n\n1. 맛있는 거 먹으면 그 사람 얼굴부터 떠오름\n2. “보고 싶다” 대신 “이거 먹으러 갈래?”가 나옴\n3. 좋아한다던 간식은 다음에 만날 때 가방에 있음\n4. 집에 놀러 오면 배부르다는 말 들어야 마음 놓임\n5. 레시피 알려달라 하면 계량부터 실패한 팁까지 줌\n6. 잘 먹는 모습 보면서 자기도 한입 더 먹음\n\n식신은 일간이 생하는 오행 중 음양이 같은 관계야. 을목에게 정화가 식신인 식이지. 전통적으로 표현·생산·먹을 복과 연결해서 봐.\n\n이건 그 상징을 마음 표현에 빗댄 거야. 식신이 많다고 모두 이렇진 않고, 일간의 힘과 다른 글자의 관계도 함께 봐야 해.",
+    "내 마음이 어떤 방식으로 전해지는지 사주로도 살펴보고 싶다면.\n\n지금은 10만원 상당 사주 PDF 리포트를 무료로 보내주고 있어.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청 방법\n1. @don.ssaem 스레드 팔로우\n2. 카카오톡 채널 ‘돈쌤’ 친구추가\nhttps://pf.kakao.com/_xfeQxiX\n3. 아래 사이트에서 ‘사주 리포트’ 신청\nhttps://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=2026-10-08-siksin-food-affection\n4. 상담 내용란에 “스레드 팔로우, 카톡 친구추가 완료”를 반드시 적어줘.\n\n이렇게 신청하면 입금하지 않아도 돼.\n신청하고 하루 뒤, 적어준 이메일로 무료 리포트를 보내줄게."
+  ],
+  "notes": "2026-10-08 운영설정·글유형·최근이력, threads.mjs topics, 스레드/03_게시글/00_목록.md 및 부모가 실제 계정에서 조회한 최근 25개 게시물 소재와 중복 점검. campaign.cta_template을 그대로 사용하고 주제 연결 문장과 해당 초안 UTM만 추가. 과거 3일·50명 조건 미사용. 실제 상담 사례·통계 창작 없음. 식신 정의는 lib/saju-library.ts:277 및 실천민속학회 제50차 전국학술대회 십성 표 검색 결과(https://folklore.or.kr/homepage/boardMedia/131343)와 대조. 목생화·음양 동일 관계로 을목-정화 확인. 표현·생산·식복 해석은 https://sajucmlab.com/wiki/siksin/ 참고. 음식으로 애정을 표현하는 장면은 전통 상징을 확장한 창작 비유이며 경험 통계나 검증된 성격 예측이 아님.",
+  "publication": {
+    "status": "published",
+    "account": "don.ssaem",
+    "verified_at": "2026-10-07T16:41:20.900Z",
+    "posts": [
+      {
+        "id": "18228588307330741",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMz557jyE3"
+      },
+      {
+        "id": "17912237952548524",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMz7C-j9Od",
+        "reply_to_id": "18228588307330741"
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-08-jeongjae-keeping-things",
+  "account": "don.ssaem",
+  "format_id": "08",
+  "title": "물건 하나 살 때 오래 고민하는 사람, 정재로 풀어보면",
+  "topic_key": "정재-물건관리와오래쓰기",
+  "created_at": "2026-10-08T01:06:21+09:00",
+  "cta_mode": "evergreen",
+  "campaign_id": null,
+  "posts": [
+    "물건 하나 살 때 오래 고민하는 사람, 정재로 풀어보면\n\n정재의 ‘차근차근 관리하는 힘’을 생활에 옮기면 이런 모습이야.\n\n1. 예쁜 것보다 어디에 둘지 먼저 생각함\n2. 새로 사기 전에 집에 있는 걸 확인함\n3. 설명서랑 보증서는 한 서랍에 모아둠\n4. 싸게 산 날보다 끝까지 잘 쓴 날이 뿌듯함\n5. 남한테 빌린 물건은 부속품까지 챙겨 돌려줌\n6. 대신 아직 쓸 수 있다는 이유로 못 버리는 것도 있음\n\n정재는 내가 극하는 오행 중 음양이 다른 관계야. 갑목에게 기토가 정재인 식이지. 전통적으로 재물을 다루고 지키는 상징이라, 물건 관리에 비유해볼 수 있어.\n\n정재가 많다고 다 이런 건 아니야. 일간의 힘과 다른 십성의 배치에 따라 꼼꼼함이 강점이 되기도, 챙길 게 너무 많은 부담이 되기도 해.",
+    "내가 가진 걸 잘 지키는 힘이 어디에서 나오는지 궁금하다면, 사주 전체를 함께 살펴보자.\n\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 있어.\n1:1 상담을 받으면 사주 PDF 리포트도 함께 주고, 상담 없이 리포트만 신청해도 돼.\n\n신청·접수 가능 여부는 여기서 확인해줘.\nhttps://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=2026-10-08-jeongjae-keeping-things\n\n카카오톡 채널 ‘돈쌤’\nhttps://pf.kakao.com/_xfeQxiX"
+  ],
+  "notes": "전통적 상징을 물건 관리 장면으로 확장한 창작 비유이며 실제 관찰 통계나 상담 사례가 아님. 정재 정의·갑목/기토 관계는 lib/saju-library.ts:289 및 실천민속학회 제50차 전국학술대회 자료의 십성 표(https://folklore.or.kr/homepage/boardMedia/131343)와 대조. 생활 장면 자체를 검증된 성격 예측으로 제시하지 않음. 최근이력 5개, threads.mjs topics의 기존 초안 0개, 스레드/03_게시글/00_목록.md 제목 중복 점검. campaign.status=pending_dates로 일반 CTA 적용. 생성 당시에는 로컬 초안만 저장했으며, 이후 사용자 요청에 따른 게시 결과는 publication에 기록.",
+  "publication": {
+    "status": "published",
+    "account": "don.ssaem",
+    "verified_at": "2026-10-07T16:26:58.371Z",
+    "posts": [
+      {
+        "id": "18137316925651021",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMyMrlD8wZ"
+      },
+      {
+        "id": "18073858748736201",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMyNcHD3vg"
+      }
+    ],
+    "updates": [
+      {
+        "id": "18112921496170737",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMzGi1j6-v",
+        "reply_to_id": "18073858748736201",
+        "purpose": "무료 이벤트 신청 조건 안내",
+        "draft": "스레드/초안/2026-10-08_jeongjae-free-report-update.json",
+        "verified_at": "2026-10-07T16:34:41.832Z"
+      }
+    ]
+  }
+}

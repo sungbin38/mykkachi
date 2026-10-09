@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "title": "고집 제일 센 일주 모음",
+      "topic_key": "일주-고집",
+      "format_id": "07",
+      "status": "user_provided_published_reference",
+      "recorded_at": "2026-10-08",
+      "posted_at": null
+    },
+    {
+      "title": "상관 많은 사람 상대하다 보면 알게 되는 것",
+      "topic_key": "상관-말과지적",
+      "format_id": "08",
+      "status": "user_provided_published_reference",
+      "recorded_at": "2026-10-08",
+      "posted_at": null
+    },
+    {
+      "title": "도화살 있는 사람 상대하다 보면 알게 되는 것",
+      "topic_key": "도화-시선과인기",
+      "format_id": "09",
+      "status": "user_provided_published_reference",
+      "recorded_at": "2026-10-08",
+      "posted_at": null
+    },
+    {
+      "title": "MBTI별 썸 탈 때 행동",
+      "topic_key": "mbti-썸연락고백",
+      "format_id": "10",
+      "status": "user_provided_published_reference",
+      "recorded_at": "2026-10-08",
+      "posted_at": null
+    },
+    {
+      "title": "3일간 사주 리포트 무료 이벤트",
+      "topic_key": "무료리포트-50명",
+      "format_id": "campaign",
+      "status": "user_provided_published_reference",
+      "recorded_at": "2026-10-08",
+      "posted_at": null
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-08-jeongjae-free-report-update",
+  "account": "don.ssaem",
+  "format_id": "cta-update",
+  "title": "정재 글의 무료 리포트 이벤트 안내 추가",
+  "topic_key": "정재-기존글-무료리포트안내수정",
+  "created_at": "2026-10-07T16:31:21.031272+00:00",
+  "cta_mode": "campaign",
+  "campaign_id": "free-report-50",
+  "reply_to_id": "18073858748736201",
+  "posts": [
+    "지금은 10만원 상당 사주 PDF 리포트를 무료로 보내주고 있어.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청 방법\n1. @don.ssaem 스레드 팔로우\n2. 카카오톡 채널 ‘돈쌤’ 친구추가\nhttps://pf.kakao.com/_xfeQxiX\n3. 아래 사이트에서 ‘사주 리포트’ 신청\nhttps://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=2026-10-08-jeongjae-free-report-update\n4. 상담 내용란에 “스레드 팔로우, 카톡 친구추가 완료”를 반드시 적어줘.\n\n이렇게 신청하면 입금하지 않아도 돼.\n신청하고 하루 뒤, 적어준 이메일로 무료 리포트를 보내줄게."
+  ],
+  "notes": "사용자가 기존 글의 무료 이벤트 안내 수정과 향후 동일 조건 적용을 명시적으로 요청. 기존 게시물의 직접 편집 API가 확인되지 않아 마지막 신청 댓글에 정확한 이벤트 안내를 후속 답글로 추가. 기존 본문·댓글 재발행이나 삭제는 하지 않음.",
+  "publication": {
+    "status": "published",
+    "account": "don.ssaem",
+    "verified_at": "2026-10-07T16:34:41.832Z",
+    "posts": [
+      {
+        "id": "18112921496170737",
+        "url": "https://www.threads.com/@don.ssaem/post/DeMzGi1j6-v",
+        "reply_to_id": "18073858748736201"
+      }
+    ]
+  }
+}

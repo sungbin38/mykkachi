@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-08-ilgan-packing-for-trips",
+  "account": "don.ssaem",
+  "format_id": "07",
+  "title": "<일간별 여행 짐 싸는 방식 모음>",
+  "topic_key": "일간-여행짐싸기",
+  "created_at": "2026-10-08T20:00:00+09:00",
+  "cta_mode": "campaign",
+  "campaign_id": "free-report-50",
+  "posts": [
+    "<일간별 여행 짐 싸는 방식 모음>\n\n1. 갑목 : 일정표부터 짜고 짐은 전날 밤 큰 것만 대충 넣음\n2. 을목 : 날씨 바뀔까 봐 겉옷 하나 더, 바꿔 입을 옷까지 챙김\n3. 병화 : 사진 찍을 옷 위주로 넣다가 캐리어 안 닫힘\n4. 정화 : 숙소에서 쓸 향초나 좋아하는 소품 하나는 꼭 넣음\n5. 무토 : 몇 년째 같은 파우치, 같은 순서. 짐 구성이 거의 안 바뀜\n6. 기토 : 같이 가는 사람 몫까지 밴드랑 소화제 챙겨옴\n7. 경금 : 필요한 것만 딱. 배낭 하나로 끝내고 남는 공간 없음\n8. 신금 : 옷마다 지퍼백 나눠 담고 칸칸이 정리해야 마음 편함\n9. 임수 : 현지에서 사면 된다고 거의 빈손으로 출발함\n10. 계수 : 출발 전날까지 챙길 목록 몇 번이고 다시 확인함\n\n일간의 전통적 이미지로 본 성향이라 원국에 따라 달라짐.",
+    "여행 짐처럼 내가 일상을 꾸리는 방식도 사주로 살펴보고 싶다면.\n\n지금은 10만원 상당 사주 PDF 리포트를 무료로 보내주고 있어.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청 방법\n1. @don.ssaem 스레드 팔로우\n2. 카카오톡 채널 ‘돈쌤’ 친구추가\nhttps://pf.kakao.com/_xfeQxiX\n3. 아래 사이트에서 ‘사주 리포트’ 신청\nhttps://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=2026-10-08-ilgan-packing-for-trips\n4. 상담 내용란에 “스레드 팔로우, 카톡 친구추가 완료”를 반드시 적어줘.\n\n이렇게 신청하면 입금하지 않아도 돼.\n신청하고 하루 뒤, 적어준 이메일로 무료 리포트를 보내줄게."
+  ],
+  "notes": "최신 돈쌤 SKILL.md·writing.md·donssaem-examples.md·운영설정·글유형·최근이력·topics·threads recent 확인 후 중복 대조. 사용자 원본 제목·짧은 반말 목록·줄바꿈 유지. 상담 경험·통계 창작 없음. 행동 묘사는 전통 명리 이미지를 일상에 옮긴 창작 공감 문구이며 성격 판정이 아님. campaign.cta_template 전문에 UTM과 주제 연결 문장만 추가. 일간 물상 lib/saju-library.ts:228-232 대조. 갑목 큰나무의 방향·계획, 을목 덩굴의 유연한 적응, 병화 햇빛의 드러냄, 정화 등불의 은은한 분위기, 무토 산의 안정·불변, 기토 밭의 돌봄, 경금 원석의 결단·간결, 신금 보석의 섬세한 정돈, 임수 큰물의 흐름·확장, 계수 이슬의 세심함으로 창작 장면 구성. 열 일간 갑목~계수 빠짐·중복 없음. 이전 칭찬·막힌일 목록, 역마 동선 글과 장면·문장 분리.",
+  "publication": {
+    "status": "published",
+    "account": "don.ssaem",
+    "verified_at": "2026-10-08T09:21:53.183Z",
+    "posts": [
+      {
+        "id": "17963106867198876",
+        "url": "https://www.threads.com/@don.ssaem/post/DeOmadDCZsm"
+      },
+      {
+        "id": "17908729305558015",
+        "url": "https://www.threads.com/@don.ssaem/post/DeOmbcuCb5i",
+        "reply_to_id": "17963106867198876"
+      }
+    ]
+  }
+}

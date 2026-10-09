@@ -1,0 +1,70 @@
+{
+  "version": 3,
+  "account": "don.ssaem",
+  "brand": "돈쌤",
+  "timezone": "Asia/Seoul",
+  "booking_url": "https://mykkachi.com/book",
+  "kakao_channel_url": "https://pf.kakao.com/_xfeQxiX",
+  "auto_format_ids": [
+    "07",
+    "08",
+    "09",
+    "11"
+  ],
+  "brand_facts": {
+    "experience_years": 9,
+    "consultation_regions": [
+      "한국",
+      "대만"
+    ],
+    "consultation_includes_report": true,
+    "report_only_available": true,
+    "daily_consultation_cap": 5,
+    "daily_report_cap": 6,
+    "source": "2026-10-08 사용자 제공"
+  },
+  "free_question_offer_active": false,
+  "campaign": {
+    "id": "free-report-50",
+    "status": "active",
+    "starts_at": null,
+    "ends_at": null,
+    "capacity_reached": false,
+    "report_value_krw": 100000,
+    "delivery": "신청하고 하루 뒤 신청 이메일로 PDF 리포트 발송",
+    "requirements": [
+      "@don.ssaem 스레드 팔로우",
+      "카카오톡 채널 돈쌤 친구추가",
+      "사이트에서 사주 리포트 신청",
+      "상담 내용란에 스레드 팔로우, 카톡 친구추가 완료를 반드시 기입"
+    ],
+    "source": "2026-10-08 사용자가 현재 무료 이벤트라고 재확인하고 앞으로도 동일 안내를 요청. 종료나 조건 변경 지시가 오면 갱신. 날짜·정원을 임의로 추가하지 않음.",
+    "previous_example": {
+      "duration_days": 3,
+      "capacity": 50,
+      "note": "이전 참고글의 조건. 현재 CTA에 자동 포함하지 않음."
+    },
+    "activation": "user_confirmed",
+    "confirmed_at": "2026-10-07T16:31:21.031000+00:00",
+    "application_note": "스레드 팔로우, 카톡 친구추가 완료",
+    "deposit_required": false,
+    "required_cta_phrases": [
+      "10만원 상당",
+      "무료",
+      "스레드 팔로우, 카톡 친구추가 완료",
+      "반드시",
+      "입금하지 않아도 돼",
+      "하루 뒤",
+      "이메일"
+    ],
+    "cta_template": "지금은 10만원 상당 사주 PDF 리포트를 무료로 보내주고 있어.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청 방법\n1. @don.ssaem 스레드 팔로우\n2. 카카오톡 채널 ‘돈쌤’ 친구추가\n{kakao_channel_url}\n3. 아래 사이트에서 ‘사주 리포트’ 신청\n{booking_url_with_utm}\n4. 상담 내용란에 “스레드 팔로우, 카톡 친구추가 완료”를 반드시 적어줘.\n\n이렇게 신청하면 입금하지 않아도 돼.\n신청하고 하루 뒤, 적어준 이메일로 무료 리포트를 보내줄게."
+  },
+  "default_cta_mode": "campaign",
+  "style_preference": {
+    "profile": "user_original_saju_lists",
+    "default_content_posts": 1,
+    "default_cta_posts": 1,
+    "mbti_only_on_explicit_request": true,
+    "source": "사용자가 최근 AI 글의 형식이 자신의 이전 글과 다르다고 교정. 원래 제목·목록·반말 형식 유지, 사주 소재·내용만 변경. 상세 정의·계산법은 비게시용 notes에 보관."
+  }
+}
