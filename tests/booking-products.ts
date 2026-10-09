@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { neon, neonConfig } from "@neondatabase/serverless";
-import { createBooking, validateBooking, updateBooking, releaseExpired, listBookings, type BookingInput } from "../lib/booking";
+import { createBooking, validateBooking, updateBooking, listBookings, type BookingInput } from "../lib/booking";
 import { priceFor } from "../lib/booking-shared";
 import { db } from "../lib/db";
 
@@ -61,9 +61,8 @@ try {
     assert.equal((await updateBooking(report.id, { status: "confirmed" })).status, "confirmed");
     assert.ok((await updateBooking(report.id, { reportSent: true })).reportSentAt);
     await updateBooking(report.id, { status: "cancelled" });
-    await updateBooking(report.id, { status: "requested" });
-    await db().prepare("UPDATE bookings SET hold_until=now()-interval '1 minute' WHERE id=?").bind(report.id).run();
-    assert.equal(await releaseExpired(), 1);
+    assert.equal(report.holdUntil, null);
+    assert.equal((await updateBooking(report.id, { status: "requested" })).status, "requested");
   }
   await db().prepare("INSERT INTO booking_slots (id,date,hour) VALUES ('test-slot','2099-01-01',10),('fail-slot','2099-01-02',10)").run();
   const consultation = validateBooking({ ...input, slotId: "test-slot", locale: "zh-TW", marketingConsent: true });
@@ -83,7 +82,7 @@ try {
   await assert.rejects(createBooking({ ...consultation, slotId: "fail-slot", name: null } as unknown as BookingInput));
   assert.equal((await db().prepare("SELECT status FROM booking_slots WHERE id='fail-slot'").first<{ status: string }>())?.status, "open");
   assert.equal((await listBookings()).length, 4);
-  console.log("PASS migration twice, legacy records, 4 prices, server validation, slot-free reports, expiry, admin updates, consultation concurrency and rollback");
+  console.log("PASS migration twice, legacy records, 4 prices, server validation, slot-free reports, no auto-expiry, admin updates, consultation concurrency and rollback");
 } finally {
   neonConfig.fetchFunction = originalFetch;
   globalThis.fetch = networkFetch;

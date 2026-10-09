@@ -130,8 +130,8 @@ type Overview = {
   collectedAt: string;
 };
 const NAV = [
-  { id: "overview", label: "대시보드", icon: LayoutDashboard },
   { id: "bookings", label: "상담 예약", icon: CalendarCheck },
+  { id: "overview", label: "대시보드", icon: LayoutDashboard },
   { id: "traffic", label: "방문 분석", icon: Activity },
   { id: "content", label: "콘텐츠 스튜디오", icon: Files },
   { id: "calendar", label: "콘텐츠 캘린더", icon: CalendarDays },
@@ -246,7 +246,7 @@ function ContentTable({ list, onSelect, onCreate }: {
 
 export function AdminDashboard({ name }: { name: string }) {
   const router = useRouter();
-  const [section, setSection] = useState<Section>("overview"),
+  const [section, setSection] = useState<Section>("bookings"),
     [items, setItems] = useState<ContentItem[]>([]),
     [data, setData] = useState<Overview>(blank),
     [loading, setLoading] = useState(true),

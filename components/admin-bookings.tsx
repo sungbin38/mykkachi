@@ -41,11 +41,11 @@ function JourneyPanel({ booking }: { booking: Booking }) {
     {!s && !booking.sessionId ? <p className="quiet-text">추적 정보가 없어요. 추적 스크립트가 켜지기 전 예약이거나, 브라우저가 저장소를 막은 경우예요.</p> : <>
       <dl className="journey-facts">
         <div><dt>유입</dt><dd>{sourceLabel(s)}</dd></div>
-        <div><dt>첫 페이지</dt><dd>{s?.landingPath || "-"}</dd></div>
         <div><dt>기기·지역</dt><dd><DeviceIcon device={s?.device} /> {s?.device || "-"} · {[s?.country, s?.city].filter(Boolean).join(" ") || "-"}</dd></div>
         <div><dt>방문</dt><dd>{s?.visits ? `${s.visits}번째 방문` : "-"} · 이번 세션 {s?.pageViews ?? 0}페이지</dd></div>
         <div><dt>세션 시작</dt><dd>{dt(s?.startedAt)}</dd></div>
         <div><dt>예약 완료</dt><dd>{dt(booking.createdAt)}</dd></div>
+        <div className="wide"><dt>첫 페이지</dt><dd>{s?.landingPath || "-"}</dd></div>
       </dl>
       {j === undefined ? <p className="quiet-text"><Loader2 size={12} className="animate-spin" /> 이동 경로 불러오는 중</p>
         : j === null ? <p className="quiet-text">이동 경로를 불러오지 못했어요.</p>
@@ -107,17 +107,37 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
 
   if (!data) return <div className="studio-empty"><Loader2 className="animate-spin" size={22} /><p>{error || "예약 정보를 불러오고 있어요."}</p></div>;
   const waiting = data.bookings.filter((b) => b.status === "requested").length;
+  const active = data.bookings.filter((b) => !["cancelled", "expired"].includes(b.status));
+  const upcomingConsults = active.filter((b) => b.product !== "report" && b.date !== null && b.date >= todayKST() && ["requested", "confirmed"].includes(b.status)).length;
+  const confirmedConsults = active.filter((b) => b.product !== "report" && b.date !== null && b.date >= todayKST() && b.status === "confirmed").length;
+  const pendingReports = active.filter((b) => b.product === "report" && ["requested", "confirmed"].includes(b.status)).length;
+  const reportsToSend = active.filter((b) => b.product === "report" && b.status === "confirmed" && !b.reportSentAt).length;
   return <>
     {error && <p className="error-message" role="alert">{error}</p>}
     <div className="metric-grid bookings-metrics">
       <div className="metric-card"><span className="tiny-label muted">입금 대기</span><strong>{waiting}</strong><p>입금 확인이 필요한 요청</p></div>
-      <div className="metric-card"><span className="tiny-label muted">확정된 상담</span><strong>{bookings.filter((b) => b.product !== "report" && b.status === "confirmed").length}</strong><p>다가오는 1:1 상담</p></div>
-      <div className="metric-card"><span className="tiny-label muted">열린 시간</span><strong>{data.slots.filter((s) => s.status === "open" && s.date >= todayKST()).length}</strong><p>예약 가능한 1시간 슬롯</p></div>
-      <div className="metric-card"><span className="tiny-label muted">알림</span><strong className="metric-inline">{data.notifications ? <BellRing size={20} /> : <BellOff size={20} />}</strong><p>{data.notifications ? "새 예약을 이메일로 받아요" : "RESEND_API_KEY · NOTIFY_EMAIL 미설정"}</p></div>
+      <div className="metric-card"><span className="tiny-label muted">다가오는 상담</span><strong>{upcomingConsults}</strong><p>확정 {confirmedConsults} · 입금 대기 {upcomingConsults - confirmedConsults}</p></div>
+      <div className="metric-card"><span className="tiny-label muted">진행할 리포트</span><strong>{pendingReports}</strong><p>입금 확인 후 아직 안 보낸 리포트 {reportsToSend}</p></div>
+      <div className="metric-card"><span className="tiny-label muted">열린 시간</span><strong>{data.slots.filter((s) => s.status === "open" && s.date >= todayKST()).length}</strong><p className="metric-inline-note">{data.notifications ? <><BellRing size={13} />새 예약 이메일 알림 켜짐</> : <><BellOff size={13} />알림 미설정</>}</p></div>
     </div>
-    <div className="studio-two-col bookings-layout">
-      <section className="studio-panel">
-        <div className="panel-heading"><h2>상담 가능 시간 열기</h2><button className="icon-button" onClick={() => void load()} aria-label="새로고침"><RefreshCw size={15} /></button></div>
+    <section className="studio-panel bookings-table-panel">
+      <div className="panel-heading"><h2>상담·리포트 신청</h2><div className="inline-actions"><button className={`filter-button${filter === "upcoming" ? " active" : ""}`} onClick={() => setFilter("upcoming")}>진행 예정</button><button className={`filter-button${filter === "all" ? " active" : ""}`} onClick={() => setFilter("all")}>전체 {data.bookings.length}</button><button className="icon-button" onClick={() => void load()} aria-label="새로고침"><RefreshCw size={15} /></button></div></div>
+      {bookings.length === 0 ? <div className="quiet-empty"><p>{filter === "upcoming" ? "진행할 상담이나 리포트가 없어요." : "아직 예약이 없어요."}</p></div>
+        : <div className="booking-table-wrap"><table className="booking-table">
+          <thead><tr><th>일시</th><th>상품</th><th>이름</th><th>사연</th><th>유입</th><th>금액</th><th>상태</th></tr></thead>
+          <tbody>{bookings.map((b) => <tr key={b.id} tabIndex={0} onClick={() => { setSelected(b); setNote(b.note || ""); }} onKeyDown={(e) => { if (e.key === "Enter") { setSelected(b); setNote(b.note || ""); } }}>
+            <td className="bt-when"><strong>{b.date ? dayLabel(b.date) : "-"}</strong><span>{b.hour !== null ? `${hh(b.hour)}–${hh(b.hour + 1)}` : `${dt(b.createdAt)} 신청`}</span></td>
+            <td><span className={`bt-product ${b.product}`}>{b.product === "report" ? "리포트" : "1:1 상담"}</span></td>
+            <td className="bt-name">{b.name}{!b.seenAt && <span className="pill red">NEW</span>}</td>
+            <td className="bt-story">{b.story ? b.story.replace(/\s+/g, " ").slice(0, 60) : "사연 없음"}</td>
+            <td className="bt-source">{sourceLabel(b.source)}</td>
+            <td className="bt-amount">{formatWon(b.amount)}</td>
+            <td className="bt-status"><span className={`pill ${STATUS_CLASS[b.status]}`}>{bookingStatusLabel(b.status, b.product)}</span>{b.reportSentAt && <span className="pill"><MailCheck size={12} />보냄</span>}</td>
+          </tr>)}</tbody>
+        </table></div>}
+    </section>
+      <section className="studio-panel bookings-slots-panel">
+        <div className="panel-heading"><h2>상담 가능 시간 열기</h2></div>
         <p className="panel-footnote">날짜를 고르고 시간을 눌러 열거나 닫아요. 기본 운영 시간은 {DEFAULT_HOURS_LABEL}예요. 예약된 시간은 닫을 수 없어요.</p>
         <div className="slot-date-row">
           <input className="input-control" type="date" value={date} min={todayKST()} onChange={(e) => setDate(e.target.value)} />
@@ -133,16 +153,6 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
             : <ul>{openDays.filter(([d]) => d >= todayKST()).map(([d, v]) => <li key={d}><button type="button" onClick={() => setDate(d)}>{dayLabel(d)}</button><span>열림 {v.open} · 예약 {v.booked}</span></li>)}</ul>}
         </div>
       </section>
-      <section className="studio-panel">
-        <div className="panel-heading"><h2>상담·리포트 신청</h2><div className="inline-actions"><button className={`filter-button${filter === "upcoming" ? " active" : ""}`} onClick={() => setFilter("upcoming")}>진행 예정</button><button className={`filter-button${filter === "all" ? " active" : ""}`} onClick={() => setFilter("all")}>전체 {data.bookings.length}</button></div></div>
-        {bookings.length === 0 ? <div className="quiet-empty"><p>{filter === "upcoming" ? "진행할 상담이나 리포트가 없어요." : "아직 예약이 없어요."}</p></div>
-          : <ul className="booking-list">{bookings.map((b) => <li key={b.id}><button type="button" className="booking-row" onClick={() => { setSelected(b); setNote(b.note || ""); }}>
-            <div className="booking-when"><strong>{b.date ? dayLabel(b.date) : "리포트"}</strong><span>{b.hour !== null ? `${hh(b.hour)}–${hh(b.hour + 1)}` : "이메일 수령"}</span></div>
-            <div className="booking-who"><strong>{b.name}</strong><span>{b.story ? b.story.slice(0, 40) : "사연 없음"} · {sourceLabel(b.source)}</span></div>
-            <div className="booking-flags"><span className={`pill ${STATUS_CLASS[b.status]}`}>{bookingStatusLabel(b.status, b.product)}</span>{b.reportSentAt && <span className="pill"><MailCheck size={12} />리포트</span>}{!b.seenAt && <span className="pill red">NEW</span>}</div>
-          </button></li>)}</ul>}
-      </section>
-    </div>
     <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
       <DialogContent className="booking-dialog">
         {selected && <>
@@ -167,7 +177,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
             <button type="button" className="outline-button" disabled={saving} onClick={() => patch(selected, { reportSent: !selected.reportSentAt })}>{selected.reportSentAt ? <><X size={14} />리포트 발송 취소</> : <><Mail size={14} />리포트 보냈어요</>}</button>
           </div>
           <label className="field"><span className="field-label">상담 메모 (나만 보는 메모)</span><textarea className="input-control booking-story" rows={4} maxLength={2000} value={note} onChange={(e) => setNote(e.target.value)} onBlur={() => note !== (selected.note || "") && patch(selected, { note })} placeholder="상담 중 메모, 리포트에 넣을 내용 등" /></label>
-          <p className="panel-footnote">1:1 상담은 취소하거나 기한이 지나면 그 시간이 다시 열려요. 리포트만 신청한 건은 시간표에 영향을 주지 않아요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
+          <p className="panel-footnote">1:1 상담은 취소하면 그 시간이 다시 열려요. 입금 대기 신청은 자동으로 만료되지 않아요. 리포트만 신청한 건은 시간표에 영향을 주지 않아요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
         </>}
       </DialogContent>
     </Dialog>

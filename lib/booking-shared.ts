@@ -30,7 +30,6 @@ export const MARKETING_CONSENT_TEXT = "상담 또는 리포트에 담긴 사연�
 /** Required for every booking: data use plus marketing email/phone contact from My Kkachi. */
 export const CONTACT_CONSENT_TEXT = "입력한 정보는 상담 예약·리포트 신청·입금 확인·리포트 발송에 사용하고, 남긴 이메일과 연락처로 돈쌤의 소식·이벤트 안내를 보내드려요. 안내 수신은 언제든 답장으로 거절할 수 있고, 이용 뒤 요청하시면 정보를 지워드려요. 동의합니다. *";
 export const DURATION_TEXT = "최대 1시간 (이야기가 정리되면 더 일찍 끝날 수도 있어요)";
-export const HOLD_MINUTES = 30;
 export const STORY_EXAMPLES: { title: string; text: string }[] = [
   { title: "이직 · 커리어", text: "IT 회사에서 기획 일을 5년 했고, 지금 32살이에요. 올해 초부터 회사가 구조조정 이야기가 나와서 불안한데, 마침 규모가 더 작은 스타트업에서 팀장 자리로 제안이 왔어요. 연봉은 비슷하고 일은 훨씬 많아질 것 같아요. 지금이 움직여도 되는 시기인지, 아니면 1~2년 더 버티는 게 나은지 알고 싶어요." },
   { title: "연애 · 궁합", text: "2년 만난 남자친구와 결혼 이야기가 나오고 있어요. 저는 1995년 3월 12일 오전 7시 여성, 남자친구는 1993년 11월 2일 오후 3시 남성이에요. 요즘 돈 쓰는 방식이랑 양가 문제로 자주 부딪히는데, 이게 맞춰갈 수 있는 차이인지 궁금하고 결혼 시기를 잡는다면 언제가 좋을지도 듣고 싶어요." },

@@ -1506,7 +1506,29 @@
 .booking-when span, .booking-who span { font-size: 12px; color: #8b8e7c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .booking-who strong { font-size: 14.5px; }
 .booking-flags { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
-.booking-dialog { max-width: 640px; }
+.bookings-table-panel { margin-bottom: 22px; }
+.bookings-slots-panel { max-width: 720px; }
+.metric-inline-note { display: inline-flex; align-items: center; gap: 5px; }
+.booking-table-wrap { overflow-x: auto; margin: 0 -4px; }
+.booking-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13.5px; }
+.booking-table th { text-align: left; font-size: 11px; letter-spacing: .5px; color: #8b8e7c; font-weight: 500; padding: 8px 8px; border-bottom: 1px solid #edf1e5; white-space: nowrap; }
+.booking-table td { padding: 11px 8px; border-bottom: 1px solid #f1f3ec; vertical-align: middle; }
+.booking-table tbody tr { cursor: pointer; }
+.booking-table tbody tr:hover, .booking-table tbody tr:focus-visible { background: #f8f5ed; outline: none; }
+.booking-table .pill { white-space: nowrap; }
+.bt-when { white-space: nowrap; }
+.bt-when strong { display: block; font-size: 13.5px; }
+.bt-when span { font-size: 12px; color: #8b8e7c; }
+.bt-product { font-size: 12.5px; font-weight: 600; white-space: nowrap; color: #2f6b5f; }
+.bt-product.report { color: #a66a38; }
+.bt-name { white-space: nowrap; font-weight: 600; }
+.bt-name .pill { margin-left: 6px; }
+.bt-story { color: #5d6b63; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-source { color: #8b8e7c; font-size: 12.5px; white-space: nowrap; }
+.bt-amount { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bt-status { white-space: nowrap; }
+.bt-status .pill + .pill { margin-left: 4px; }
+.booking-dialog { max-width: 640px; max-height: calc(100dvh - 2rem); overflow-y: auto; }
 .booking-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin: 6px 0 14px; }
 .booking-detail div { display: grid; gap: 2px; }
 .booking-detail dt { font-size: 11.5px; letter-spacing: .6px; color: #8b8e7c; text-transform: uppercase; }
@@ -1529,11 +1551,13 @@
 .journey-facts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 14px; margin-bottom: 12px; }
 .journey-facts div { display: grid; gap: 1px; }
 .journey-facts dt { font-size: 10.5px; letter-spacing: .6px; color: #8b8e7c; text-transform: uppercase; }
-.journey-facts dd { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+.journey-facts dd { font-size: 13px; display: flex; align-items: center; gap: 4px; min-width: 0; word-break: keep-all; }
+.journey-facts .wide { grid-column: 1 / -1; }
+.journey-facts .wide dd { word-break: break-all; }
 .journey-steps { list-style: none; padding: 0; margin: 0; max-height: 220px; overflow: auto; border-top: 1px solid #edf1e5; }
-.journey-steps li { display: grid; grid-template-columns: 70px 110px 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f3ec; font-size: 12.5px; align-items: baseline; }
-.journey-time { color: #8b8e7c; font-family: var(--font-dm), sans-serif; font-variant-numeric: tabular-nums; }
-.journey-event { font-weight: 600; color: #4a5a55; }
+.journey-steps li { display: grid; grid-template-columns: 92px 84px 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f3ec; font-size: 12.5px; align-items: baseline; }
+.journey-time { white-space: nowrap; color: #8b8e7c; font-family: var(--font-dm), sans-serif; font-variant-numeric: tabular-nums; }
+.journey-event { white-space: nowrap; font-weight: 600; color: #4a5a55; }
 .journey-event.cta_click, .journey-event.slot_selected, .journey-event.booking_submit { color: #a66a38; }
 .journey-event.booking_created { color: #2f6b5f; }
 .journey-path { color: #5d6b63; word-break: break-all; }
@@ -1563,7 +1587,7 @@
 .session-meta { display: inline-flex; align-items: center; gap: 4px; color: #6c7567; font-size: 12px; }
 .session-trail { font-size: 12.5px; color: #4a5a55; margin-top: 6px; word-break: break-all; font-family: var(--font-dm), sans-serif; }
 .session-ref { font-size: 11.5px; color: #8b8e7c; margin-top: 2px; word-break: break-all; }
-@media (max-width: 760px) { .journey-facts { grid-template-columns: 1fr 1fr; } .journey-steps li { grid-template-columns: 60px 1fr; } .journey-path { grid-column: 2; } .funnel li { grid-template-columns: 90px 1fr 36px 44px; } }
+@media (max-width: 760px) { .journey-facts { grid-template-columns: 1fr 1fr; } .journey-steps li { grid-template-columns: 92px 1fr; } .journey-path { grid-column: 2; } .funnel li { grid-template-columns: 90px 1fr 36px 44px; } }
 .consent-tag { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 5px; background: #e9ede2; color: #517c73; font-size: 11px; font-style: normal; font-family: var(--font-pretendard), sans-serif; vertical-align: middle; }
 
 /* Long campaign URLs must not widen the traffic cards. */
