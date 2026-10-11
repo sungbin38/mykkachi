@@ -14,6 +14,8 @@
   "format_id": "08",
   "title": "실제로 작성한 새 제목",
   "topic_key": "핵심개념-생활장면",
+  "hook_formula": "06-contrarian",
+  "hook_line": "본문 첫 줄에 실제로 쓴 후킹 문장",
   "created_at": "2026-10-08T18:00:00+09:00",
   "cta_mode": "evergreen",
   "campaign_id": null,
