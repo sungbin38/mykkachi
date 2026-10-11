@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { createBooking, validateBooking, updateBooking, listBookings, type BookingInput } from "../lib/booking";
-import { priceFor } from "../lib/booking-shared";
+import { offerFor, priceFor, REPORT_PROMO_END } from "../lib/booking-shared";
 import { db } from "../lib/db";
 
 // Isolate every query in a temporary schema, and never send test notifications.
@@ -44,14 +44,16 @@ try {
     return new Response(JSON.stringify(body.queries ? { results: result.results.slice(1) } : result.results[1]), { status: response.status, headers: { "Content-Type": "application/json" } });
   };
   assert.equal((await db().prepare("SELECT product FROM bookings WHERE id='legacy'").first<{ product: string }>())?.product, "consultation");
-  assert.deepEqual([priceFor(false), priceFor(true), priceFor(false, "report"), priceFor(true, "report")], [200000, 150000, 100000, 50000]);
+  assert.deepEqual([priceFor(false), priceFor(true)], [200000, 150000]);
+  assert.deepEqual([offerFor("report", REPORT_PROMO_END - 1).base, offerFor("report", REPORT_PROMO_END - 1).marketing, offerFor("report", REPORT_PROMO_END - 1).regular], [10000, 5000, 100000]);
+  assert.deepEqual([offerFor("report", REPORT_PROMO_END).base, offerFor("report", REPORT_PROMO_END).marketing], [100000, 50000]);
   assert.throws(() => validateBooking({ ...input, product: "wrong" }));
   assert.throws(() => validateBooking({ ...input, product: "consultation" }));
   assert.equal(validateBooking({ ...input, slotId: "legacy-slot" }).product, "consultation");
 
   for (const consent of [false, true]) {
     const report = await createBooking(validateBooking({ ...input, product: "report", locale: "zh-TW", marketingConsent: consent, slotId: "should-be-ignored", amount: 1 }));
-    assert.equal(report.amount, consent ? 50000 : 100000);
+    assert.equal(report.amount, priceFor(consent, "report"));
     assert.equal(report.product, "report");
     assert.equal(report.locale, "zh-TW");
     assert.equal(report.slotId, null);

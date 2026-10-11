@@ -211,6 +211,11 @@ body:has(.site-header) :is(h1,h2,h3,.serif) { font-family: var(--font-pretendard
 .service-price strong { color: var(--primary); font-size: 52px; line-height: 1.2; font-weight: 650; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
 .service-saving { display: inline-flex; align-items: center; flex-shrink: 0; padding: 6px 12px; border-radius: 999px; background: var(--primary); color: var(--primary-foreground); font-size: 13px; font-weight: 650; line-height: 1.4; white-space: nowrap; }
 .service-base-price { margin-top: 12px; color: var(--muted-foreground); font-size: 14px; }
+.service-regular-price { color: var(--muted-foreground); font-size: 20px; font-weight: 500; text-decoration-thickness: 2px; }
+.promo-badge { display: inline-block; margin-right: 8px; padding: 3px 9px; border-radius: 6px; background: #c2412d; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: -.01em; vertical-align: 1px; }
+.promo-countdown { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: fit-content; max-width: 100%; margin-top: 14px; padding: 9px 14px; border-radius: 10px; background: #fbeeea; color: #8f2f20; font-size: 13.5px; font-weight: 600; }
+.promo-countdown strong { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 750; font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.promo-dday { padding: 1px 7px; border-radius: 5px; background: #c2412d; color: #fff; font-size: 13px; }
 .service-discount { margin-top: 17px; font-size: 13px; line-height: 1.75; color: var(--muted-foreground); word-break: keep-all; }
 .service-includes { list-style: none; margin: 28px 0 32px; padding-top: 22px; border-top: 1px solid var(--border); display: grid; gap: 12px; font-size: 14px; }
 .service-includes li { padding-left: 15px; border-left: 2px solid var(--input); }
@@ -635,3 +640,6 @@ body .journal-cover.illustrated-cover { background: var(--soft); }
 .reading-layout .privacy-hint { color: var(--muted-foreground); }
 .booking-page .booking-deadline, .booking-page .booking-deadline strong { color: var(--destructive); }
 .journal-search input { color: var(--ink); }
+.booking-page .booking-products > button > span.promo-countdown { display: flex; margin-top: 14px; color: #8f2f20; font-size: 13.5px; line-height: 1.4; }
+.booking-page .booking-products > button .promo-countdown span { color: inherit; }
+.booking-page .booking-products > button .promo-countdown .promo-dday { color: #fff; }

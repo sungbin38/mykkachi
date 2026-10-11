@@ -19,10 +19,21 @@ export const BOOKING_PRODUCTS = {
   report: { name: "사주 리포트", base: 100000, marketing: 50000 },
 } as const;
 export type BookingProduct = keyof typeof BOOKING_PRODUCTS;
+/** October special for the report-only product. Ends at midnight KST on Nov 1; regular prices return automatically after that. */
+export const REPORT_PROMO = { label: "10월 특가", endsAt: "2026-11-01T00:00:00+09:00", base: 10000, marketing: 5000 } as const;
+export const REPORT_PROMO_END = Date.parse(REPORT_PROMO.endsAt);
+export const reportPromoActive = (now = Date.now()) => now < REPORT_PROMO_END;
+/** Prices in effect right now; `regular` is the list price shown struck through during a promotion. */
+export const offerFor = (product: BookingProduct, now = Date.now()) => {
+  const p = BOOKING_PRODUCTS[product];
+  return product === "report" && reportPromoActive(now)
+    ? { name: p.name, base: REPORT_PROMO.base as number, marketing: REPORT_PROMO.marketing as number, regular: p.base as number, promo: true }
+    : { name: p.name, base: p.base as number, marketing: p.marketing as number, regular: p.base as number, promo: false };
+};
 /** Base price; the marketing-consent discount applies only when the customer opts in. */
 export const PRICE = PRICE_BASE;
 export const priceFor = (marketingConsent: boolean, product: BookingProduct = "consultation") =>
-  marketingConsent ? BOOKING_PRODUCTS[product].marketing : BOOKING_PRODUCTS[product].base;
+  marketingConsent ? offerFor(product).marketing : offerFor(product).base;
 export const bookingStatusLabel = (status: BookingStatus, product: BookingProduct = "consultation") =>
   product === "report" && status === "done" ? "리포트 완료" : STATUS_LABEL[status];
 /** Optional, discounted: lets us reuse the consultation story anonymously. Marketing contact itself is part of the required agreement (CONTACT_CONSENT_TEXT). */
