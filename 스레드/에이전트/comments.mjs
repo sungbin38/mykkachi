@@ -36,11 +36,12 @@ async function dueComments(api, me, minAge, days) {
     const root_id = post.ids[0];
     const res = await api(`/v1.0/${root_id}/conversation`, { params: { fields: 'id,text,username,timestamp,replied_to,is_reply_owned_by_me', reverse: 'false', limit: '100' } });
     const items = res.data || [];
+    const ownIds = new Set([...post.ids, ...items.filter(x => x.username === me || x.is_reply_owned_by_me).map(x => x.id)]);
     const answered = new Set(items.filter(x => x.username === me || x.is_reply_owned_by_me).map(x => x.replied_to?.id).filter(Boolean));
     for (const c of items) {
       if (c.username === me || c.is_reply_owned_by_me || answered.has(c.id)) continue;
-      // 우리 본문·신청 댓글에 직접 단 댓글만 대상 (다른 사람끼리의 대화는 제외)
-      if (!post.ids.includes(c.replied_to?.id)) continue;
+      // 우리 본문·신청 댓글·안내 댓글에 직접 단 댓글만 대상 (다른 사람끼리의 대화는 제외)
+      if (!ownIds.has(c.replied_to?.id)) continue;
       const age = (Date.now() - Date.parse(c.timestamp)) / 60000;
       if (age < minAge) continue;
       due.push({ post: post.draft_id, comment_id: c.id, username: c.username, age_min: Math.round(age), text: c.text || '' });
