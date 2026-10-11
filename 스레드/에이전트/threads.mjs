@@ -92,6 +92,8 @@ export function createApi(token, request = fetch) {
 export async function checkAccount(api, config, token) {
   const me = await api('/v1.0/me', { params: { fields: 'id,username' } });
   required(cleanHandle(me.username) === cleanHandle(config.account), `Token belongs to @${me.username}; expected @${config.account}. No posts sent.`);
+  // In cloud runs a network proxy injects the real token, so debug_token cannot inspect it; /me already proved the account.
+  if (process.env.THREADS_TOKEN_INJECTED === '1') return { id: me.id, username: me.username, valid: true, scopes: null, expires_at: null, token: 'proxy-injected' };
   const debug = await api('/debug_token', { params: { input_token: token } });
   const data = debug.data || {};
   required(data.is_valid, 'Threads access token is not valid.');
@@ -180,7 +182,7 @@ export async function publishThread({ draft, config, api, token, stateDir, execu
 async function main(args) {
   const [command, file, ...flags] = args;
   if (!command || command === '--help') {
-    console.log('Usage: node 스레드/에이전트/threads.mjs status | topics | recent | validate <draft.json> | publish <draft.json> [--execute]\nPublish defaults to a local dry run. --execute is only for an explicit user publishing request.');
+    console.log('Usage: node 스레드/에이전트/threads.mjs status | topics | recent [--limit=N≤100] | validate <draft.json> | publish <draft.json> [--execute]\nPublish defaults to a local dry run. --execute is only for an explicit user publishing request.');
     return;
   }
   required(['status', 'topics', 'recent', 'validate', 'publish'].includes(command), 'Unknown command.');
@@ -209,7 +211,7 @@ async function main(args) {
     console.log(JSON.stringify({ ...account, configured_username_matches: cleanHandle(process.env.THREADS_USERNAME) === cleanHandle(account.username), campaign_active: campaignActive(config) }, null, 2));
   } else if (command === 'recent') {
     await checkAccount(api, config, token);
-    const result = await api('/v1.0/me/threads', { params: { fields: 'id,text,timestamp,permalink', limit: '25' } });
+    const result = await api('/v1.0/me/threads', { params: { fields: 'id,text,timestamp,permalink', limit: String(Math.min(100, Math.max(1, Number(([file, ...flags].find(f => f?.startsWith('--limit=')) || '--limit=25').slice(8)) || 25))) } });
     // Do not print paging URLs: they can contain the access token.
     console.log(JSON.stringify({ posts: (result.data || []).map(({ id, text, timestamp, permalink }) => ({ id, text, timestamp, permalink })) }, null, 2));
   } else {
