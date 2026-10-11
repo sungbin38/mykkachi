@@ -18,7 +18,9 @@
     "report_only_available": true,
     "daily_consultation_cap": 5,
     "daily_report_cap": 6,
-    "source": "2026-10-08 사용자 제공"
+    "source": "2026-10-08 사용자 제공",
+    "charts_reviewed": "1000개 넘게 (9년간 본 명식)",
+    "charts_reviewed_source": "2026-10-11 사용자 확인: 9년 동안 명식 천 개 넘게 봄, 후킹·본문에 써도 됨"
   },
   "free_question_offer_active": false,
   "campaign": {
