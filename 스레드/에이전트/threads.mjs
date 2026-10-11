@@ -32,7 +32,7 @@ export function validateDraft(draft, config, now = new Date()) {
     required(typeof draft[key] === 'string' && draft[key].trim(), `Missing ${key}.`);
   }
   required(Number.isFinite(Date.parse(draft.created_at)), 'Invalid created_at.');
-  required(['evergreen', 'campaign'].includes(draft.cta_mode), 'cta_mode must be evergreen or campaign.');
+  required(['evergreen', 'campaign', 'soft'].includes(draft.cta_mode), 'cta_mode must be evergreen, campaign or soft.');
   const isReply = draft.reply_to_id !== undefined;
   if (isReply) required(typeof draft.reply_to_id === 'string' && /^\d+$/.test(draft.reply_to_id), 'reply_to_id must be a numeric post id string.');
   required(Array.isArray(draft.posts) && draft.posts.length >= (isReply ? 1 : 2), 'Provide content and a final CTA reply.');
@@ -42,6 +42,14 @@ export function validateDraft(draft, config, now = new Date()) {
     required(!/https?:\/\/\S*…/.test(post), `Post ${i + 1} has a truncated URL.`);
   }
   const last = draft.posts.at(-1);
+  // Soft sets carry no link or offer, so most posts do not look like repeated promotion.
+  if (draft.cta_mode === 'soft') {
+    for (const [i, post] of draft.posts.entries()) {
+      required(!/https?:\/\/|mykkachi|pf\.kakao/i.test(post), `Soft post ${i + 1} must not contain a link.`);
+      required(!/특가|만원|무료|할인|입금|선착순|신청/.test(post), `Soft post ${i + 1} must not contain an offer.`);
+    }
+    return { id: draft.id, account: draft.account, counts: draft.posts.map(count), cta_mode: draft.cta_mode, ...(isReply ? { reply_to_id: draft.reply_to_id } : {}) };
+  }
   const urls = last.match(/https?:\/\/[^\s<>]+/g) || [];
   required(urls.some(raw => {
     try {
@@ -167,6 +175,8 @@ export async function publishThread({ draft, config, api, token, stateDir, execu
         item.media_id = published.id;
         item.stage = 'published';
         await save();
+        // Space chain replies out; back-to-back publishing reads as automated bulk activity.
+        if (i < draft.posts.length - 1) await pause(20000 + Math.floor(Math.random() * 25000));
       }
       if (!item.permalink) {
         const post = await api(`/v1.0/${item.media_id}`, { params: { fields: 'id,permalink' } });

@@ -36,7 +36,7 @@ function mockApi({ username = 'don.ssaem', parentUsername = 'don.ssaem', uncerta
     if (failLink) { failLink = false; throw new Error('Temporary permalink failure'); }
     return { id: path.split('/').at(-1), permalink: `https://www.threads.com/@don.ssaem/post/${path.split('/').at(-1)}` };
   };
-  return { api, writes };
+  return { api, writes, pause: async () => {} };
 }
 
 async function tempState(t) {
@@ -176,4 +176,14 @@ test('API adapter sends token in header and never echoes remote error text', asy
   assert.equal(request.url.search, '');
   assert.equal(request.init.headers.Authorization, 'Bearer secret-token');
   assert.equal(request.init.body.get('text'), 'text & 한글');
+});
+
+test('soft sets publish without any link or offer even while a campaign is active', () => {
+  const draft = makeDraft(); draft.cta_mode = 'soft';
+  draft.posts = ['첫 글', '마지막 정리'];
+  assert.doesNotThrow(() => validateDraft(draft, config));
+  draft.posts[1] = 'https://mykkachi.com/book';
+  assert.throws(() => validateDraft(draft, config), /must not contain a link/);
+  draft.posts[1] = '10월 특가 1만원';
+  assert.throws(() => validateDraft(draft, config), /must not contain an offer/);
 });
