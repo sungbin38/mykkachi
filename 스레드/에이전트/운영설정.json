@@ -25,39 +25,25 @@
   },
   "free_question_offer_active": false,
   "campaign": {
-    "id": "free-report-50",
+    "id": "october-report-special",
     "status": "active",
-    "starts_at": null,
-    "ends_at": null,
-    "capacity_reached": false,
-    "report_value_krw": 100000,
-    "delivery": "신청하고 하루 뒤 신청 이메일로 PDF 리포트 발송",
-    "requirements": [
-      "@don.ssaem 스레드 팔로우",
-      "카카오톡 채널 돈쌤 친구추가",
-      "사이트에서 사주 리포트 신청",
-      "상담 내용란에 스레드 팔로우, 카톡 친구추가 완료를 반드시 기입"
-    ],
-    "source": "2026-10-08 사용자가 현재 무료 이벤트라고 재확인하고 앞으로도 동일 안내를 요청. 종료나 조건 변경 지시가 오면 갱신. 날짜·정원을 임의로 추가하지 않음.",
-    "previous_example": {
-      "duration_days": 3,
-      "capacity": 50,
-      "note": "이전 참고글의 조건. 현재 CTA에 자동 포함하지 않음."
-    },
     "activation": "user_confirmed",
-    "confirmed_at": "2026-10-07T16:31:21.031000+00:00",
-    "application_note": "스레드 팔로우, 카톡 친구추가 완료",
-    "deposit_required": false,
+    "confirmed_at": "2026-10-11T01:11:16Z",
+    "starts_at": null,
+    "ends_at": "2026-11-01T00:00:00+09:00",
+    "capacity_reached": false,
+    "report_regular_krw": 100000,
+    "report_price_krw": 10000,
+    "report_price_with_consent_krw": 5000,
+    "consent_note": "마케팅 활용 동의 = 사연과 풀이를 이름·개인정보 없이 후기·콘텐츠에 활용 (lib/booking-shared.ts MARKETING_CONSENT_TEXT)",
+    "source": "2026-10-11 사용자 지시: 스레드 신청 댓글을 무료 이벤트에서 사이트 10월 특가(lib/booking-shared.ts REPORT_PROMO)로 교체. 11/1 00:00 KST부터는 evergreen_cta_template 사용.",
     "required_cta_phrases": [
-      "10만원 상당",
-      "무료",
-      "스레드 팔로우, 카톡 친구추가 완료",
-      "반드시",
-      "입금하지 않아도 돼",
-      "하루 뒤",
-      "이메일"
+      "10월",
+      "1만원",
+      "5천원",
+      "10월 31일"
     ],
-    "cta_template": "지금은 10만원 상당 사주 PDF 리포트를 무료로 보내주고 있어.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청 방법\n1. @don.ssaem 스레드 팔로우\n2. 카카오톡 채널 ‘돈쌤’ 친구추가\n{kakao_channel_url}\n3. 아래 사이트에서 ‘사주 리포트’ 신청\n{booking_url_with_utm}\n4. 상담 내용란에 “스레드 팔로우, 카톡 친구추가 완료”를 반드시 적어줘.\n\n이렇게 신청하면 입금하지 않아도 돼.\n신청하고 하루 뒤, 적어준 이메일로 무료 리포트를 보내줄게."
+    "cta_template": "10월 한 달만 사주 리포트 특가 중이야.\n원래 10만원인 사주 PDF 리포트를 10월 31일까지 1만원에 받아볼 수 있어.\n신청할 때 사연을 익명 후기로 쓰는 데 동의하면 5천원이야.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 써줄게.\n\n신청은 여기서 👉\n{booking_url_with_utm}\n카카오톡 채널 ‘돈쌤’ 👉\n{kakao_channel_url}\n스레드 팔로우해두면 새 풀이 글도 놓치지 않아."
   },
   "default_cta_mode": "campaign",
   "style_preference": {
@@ -66,5 +52,13 @@
     "default_cta_posts": 1,
     "mbti_only_on_explicit_request": true,
     "source": "사용자가 최근 AI 글의 형식이 자신의 이전 글과 다르다고 교정. 원래 제목·목록·반말 형식 유지, 사주 소재·내용만 변경. 상세 정의·계산법은 비게시용 notes에 보관."
-  }
+  },
+  "previous_campaigns": [
+    {
+      "id": "free-report-50",
+      "ended_at": "2026-10-11T10:11:16+09:00",
+      "note": "10만원 상당 리포트 무료 이벤트. 사용자가 2026-10-11 10월 특가로 교체 지시."
+    }
+  ],
+  "evergreen_cta_template": "내 사주에서는 어떤 모습으로 나타나는지 궁금하면 직접 봐줄게.\n한국이랑 대만에서 9년 동안 상담해 온 돈쌤이 한 명씩 직접 보고 있어.\n1:1 상담을 받으면 사주 리포트도 함께 주고, 상담 없이 리포트만 신청해도 돼.\n신청·접수 가능 여부는 여기서 확인해줘.\n{booking_url_with_utm}\n카카오톡 채널 ‘돈쌤’ 👉 {kakao_channel_url}"
 }
