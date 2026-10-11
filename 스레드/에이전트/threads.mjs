@@ -47,11 +47,12 @@ export function validateDraft(draft, config, now = new Date()) {
     try {
       const url = new URL(raw);
       return url.origin + url.pathname === config.booking_url &&
+        (!config.booking_product || url.searchParams.get('product') === config.booking_product) &&
         url.searchParams.get('utm_source') === 'threads' &&
         url.searchParams.get('utm_medium') === 'post' &&
         url.searchParams.get('utm_content') === draft.id;
     } catch { return false; }
-  }), 'Final reply needs the full booking URL with threads/post UTM and this draft id.');
+  }), `Final reply needs the full booking URL${config.booking_product ? ` with product=${config.booking_product}` : ''}, threads/post UTM and this draft id.`);
   required(urls.includes(config.kakao_channel_url), 'Final reply needs the full Kakao channel URL.');
   if (config.default_cta_mode === 'campaign' && campaignActive(config, now)) {
     required(draft.cta_mode === 'campaign', 'The current default is the free-report campaign; update the final CTA.');

@@ -61,7 +61,7 @@
 - 세 가지 항목 문장은 매번 주제에 맞게 새로 쓴다.
 - “유명 점집 가서 몇십만 원 쓰지 마라” 같은 타 업체 비하는 쓰지 않는다.
 - 마지막 줄은 댓글 참여 유도. **Threads에서는 무료 풀이가 종료됐으므로 “캡처 올리면 봐줄게/풀어줄게” 같은 무료 풀이 약속은 하지 않는다.** “몇 번인지 댓글로 남겨줘”처럼 독자가 스스로 답하는 형태만.
-- 링크는 잘리지 않은 전체 URL(`utm_content`=초안 id).
+- 링크는 잘리지 않은 전체 URL: `https://mykkachi.com/book?product=report&utm_source=threads&utm_medium=post&utm_content=<초안 id>`. `product=report`가 없으면 상담 화면으로 가니 반드시 넣는다.
 
 ## 말투
 

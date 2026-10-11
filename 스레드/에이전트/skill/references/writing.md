@@ -49,7 +49,7 @@
 > {booking_url_with_utm}
 > 카카오톡 채널 ‘돈쌤’ 👉 {kakao_channel_url}
 
-- 신청: `https://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=<초안-id>`.
+- 신청: `https://mykkachi.com/book?product=report&utm_source=threads&utm_medium=post&utm_content=<초안-id>`. **2026-10-11 사용자 지시: 링크는 상담이 아니라 리포트 신청으로 가야 하므로 `product=report`를 반드시 맨 앞에 붙인다**(운영설정 `booking_product`, validate가 검사). `{booking_url_with_utm}`도 이 형태다.
 - 카카오: `https://pf.kakao.com/_xfeQxiX`. 잘린 URL·생략부호를 사용하지 않는다.
 - 일반형의 유료 가격은 생략. 필요하면 `lib/booking-shared.ts`와 최신 사이트를 확인한다. 예시의 15만원/5만원은 동의 조건이 있으므로 무조건 적용되는 가격처럼 쓰지 않는다. 무료 이벤트에는 사용자가 지정한 **10만원 상당**을 명시한다.
 - 하루 상담 5명·리포트 6명은 사용자 제공 운영 상한이며 잔여 인원이 아니다. 접수 가능 여부는 사이트로 안내한다.

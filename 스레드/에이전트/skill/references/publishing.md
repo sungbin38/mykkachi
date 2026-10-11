@@ -21,7 +21,7 @@
   "campaign_id": null,
   "posts": [
     "실제 내용. 번호·메모 없이 글당 500자 이내.",
-    "주제에서 이어지는 돈쌤 소개와 상담·리포트 신청 안내.\nhttps://mykkachi.com/book?utm_source=threads&utm_medium=post&utm_content=2026-10-08-new-topic\n카카오톡 채널 돈쌤 https://pf.kakao.com/_xfeQxiX"
+    "주제에서 이어지는 돈쌤 소개와 상담·리포트 신청 안내.\nhttps://mykkachi.com/book?product=report&utm_source=threads&utm_medium=post&utm_content=2026-10-08-new-topic\n카카오톡 채널 돈쌤 https://pf.kakao.com/_xfeQxiX"
   ],
   "notes": "비게시용 근거·확인 사항. 필요하면 출처 URL."
 }

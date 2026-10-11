@@ -4,6 +4,9 @@
   "brand": "돈쌤",
   "timezone": "Asia/Seoul",
   "booking_url": "https://mykkachi.com/book",
+  "booking_product": "report",
+  "booking_url_example": "https://mykkachi.com/book?product=report&utm_source=threads&utm_medium=post&utm_content=<draft-id>",
+  "booking_product_note": "2026-10-11 사용자 지시: 신청 링크는 리포트(product=report)로. 없으면 상담 화면으로 감.",
   "kakao_channel_url": "https://pf.kakao.com/_xfeQxiX",
   "auto_format_ids": [
     "13"
