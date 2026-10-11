@@ -33,6 +33,10 @@ description: 돈쌤 Threads 글의 새 주제를 자동으로 골라 기존 글 
 6. `스레드/초안/YYYY-MM-DD_<새-slug>.json`에 [publishing.md](references/publishing.md) 형식으로 저장하고 `threads.mjs validate`로 검증한다. 로컬 초안이 다음 요청의 소재 이력이다. 수정본은 같은 파일을 갱신한다.
 7. 대화에는 후킹·제목과 복사할 수 있는 `1/N`~`N/N` 원고를 먼저 보여준다. 번호는 게시물 밖 구분이고 JSON `posts`에는 원문만 넣는다. 끝에 글자 수와 저장 링크를 짧게 적는다. 브라우저 임시저장은 별도 요청 시 실제 로그인 계정을 확인하고 처리한다.
 
+## 무료 사주풀이 댓글 (글유형 12)
+
+모집글과 댓글 답글은 [free-reading.md](references/free-reading.md)를 따른다. 답글은 반드시 `saju-chart.mjs`로 계산한 명식에 근거하고, 댓글 11분 뒤 `comments.mjs`로 단다. 클라우드 루틴이 하루 1회 모집글과 매시 답글을 처리한다.
+
 ## API 게시
 
 게시 요청일 때만 [publishing.md](references/publishing.md)를 읽고 실행한다. 토큰·시크릿은 `.env.local`에서 읽으며 출력·게시·커밋하지 않는다. `/me`의 실제 계정이 `don.ssaem`인지 확인한다. 마지막 CTA까지 직전 게시물의 답글로 연결한다. 불확실한 발행 뒤에는 무작정 재시도하지 말고 발행 기록을 확인한다. 완료 보고에는 실제 반환된 게시물 링크만 쓴다.
