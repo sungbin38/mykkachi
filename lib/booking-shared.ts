@@ -19,8 +19,8 @@ export const BOOKING_PRODUCTS = {
   report: { name: "사주 리포트", base: 100000, marketing: 50000 },
 } as const;
 export type BookingProduct = keyof typeof BOOKING_PRODUCTS;
-/** October special for the report-only product. Ends at midnight KST on Nov 1; regular prices return automatically after that. */
-export const REPORT_PROMO = { label: "10월 특가", endsAt: "2026-11-01T00:00:00+09:00", base: 10000, marketing: 5000 } as const;
+/** November special for the report-only product. Ends at midnight KST on Dec 1; regular prices return automatically after that. */
+export const REPORT_PROMO = { label: "11월 특가", endsAt: "2026-12-01T00:00:00+09:00", base: 10000, marketing: 5000 } as const;
 export const REPORT_PROMO_END = Date.parse(REPORT_PROMO.endsAt);
 export const reportPromoActive = (now = Date.now()) => now < REPORT_PROMO_END;
 /** Prices in effect right now; `regular` is the list price shown struck through during a promotion. */

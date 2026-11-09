@@ -144,7 +144,7 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
       {(Object.keys(BOOKING_PRODUCTS) as BookingProduct[]).map(key => <button key={key} type="button" aria-pressed={product === key} onClick={() => { setProduct(key); setError(""); }}>
         <strong>{zh ? (key === "report" ? "八字報告" : "一對一八字諮詢") : BOOKING_PRODUCTS[key].name}</strong>
         <span>{key === "report" ? t("상담 없이 글로 · 약 10페이지 PDF, 약 하루 뒤 이메일 수령") : t("최대 1시간 카카오톡 1:1 채팅 · 약 10페이지 PDF, 상담 후 약 하루 뒤 발송")}</span>
-        <span className="booking-product-condition">{offerFor(key).promo && <span className="promo-badge">{zh ? "10月特價" : "10월 특가"}</span>}{t("마케팅 활용 동의 시")}</span>
+        <span className="booking-product-condition">{offerFor(key).promo && <span className="promo-badge">{zh ? "11月特價" : "11월 특가"}</span>}{t("마케팅 활용 동의 시")}</span>
         <span className="booking-product-price">{offerFor(key).promo && <s className="service-regular-price">{formatWon(offerFor(key).regular)}</s>}<b>{formatWon(offerFor(key).marketing)}</b><span className="service-saving">{offerFor(key).promo ? `${Math.round((1 - offerFor(key).marketing / offerFor(key).regular) * 100)}% ` : formatWon(offerFor(key).base - offerFor(key).marketing)}{t("할인")}</span></span>
         <small>{offerFor(key).promo ? t("미동의 시") : t("미동의 시 기본가")}{" "}{formatWon(offerFor(key).base)}{offerFor(key).promo ? (zh ? `・原價 ${formatWon(offerFor(key).regular)}` : ` · 정가 ${formatWon(offerFor(key).regular)}`) : ""}</small>
         {offerFor(key).promo && <PromoCountdown locale={locale} />}

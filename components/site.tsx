@@ -54,7 +54,7 @@ export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
     : "무료 사주에 입력한 생년월일·출생시간·닉네임은 브라우저에서 계산하며 서버에 저장하지 않습니다. 페이지별 익명 이벤트 횟수만 집계하며 생년월일·IP·사용자 식별자를 저장하지 않습니다. 상담 예약·리포트 신청 시 입력한 이름·이메일·연락처·출생 정보·사연은 신청 확인과 상담, 리포트 작성·발송에 사용하며 서버에 저장됩니다. 예약 시 동의에 따라 남긴 이메일과 연락처로 돈쌤의 소식·이벤트 안내를 보내드리며, 답장으로 언제든 수신을 거절할 수 있습니다. 상담 뒤 삭제를 요청하시면 지워드립니다. 관리자 콘텐츠 초안도 서버에 저장됩니다.";
   const terms = zh
     ? "免費八字排盤採陽曆、節氣換年月、午夜換日，不做真太陽時校正。解讀以文化體驗與自我探索為目的。一對一諮詢由老師透過 KakaoTalk 文字聊天進行，諮詢前請務必加入 KakaoTalk 諮詢頻道。每次最長一小時，談完可能提前結束。費用為 20 萬韓元，同意行銷用途則為 15 萬韓元；進行方式與取消退款規則將於預約確認信中說明，確認後再以銀行轉帳付款。諮詢包含報告；只購買報告原價 10 萬韓元，10 月特價期間（至 2026 年 10 月 31 日）為 1 萬韓元，同意匿名行銷用途為 5 千韓元。報告約 10 頁，由老師親自分析與撰寫，約需一天，再以 PDF 寄到電子信箱。單獨報告於確認付款後開始製作。網站不提供自動扣款。"
-    : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 카카오톡 채팅으로 상담자가 직접 진행하며, 상담 전 카카오톡 상담 채널을 반드시 추가해야 합니다. 회당 최대 1시간이고 이야기가 정리되면 더 일찍 끝날 수 있습니다. 비용은 20만원, 상담 이야기의 익명 후기·콘텐츠 활용에 동의하면 15만원이며, 진행 방법·취소 및 환불 기준은 예약 확인 메일로 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 상담 후 리포트가 포함됩니다. 상담 없이 리포트만 받는 상품은 정가 10만원이며, 10월 특가 기간(2026년 10월 31일까지)에는 1만원, 사연과 풀이의 익명 마케팅 활용에 동의하면 5천원입니다. 리포트는 약 10페이지 분량의 PDF로 이메일 발송합니다. 상담자가 직접 분석하고 작성해 약 하루가 걸리며, 리포트 단독 상품은 입금 확인 후 제작을 시작합니다. 사이트 내 자동 결제는 제공하지 않습니다.";
+    : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 카카오톡 채팅으로 상담자가 직접 진행하며, 상담 전 카카오톡 상담 채널을 반드시 추가해야 합니다. 회당 최대 1시간이고 이야기가 정리되면 더 일찍 끝날 수 있습니다. 비용은 20만원, 상담 이야기의 익명 후기·콘텐츠 활용에 동의하면 15만원이며, 진행 방법·취소 및 환불 기준은 예약 확인 메일로 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 상담 후 리포트가 포함됩니다. 상담 없이 리포트만 받는 상품은 정가 10만원이며, 11월 특가 기간(2026년 11월 30일까지)에는 1만원, 사연과 풀이의 익명 마케팅 활용에 동의하면 5천원입니다. 리포트는 약 10페이지 분량의 PDF로 이메일 발송합니다. 상담자가 직접 분석하고 작성해 약 하루가 걸리며, 리포트 단독 상품은 입금 확인 후 제작을 시작합니다. 사이트 내 자동 결제는 제공하지 않습니다.";
   return <><footer className="site-footer"><div className="shell">
     <div className="footer-top"><a href={homePath(locale)} aria-label={zh ? "돈쌤 DON SSAEM 首頁" : "돈쌤 DON SSAEM 홈"}><Logo /></a>
       <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><a href={homePath(locale)+"#story"}>{zh ? "從八字認識自己" : "사주로 보는 나"}</a><a href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
@@ -144,7 +144,7 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
           <div className="service-title"><Mail size={25} strokeWidth={1.5} aria-hidden="true" /><h3>{zh ? "只購買八字報告" : "사주 리포트만 받기"}</h3></div>
           <p className="service-description">{zh ? "不需要約定時間，在適合自己的時刻慢慢閱讀。" : "시간을 맞추지 않아도 괜찮아요. 편할 때 천천히 읽어보세요."}</p>
           {reportPromoActive() ? <>
-            <p className="service-price-condition"><span className="promo-badge">{zh ? "10月特價" : "10월 특가"}</span>{zh ? "同意匿名行銷使用時" : "마케팅 활용 동의 시"}</p>
+            <p className="service-price-condition"><span className="promo-badge">{zh ? "11月特價" : "11월 특가"}</span>{zh ? "同意匿名行銷使用時" : "마케팅 활용 동의 시"}</p>
             <div className="service-price"><s className="service-regular-price">{zh ? "10 萬" : "10만원"}</s><strong>{zh ? "5 千" : "5천원"}</strong><span className="service-saving">{zh ? "95% 折扣" : "95% 할인"}</span></div>
             <p className="service-base-price">{zh ? "未同意時 1 萬韓元・原價 10 萬韓元・PDF 電子郵件寄送" : "미동의 시 1만원 · 정가 10만원 · PDF 이메일 발송"}</p>
             <PromoCountdown locale={locale} />

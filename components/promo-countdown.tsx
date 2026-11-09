@@ -23,9 +23,9 @@ export function PromoCountdown({ locale = "ko", className = "" }: { locale?: Loc
   const clock = `${pad(Math.floor((s % 86400) / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
   return <span className={`promo-countdown ${className}`.trim()} role="timer" aria-live="off">
     <Clock3 size={15} aria-hidden="true" />
-    <span>{zh ? "10月特價結束倒數" : "10월 특가 마감까지"}</span>
+    <span>{zh ? "11月特價結束倒數" : "11월 특가 마감까지"}</span>
     {left === null
-      ? <strong>{zh ? "10/31 23:59（韓國時間）" : "10월 31일 23:59까지"}</strong>
+      ? <strong>{zh ? "11/30 23:59（韓國時間）" : "11월 30일 23:59까지"}</strong>
       : <strong><span className="promo-dday">{days > 0 ? `D-${days}` : "D-DAY"}</span>{clock}</strong>}
   </span>;
 }
