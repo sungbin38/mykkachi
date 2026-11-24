@@ -1,8 +1,8 @@
 import "server-only";
-import { BRAND, CONTACT_EMAIL, KAKAO_URL, KAKAO_CHANNEL_URL, type Locale } from "./brand";
+import { BRAND, CONTACT_EMAIL, KAKAO_URL, KAKAO_CHANNEL_URL, ORIGIN, type Locale } from "./brand";
 import { bookingSlotLabel, bookingMoney } from "./booking-locale";
 import { db, HttpError, runtime } from "./server";
-import { BANK, BOOKING_HOURS, bankAccountDisplay, BOOKING_STATUSES, formatWon, priceFor, BOOKING_PRODUCTS, type BookingProduct, type BookingStatus } from "./booking-shared";
+import { BOOKING_HOURS, BOOKING_STATUSES, formatWon, priceFor, BOOKING_PRODUCTS, PAYMENT_HOLD_MINUTES, type BookingProduct, type BookingStatus, type BookingSummary } from "./booking-shared";
 import { recordEvent, sessionSnapshot } from "./tracking";
 export { BOOKING_HOURS, BOOKING_STATUSES, BOOKING_TOPICS, STATUS_LABEL, PRICE, type BookingStatus } from "./booking-shared";
 
@@ -16,14 +16,14 @@ export type Booking = {
   id: string; locale: Locale; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
   topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus;
-  holdUntil: string | null; paidAt: string | null; note: string | null; reportSentAt: string | null; seenAt: string | null;
+  holdUntil: string | null; paidAt: string | null; paymentId: string | null; termsAgreedAt: string | null; note: string | null; reportSentAt: string | null; seenAt: string | null;
   visitorId: string | null; sessionId: string | null; source: BookingSource | null; createdAt: string; updatedAt: string;
 };
 type Row = {
   id: string; locale: Locale; product: BookingProduct; slot_id: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birth_date: string; birth_time: string | null; birth_unknown: boolean; calendar: string; gender: string | null;
   topic: string | null; story: string | null; deposit_name: string | null; amount: number; marketing_consent: boolean; status: string; hold_until: string | Date | null;
-  paid_at: string | Date | null; note: string | null; report_sent_at: string | Date | null; seen_at: string | Date | null;
+  paid_at: string | Date | null; payment_id?: string | null; terms_agreed_at?: string | Date | null; note: string | null; report_sent_at: string | Date | null; seen_at: string | Date | null;
   visitor_id: string | null; session_id: string | null; source: BookingSource | null; created_at: string | Date; updated_at: string | Date;
 };
 const iso = (v: string | Date | null) => (v == null ? null : v instanceof Date ? v.toISOString() : new Date(v).toISOString());
@@ -31,7 +31,7 @@ const fromRow = (r: Row): Booking => ({
   id: r.id, locale: r.locale ?? "ko", product: r.product ?? "consultation", slotId: r.slot_id, date: r.date, hour: r.hour, name: r.name, email: r.email, phone: r.phone,
   birthDate: r.birth_date, birthTime: r.birth_time, birthUnknown: !!r.birth_unknown,
   calendar: r.calendar === "lunar" ? "lunar" : "solar", gender: r.gender, topic: r.topic, story: r.story,
-  depositName: r.deposit_name, amount: r.amount, marketingConsent: !!r.marketing_consent, status: r.status as BookingStatus, holdUntil: iso(r.hold_until), paidAt: iso(r.paid_at),
+  depositName: r.deposit_name, amount: r.amount, marketingConsent: !!r.marketing_consent, status: r.status as BookingStatus, holdUntil: iso(r.hold_until), paidAt: iso(r.paid_at), paymentId: r.payment_id ?? null, termsAgreedAt: iso(r.terms_agreed_at ?? null),
   note: r.note, reportSentAt: iso(r.report_sent_at), seenAt: iso(r.seen_at), visitorId: r.visitor_id, sessionId: r.session_id,
   source: r.source, createdAt: iso(r.created_at)!, updatedAt: iso(r.updated_at)!,
 });
@@ -45,7 +45,15 @@ export function hourNowSeoul() {
 const isDate = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v));
 const isHour = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && BOOKING_HOURS.includes(v);
 
+/** Orders left unpaid past their hold are expired and their consultation slots reopened. Transfer-era requests (no hold) are never touched. */
+export async function expireUnpaid() {
+  await db().prepare(`WITH gone AS (
+      UPDATE bookings SET status='expired',updated_at=now()
+      WHERE status='requested' AND hold_until IS NOT NULL AND hold_until<now() RETURNING slot_id
+    ) UPDATE booking_slots SET status='open' WHERE status='booked' AND id IN (SELECT slot_id FROM gone WHERE slot_id IS NOT NULL)`).run();
+}
 export async function openSlots(): Promise<Slot[]> {
+  await expireUnpaid().catch(() => {});
   const today = todaySeoul();
   const limit = new Date(Date.parse(today) + 70 * 86400000).toISOString().slice(0, 10);
   const rows = await db()
@@ -73,7 +81,7 @@ export async function setSlots(date: unknown, hours: unknown, action: unknown) {
 
 export type BookingInput = {
   locale?: Locale; product: BookingProduct; slotId: string | null; name: string; email: string; phone?: string; birthDate: string; birthTime?: string; birthUnknown: boolean;
-  calendar: "solar" | "lunar"; gender?: string; topic?: string; story?: string; depositName?: string; marketingConsent: boolean; visitorId?: string; sessionId?: string;
+  calendar: "solar" | "lunar"; gender?: string; topic?: string; story?: string; depositName?: string; marketingConsent: boolean; visitorId?: string; sessionId?: string; replaces?: string;
 };
 export function validateBooking(p: Record<string, unknown>): BookingInput {
   const str = (v: unknown, max: number) => (typeof v === "string" && v.trim().length <= max ? v.trim() : null);
@@ -94,14 +102,24 @@ export function validateBooking(p: Record<string, unknown>): BookingInput {
   const depositName = str(p.depositName, 40) || undefined;
   const gender = ["female", "male"].includes(p.gender as string) ? (p.gender as string) : undefined;
   if (!gender) throw new HttpError(400, "성별을 골라 주세요.");
+  if (p.termsAgreed !== true) throw new HttpError(400, "이용약관 및 환불정책에 동의해 주세요.");
+  if (product === "report" && p.withdrawalAgreed !== true) throw new HttpError(400, "리포트 청약철회 제한 안내를 확인해 주세요.");
   const id = (v: unknown) => (typeof v === "string" && /^[A-Za-z0-9_-]{8,64}$/.test(v) ? v : undefined);
-  return { locale: p.locale === "zh-TW" ? "zh-TW" : "ko", product, slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, marketingConsent: p.marketingConsent === true, visitorId: id(p.visitorId), sessionId: id(p.sessionId) };
+  return { locale: p.locale === "zh-TW" ? "zh-TW" : "ko", product, slotId, name, email, phone, birthDate: p.birthDate, birthTime: birthTime || undefined, birthUnknown, calendar: p.calendar === "lunar" ? "lunar" : "solar", gender, topic, story, depositName, marketingConsent: p.marketingConsent === true, visitorId: id(p.visitorId), sessionId: id(p.sessionId), replaces: id(p.replaces) };
 }
 
+/** Creates an order awaiting card payment. The amount is always computed here; nothing the browser sends can change it. */
 export async function createBooking(input: BookingInput): Promise<Booking> {
+  await expireUnpaid().catch(() => {});
+  // Resubmitting the form after an abandoned payment frees that earlier attempt, including its slot.
+  if (input.replaces) {
+    const old = await db().prepare("UPDATE bookings SET status='cancelled',updated_at=now() WHERE id=? AND status='requested' AND hold_until IS NOT NULL RETURNING slot_id").bind(input.replaces).first<{ slot_id: string | null }>();
+    if (old?.slot_id) await db().prepare("UPDATE booking_slots SET status='open' WHERE id=? AND status='booked'").bind(old.slot_id).run();
+  }
   const id = crypto.randomUUID();
   const source = input.sessionId ? await sessionSnapshot(input.sessionId, input.visitorId) : null;
-  const columns = "id,product,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,marketing_consent,status,hold_until,visitor_id,session_id,source,locale";
+  const columns = "id,product,slot_id,date,hour,name,email,phone,birth_date,birth_time,birth_unknown,calendar,gender,topic,story,deposit_name,amount,marketing_consent,status,hold_until,visitor_id,session_id,source,locale,terms_agreed_at";
+  const hold = `now() + interval '${PAYMENT_HOLD_MINUTES} minutes'`;
   const values = [id, input.product, input.name, input.email, input.phone ?? null, input.birthDate, input.birthTime ?? null,
     input.birthUnknown, input.calendar, input.gender ?? null, input.topic ?? null, input.story ?? null,
     input.depositName ?? null, priceFor(input.marketingConsent, input.product), input.marketingConsent,
@@ -109,13 +127,13 @@ export async function createBooking(input: BookingInput): Promise<Booking> {
   // A report never claims a consultation slot. Claim + insert are atomic for consultations.
   const row = input.product === "report"
     ? await db().prepare(`INSERT INTO bookings (${columns})
-        VALUES (?,?,NULL,NULL,NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',NULL,?,?,?::jsonb,?) RETURNING *`)
+        VALUES (?,?,NULL,NULL,NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',${hold},?,?,?::jsonb,?,now()) RETURNING *`)
         .bind(...values).first<Row>()
     : await db().prepare(`WITH claimed AS (
         UPDATE booking_slots SET status='booked' WHERE id=? AND status='open'
           AND (date>? OR (date=? AND hour>?)) RETURNING id,date,hour
       ) INSERT INTO bookings (${columns})
-        SELECT ?,?,claimed.id,claimed.date,claimed.hour,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',NULL,?,?,?::jsonb,?
+        SELECT ?,?,claimed.id,claimed.date,claimed.hour,?,?,?,?,?,?,?,?,?,?,?,?,?,'requested',${hold},?,?,?::jsonb,?,now()
         FROM claimed RETURNING *`)
         .bind(input.slotId, todaySeoul(), todaySeoul(), hourNowSeoul(), ...values).first<Row>();
   if (!row) throw new HttpError(409, "이 시간은 방금 마감되었어요. 다른 시간을 골라 주세요.");
@@ -124,7 +142,25 @@ export async function createBooking(input: BookingInput): Promise<Booking> {
     await db().prepare("UPDATE sessions SET booked_at=now() WHERE id=? AND booked_at IS NULL").bind(input.sessionId).run().catch(() => {});
     await recordEvent(input.sessionId, input.visitorId || "unknown", "booking_created", "/book", { bookingId: id, product: booking.product, date: booking.date, hour: booking.hour }).catch(() => {});
   }
-  await notifyOwner(booking).catch((e) => console.error("booking notification failed", e instanceof Error ? e.message : e));
+  return booking;
+}
+export const bookingSummary = (b: Booking): BookingSummary => ({ id: b.id, product: b.product, date: b.date, hour: b.hour, name: b.name, email: b.email, amount: b.amount, marketingConsent: b.marketingConsent, orderName: BOOKING_PRODUCTS[b.product].name });
+/**
+ * Marks an order paid exactly once and returns it; null when it cannot be honoured (cancelled, or expired with the slot since taken).
+ * An expired order is revived when its slot is still free, so a payment finished just after the hold is not lost.
+ */
+export async function confirmPaid(id: string, paymentId: string): Promise<Booking | null> {
+  const set = "status='confirmed',paid_at=now(),payment_id=?,updated_at=now()";
+  const paid = await db().prepare(`UPDATE bookings SET ${set} WHERE id=? AND status='requested' RETURNING *`).bind(paymentId, id).first<Row>()
+    ?? await db().prepare(`WITH slot AS (
+        UPDATE booking_slots SET status='booked' WHERE id=(SELECT slot_id FROM bookings WHERE id=? AND status='expired') AND status='open'
+          AND (date>? OR (date=? AND hour>?)) RETURNING id
+      ) UPDATE bookings SET ${set} WHERE id=? AND status='expired' AND (slot_id IS NULL OR slot_id IN (SELECT id FROM slot)) RETURNING *`)
+      .bind(id, todaySeoul(), todaySeoul(), hourNowSeoul(), paymentId, id).first<Row>();
+  if (!paid) return null;
+  const booking = fromRow(paid);
+  if (booking.sessionId) await recordEvent(booking.sessionId, booking.visitorId || "unknown", "booking_paid", "/book", { bookingId: id, product: booking.product, amount: booking.amount }).catch(() => {});
+  await notifyConfirmed(booking).catch((e) => console.error("booking notification failed", e instanceof Error ? e.message : e));
   return booking;
 }
 
@@ -156,7 +192,8 @@ export async function updateBooking(id: string, p: Record<string, unknown>): Pro
   if (status === "confirmed" && !paidAt) paidAt = new Date().toISOString();
   if (p.paid === false) paidAt = null;
   const wasOpen = ["cancelled", "expired"].includes(current.status), isOpen = ["cancelled", "expired"].includes(status);
-  await db().prepare("UPDATE bookings SET status=?,note=?,report_sent_at=?,paid_at=?,updated_at=now() WHERE id=?").bind(status, note, reportSentAt, paidAt, id).run();
+  // A status set by hand is never auto-expired afterwards.
+  await db().prepare("UPDATE bookings SET status=?,note=?,report_sent_at=?,paid_at=?,hold_until=CASE WHEN ?::text<>?::text THEN NULL ELSE hold_until END,updated_at=now() WHERE id=?").bind(status, note, reportSentAt, paidAt, status, current.status, id).run();
   if (current.slotId && isOpen && !wasOpen) await db().prepare("UPDATE booking_slots SET status='open' WHERE id=? AND status='booked'").bind(current.slotId).run();
   if (current.slotId && !isOpen && wasOpen) {
     const taken = await db().prepare("UPDATE booking_slots SET status='booked' WHERE id=? AND status='open'").bind(current.slotId).run();
@@ -192,16 +229,17 @@ async function sendMail(to: string, subject: string, text: string) {
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   return true;
 }
-const bankLine = () => (BANK.account ? `${BANK.name} ${bankAccountDisplay()} (예금주 ${BANK.holder || "마이까치"})` : "계좌는 확인 메일로 따로 안내드려요.");
-export async function notifyOwner(b: Booking) {
-  const r = runtime();
+/** Operational alerts to the owner (automatic refunds and the like). */
+export const alertOwner = (subject: string, lines: string[]) => sendMail(runtime().NOTIFY_EMAIL || "sungbin3833@gmail.com", subject, lines.join("\n"));
+/** Sent once, when the card payment has been verified: the owner alert and the customer's confirmation. */
+export async function notifyConfirmed(b: Booking) {
   const reportOnly = b.product === "report";
   const when = b.date !== null && b.hour !== null ? formatSlot(b.date, b.hour) : "PDF 리포트 · 이메일 수령";
   const productName = BOOKING_PRODUCTS[b.product].name;
   const src = b.source;
   const route = src ? [src.utmSource || src.referrerHost || "직접 방문", src.utmCampaign, src.landingPath].filter(Boolean).join(" · ") : "추적 정보 없음";
   const owner = [
-    `새 ${productName} 요청이 들어왔어요. 입금 확인 후 확정해 주세요.`, ``,
+    `새 ${productName} 결제가 완료되어 예약이 확정됐어요.`, ``,
     `예약번호: ${b.id}`, `접수 시각: ${b.createdAt}`, `상품: ${productName}`,
     `신청 언어: ${b.locale === "zh-TW" ? "대만 번체 (고객 시간 UTC+8 / 관리자 KST)" : "한국어"}`,
     `진행: ${b.date ? `${b.date} · ` : ""}${when}${b.date ? " (한국시간 KST)" : ""}`, ``,
@@ -210,27 +248,26 @@ export async function notifyOwner(b: Booking) {
     `생년월일: ${b.birthDate}`, `양력/음력: ${b.calendar === "lunar" ? "음력" : "양력"}`,
     `태어난 시간: ${b.birthUnknown ? "시간 모름" : b.birthTime || "미입력"}`,
     `상담 주제: ${b.topic || "미입력"}`, ``, `사연:`, b.story || "(없음)", ``,
-    `입금자명: ${b.depositName || b.name}`, `금액: ${formatWon(b.amount)}`,
+    `결제: 카드 결제 완료 · ${formatWon(b.amount)}`, `결제번호: ${b.paymentId || "수동 확정"}`,
     `후기 활용 동의: ${b.marketingConsent ? "동의 (할인 적용)" : "미동의"}`,
     ``,
     `유입: ${route}`, ``, `스튜디오에서 확인: https://mykkachi.com/admin`,
   ];
-  await sendMail(r.NOTIFY_EMAIL || "sungbin3833@gmail.com", `[돈쌤] 새 예약 요청 · ${when} · ${b.name}`, owner.join("\n"));
+  await alertOwner(`[돈쌤] 결제 완료 · ${when} · ${b.name}`, owner);
   if (b.locale === "zh-TW") {
     const customerWhen = b.date !== null && b.hour !== null ? bookingSlotLabel(b.date, b.hour, "zh-TW") : "八字 PDF 報告・電子郵件寄送";
-    await sendMail(b.email, `[DON SSAEM] 已收到你的申請・${customerWhen}`, [
-      `${b.name}，謝謝你將故事交給 DON SSAEM。`, `申請服務：${reportOnly ? "八字報告" : "一對一八字諮詢"}`, `時間：${customerWhen}`,
-      `應付金額：${bookingMoney(b.amount, "zh-TW")}${b.marketingConsent ? "（已套用匿名行銷使用折扣）" : ""}`,
-      `轉帳帳戶：Hana Bank（하나은행） ${bankAccountDisplay()}`, `戶名：${BANK.holder}`, `匯款人：${b.depositName || b.name}`,
-      `申請後請儘快完成轉帳。確認入帳後，再通知你正式確認。`,
-      reportOnly ? "確認入帳後，由老師親自分析與撰寫約 10 頁 PDF，約一天後寄到此信箱。" : `諮詢以 KakaoTalk 一對一文字聊天進行，最長一小時，可能提前結束。請務必加入 KakaoTalk 諮詢頻道，並傳送預約姓名。加入頻道：${KAKAO_CHANNEL_URL}。諮詢後由老師親自撰寫約 10 頁 PDF，約一天後寄到此信箱。`,
+    await sendMail(b.email, `[DON SSAEM] 付款完成，申請已確認・${customerWhen}`, [
+      `${b.name}，謝謝你將故事交給 DON SSAEM。付款已完成，申請正式成立。`, `申請服務：${reportOnly ? "八字報告" : "一對一八字諮詢"}`, `時間：${customerWhen}`,
+      `付款金額：${bookingMoney(b.amount, "zh-TW")}${b.marketingConsent ? "（已套用匿名行銷使用折扣）" : ""}（信用卡）`,
+      reportOnly ? "由老師親自分析與撰寫約 10 頁 PDF，約一天後寄到此信箱。" : `諮詢以 KakaoTalk 一對一文字聊天進行，最長一小時，可能提前結束。請務必加入 KakaoTalk 諮詢頻道，並傳送預約姓名。加入頻道：${KAKAO_CHANNEL_URL}。諮詢後由老師親自撰寫約 10 頁 PDF，約一天後寄到此信箱。`,
+      `取消與退款規定：${ORIGIN}/terms#refund`,
       `預約與付款問題：${CONTACT_EMAIL}`, ...(KAKAO_URL ? [`KakaoTalk：${KAKAO_URL}`] : []), "DON SSAEM",
     ].join("\n")).catch(() => false);
     return;
   }
-  await sendMail(b.email, `[돈쌤] 예약 요청을 받았어요 · ${when}`, [
-    `${b.name}님, 돈쌤에 이야기를 건네주셔서 고마워요.`, ``, reportOnly ? `신청 상품: ${productName} (상담 없이 PDF를 이메일로 보내드려요)` : `요청하신 상담 시간: ${when} (최대 1시간, 이야기가 정리되면 더 일찍 끝날 수 있어요)`, `이용 금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인 적용)" : ""}`, `입금 계좌: ${bankLine()}`, `입금자명: ${b.depositName || b.name}`, ``,
-    `신청 뒤 입금해 주세요. 입금이 확인되면 진행 안내를 보내드려요.`,
-    reportOnly ? `입금 확인 후 상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담은 카카오톡 1:1 채팅으로 진행합니다. 카카오톡 상담 채널을 반드시 추가하고 채팅으로 예약자 성함을 보내주세요. 채널 추가: ${KAKAO_CHANNEL_URL}\n상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``, `예약·입금 문의: ${CONTACT_EMAIL}`, ...(KAKAO_URL ? [`카카오톡 문의: ${KAKAO_URL}`] : []), `돈쌤 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
+  await sendMail(b.email, `[돈쌤] 결제가 완료되어 ${reportOnly ? "리포트 신청" : "예약"}이 확정됐어요 · ${when}`, [
+    `${b.name}님, 돈쌤에 이야기를 건네주셔서 고마워요. 결제가 확인되어 ${reportOnly ? "신청" : "예약"}이 확정됐어요.`, ``, reportOnly ? `신청 상품: ${productName} (상담 없이 PDF를 이메일로 보내드려요)` : `상담 시간: ${when} (최대 1시간, 이야기가 정리되면 더 일찍 끝날 수 있어요)`, `결제 금액: ${formatWon(b.amount)}${b.marketingConsent ? " (후기 활용 동의 할인 적용)" : ""} · 카드 결제`, `예약번호: ${b.id}`, ``,
+    reportOnly ? `상담자가 사연과 명식을 직접 분석하고, 약 10페이지 분량의 PDF 리포트로 작성해 이 이메일로 보내드립니다. 사람이 직접 분석하고 쓰기 때문에 약 하루가 걸립니다.` : `상담은 카카오톡 1:1 채팅으로 진행합니다. 카카오톡 상담 채널을 반드시 추가하고 채팅으로 예약자 성함을 보내주세요. 채널 추가: ${KAKAO_CHANNEL_URL}\n상담 후 상담자가 직접 분석하고 작성한 약 10페이지 분량의 PDF 리포트를 이 이메일로 보내드립니다. 작성에는 약 하루가 걸립니다.`, ``,
+    `취소·환불 기준: ${ORIGIN}/terms#refund`, `예약·결제 문의: ${CONTACT_EMAIL}`, ...(KAKAO_URL ? [`카카오톡 문의: ${KAKAO_URL}`] : []), `돈쌤 · 시간이 걸리더라도, 제대로 봐드리겠습니다`,
   ].join("\n")).catch(() => false);
 }

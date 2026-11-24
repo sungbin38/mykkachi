@@ -102,3 +102,4 @@
   .reviews-filters { gap: 7px; margin-top: 24px; }
   .reviews-filters button { padding: 9px 12px; font-size: .8125rem; }
 }
+.reviews-disclaimer { margin-top: 26px; font-size: 13px; line-height: 1.8; color: var(--muted-foreground); text-align: center; word-break: keep-all; }

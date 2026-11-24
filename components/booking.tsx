@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Banknote, CalendarDays, Check, Clock3, Copy, Loader2, LockKeyhole, Mail, Lightbulb, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, CalendarDays, Check, Clock3, CreditCard, Loader2, LockKeyhole, Mail, Lightbulb, UserRound } from "lucide-react";
 import { KakaoConsultationNotice } from "./kakao-consultation-notice";
 import { SiteHeader, SiteFooter } from "@/components/site";
 import { BirthFields, BirthTimeField } from "@/components/birth-fields";
-import { BANK, DURATION_TEXT, CONTACT_CONSENT_TEXT, MARKETING_CONSENT_TEXT, STORY_EXAMPLES, BOOKING_PRODUCTS, type BookingProduct, bankAccountDigits, bankAccountDisplay, bankConfigured, priceFor, offerFor } from "@/lib/booking-shared";
+import { DURATION_TEXT, CONTACT_CONSENT_TEXT, MARKETING_CONSENT_TEXT, TERMS_CONSENT_TEXT, WITHDRAWAL_CONSENT_TEXT, REFUND_SUMMARY, STORY_EXAMPLES, BOOKING_PRODUCTS, type BookingProduct, type BookingSummary, priceFor, offerFor } from "@/lib/booking-shared";
+import { DRAFT_KEY, clearPending, loadPending, requestCardPayment } from "@/lib/payment-client";
 import { FREE_READING_ENABLED, homePath, localPath, KAKAO_URL, type Locale } from "@/lib/brand";
 import { ids, track } from "@/lib/track-client";
 import { PromoCountdown } from "./promo-countdown";
@@ -15,23 +16,33 @@ import { bookingZoneLabel, bookingSlotLocal, bookingDay, bookingSlotLabel, booki
 type Slot = { id: string; date: string; hour: number };
 type Form = {
   name: string; email: string; phone: string; birthDate: string; birthTime: string; birthUnknown: boolean;
-  calendar: "solar" | "lunar"; gender: string; story: string; depositName: string; marketingConsent: boolean; agree: boolean;
+  calendar: "solar" | "lunar"; gender: string; story: string; marketingConsent: boolean; agree: boolean; agreeTerms: boolean; agreeWithdrawal: boolean;
 };
-type Done = { product: BookingProduct; date: string | null; hour: number | null; email: string; name: string; amount: number; marketingConsent: boolean; holdUntil: string | null; depositName: string };
-export function BankBox({ depositName, amount, locale = "ko", product }: { depositName?: string; amount: number; locale?: Locale; product: BookingProduct }) {
+const EMPTY_FORM: Form = { name: "", email: "", phone: "", birthDate: "", birthTime: "", birthUnknown: false, calendar: "solar", gender: "", story: "", marketingConsent: false, agree: false, agreeTerms: false, agreeWithdrawal: false };
+/** Confirmation shown once the server has verified the card payment (on /book and on the mobile return page). */
+export function BookingDone({ done, locale = "ko" }: { done: BookingSummary; locale?: Locale }) {
   const zh = locale === "zh-TW";
   const t = bookingText(locale);
-  const formatWon = (n: number) => bookingMoney(n, locale);
-  const [copied, setCopied] = useState(false);
-  return <div className="bank-box">
-    <p className="bank-box-label"><Banknote size={15} />{t("입금 계좌")}</p>
-    {bankConfigured() ? <>
-      <p className="bank-box-account"><strong>{zh ? "Hana Bank（하나은행）" : BANK.name} <span className="bank-account-number">{bankAccountDisplay()}</span></strong><button type="button" className="bank-copy" aria-label={t("계좌번호 숫자만 복사")} onClick={() => { navigator.clipboard?.writeText(bankAccountDigits()).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); }}>{copied ? <Check size={13} /> : <Copy size={13} />}{copied ? t("복사됨") : t("복사")}</button></p>
-      <p className="bank-box-sub">{zh ? "戶名" : "예금주"} {BANK.holder ? `${BANK.holder.slice(0, 1)}**` : "마이까치"} · {zh ? "金額" : "금액"} {formatWon(amount)}{depositName ? ` · ${zh ? "匯款人" : "입금자명"} ${depositName}` : ""}</p>
-    </> : <p className="bank-box-sub">{zh ? "Hana Bank（하나은행）" : BANK.name} {zh ? "帳號將透過預約通知信提供。金額" : "계좌번호는 예약 확인 메일로 안내드려요. 금액"} {formatWon(amount)}.</p>}
-    {product === "consultation" && <KakaoConsultationNotice locale={locale} />}
-    <p className="booking-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}{" "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p>
-  </div>;
+  return <section className="booking-done">
+    <span className="booking-done-icon"><Check size={22} /></span>
+    <p className="tiny-label muted">BOOKING CONFIRMED</p>
+    <h1>{done.name}{zh ? "，" : "님, "} {done.product === "report" ? t("리포트 신청이 확정됐어요.") : t("예약이 확정됐어요.")}</h1>
+    {done.date !== null && done.hour !== null ? <p className="booking-done-slot"><CalendarDays size={16} />{bookingSlotLabel(done.date, done.hour, locale)}</p> : <p className="booking-done-slot"><Mail size={16} />{t("사주 리포트 · 약 하루 뒤 PDF 이메일 수령")}</p>}
+    <p className="booking-done-amount">{t("결제 금액")}{" "}<strong>{bookingMoney(done.amount, locale)}</strong>{done.marketingConsent ? t(" · 후기 활용 동의 할인 적용") : ""}</p>
+    {done.product === "consultation" && <KakaoConsultationNotice locale={locale} />}
+    <ol className="booking-next">
+      <li><strong>{t("결제가 완료되어 신청이 확정됐어요.")}</strong> {zh ? "確認信已寄至 " : "확정 안내를 "}<em>{done.email}</em>{zh ? "。" : "로 보내드렸어요."}</li>
+      {done.product === "report" ? <>
+        <li><strong>{t("남겨주신 사연과 명식을 읽어요.")}</strong>{t("상담자가 직접 분석하고 작성해요. 한 분 한 분 직접 쓰기 때문에 약 하루가 걸립니다.")}</li>
+        <li><strong>{t("PDF 리포트를 이메일로 받아요.")}</strong>{t("신청할 때 남긴 질문과 사연을 바탕으로 작성한 약 10페이지 분량의 리포트를 보내드려요.")}</li>
+      </> : <>
+        <li><strong>{t("약속한 시간에 카카오톡 1:1 채팅으로 만나요.")}</strong>{t("미리 남겨주신 사연과 명식을 바탕으로 최대 1시간 이야기를 나눠요. 이야기가 정리되면 더 일찍 끝날 수도 있어요.")}</li>
+        <li><strong>{t("상담 뒤, 사주 리포트가 도착해요.")}</strong>{t("상담 후 직접 분석하고 작성한 약 10페이지 PDF 리포트를 같은 이메일로 보내드려요. 작성에는 약 하루가 걸립니다.")}</li>
+      </>}
+    </ol>
+    <p className="booking-contact">{zh ? "取消與退款請參考" : "취소·환불은 "}<a href="/terms#refund">{zh ? "退款政策（韓文）" : "환불정책"}</a>{zh ? "，或透過 KakaoTalk 聯絡我們。" : "을 확인하거나 카카오톡으로 문의해 주세요."}{" "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p>
+    <div className="hero-actions"><a className="primary-button" href={homePath(locale)}>{t("홈으로 돌아가기")}</a>{FREE_READING_ENABLED && <a className="text-link" href={localPath(locale, "/read")}>{t("기다리는 동안 무료 사주 보기")}<ArrowRight size={16} /></a>}</div>
+  </section>;
 }
 
 function BookingCalendar({ byDate, date, onSelect, locale }: { locale: Locale; byDate: Map<string, Slot[]>; date: string; onSelect: (date: string) => void }) {
@@ -75,15 +86,21 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
   const [slots, setSlots] = useState<Slot[] | null>(null);
   const [date, setDate] = useState("");
   const [slot, setSlot] = useState<Slot | null>(null);
-  const [form, setForm] = useState<Form>({ name: "", email: "", phone: "", birthDate: "", birthTime: "", birthUnknown: false, calendar: "solar", gender: "", story: "", depositName: "", marketingConsent: false, agree: false });
+  const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [done, setDone] = useState<Done | null>(null);
+  const [done, setDone] = useState<BookingSummary | null>(null);
   const [showExamples, setShowExamples] = useState(false);
 
   const loadSlots = () => fetch("/api/booking/slots").then((r) => r.json() as Promise<{ slots?: Slot[] }>).then((d) => setSlots(d.slots || [])).catch(() => setSlots([]));
   useEffect(() => {
-    const prefill = setTimeout(() => { try { const birth = sessionStorage.getItem("luun-start-birth"); if (birth) setForm((f) => ({ ...f, birthDate: birth })); } catch {} }, 0);
+    // Restore what was typed when the visitor comes back from an unfinished payment; consents are asked again.
+    const prefill = setTimeout(() => { try {
+      const draft = JSON.parse(sessionStorage.getItem(DRAFT_KEY) || "null") as Partial<Form> | null;
+      const birth = sessionStorage.getItem("luun-start-birth");
+      if (draft) setForm({ ...EMPTY_FORM, ...draft, agree: false, agreeTerms: false, agreeWithdrawal: false });
+      else if (birth) setForm((f) => ({ ...f, birthDate: birth }));
+    } catch {} }, 0);
     return () => clearTimeout(prefill);
   }, []);
   useEffect(() => { if (product === "consultation") void loadSlots(); }, [product]);
@@ -99,39 +116,29 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
     if (!form.gender) { setError(t("성별을 골라 주세요.")); return; }
     if (form.story.trim().length < 10) { setError(t("사연을 조금 더 적어 주세요. 남겨주신 내용을 읽고 준비해요.")); return; }
     if (!form.agree) { setError(t("정보 이용과 소식 안내 수신에 동의해 주세요.")); return; }
+    if (!form.agreeTerms) { setError(t("이용약관 및 환불정책에 동의해 주세요.")); return; }
+    if (reportOnly && !form.agreeWithdrawal) { setError(t("리포트 청약철회 제한 안내를 확인해 주세요.")); return; }
     setBusy(true); setError("");
     track("booking_submit", { product, date: reportOnly ? null : slot?.date, hour: reportOnly ? null : slot?.hour });
     try {
       const { vid, sid } = ids();
-      const res = await fetch("/api/booking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, product, locale, slotId: reportOnly ? undefined : slot?.id, phone: form.phone.trim(), gender: form.gender, story: form.story.trim(), depositName: form.depositName || undefined, visitorId: vid, sessionId: sid }) });
-      const data = (await res.json()) as { error?: string } & Done;
-      if (!res.ok) { setError(zh ? (res.status === 409 ? "此時段剛被預約，請選擇其他時間。" : t("예약을 처리하지 못했어요.")) : data.error || t("예약을 처리하지 못했어요.")); if (res.status === 409) { setSlot(null); void loadSlots(); } return; }
-      setDone(data);
-      window.scrollTo({ top: 0 });
+      try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify(form)); } catch {}
+      // 1) Save the order as awaiting payment. The server sets the amount; an earlier unpaid attempt from this browser is released.
+      const res = await fetch("/api/booking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, product, locale, slotId: reportOnly ? undefined : slot?.id, phone: form.phone.trim(), gender: form.gender, story: form.story.trim(), termsAgreed: form.agreeTerms, withdrawalAgreed: form.agreeWithdrawal, replaces: loadPending()?.id, visitorId: vid, sessionId: sid }) });
+      const order = (await res.json()) as { error?: string } & BookingSummary;
+      if (!res.ok) { setError(zh ? (res.status === 409 ? "此時段剛被預約，請選擇其他時間。" : t("예약을 처리하지 못했어요.")) : order.error || t("예약을 처리하지 못했어요.")); if (res.status === 409) { setSlot(null); void loadSlots(); } return; }
+      // 2) Card payment window, then 3) server-side verification.
+      const outcome = await requestCardPayment({ ...order, phone: form.phone.trim(), locale });
+      if (outcome.state === "redirecting") return;
+      if (outcome.state === "paid" && outcome.booking) { clearPending(); setDone(outcome.booking); window.scrollTo({ top: 0 }); return; }
+      if (outcome.state === "refunded" && !reportOnly) { setSlot(null); void loadSlots(); }
+      setError(outcome.state === "pending" ? t("결제 확인이 늦어지고 있어요. 결제가 완료됐다면 확정 메일이 곧 도착해요. 메일이 오지 않으면 카카오톡으로 문의해 주세요.")
+        : (!zh && outcome.message) || t("결제가 완료되지 않았어요. 다시 시도해 주세요."));
     } catch { setError(t("네트워크 오류가 발생했어요. 잠시 뒤 다시 시도해 주세요.")); }
     finally { setBusy(false); }
   }
 
-  if (done) return <><SiteHeader locale={locale} /><main id="main-content" tabIndex={-1} className="shell booking-page"><section className="booking-done">
-    <span className="booking-done-icon"><Check size={22} /></span>
-    <p className="tiny-label muted">BOOKING REQUESTED</p>
-    <h1>{done.name}{zh ? "，" : "님, "} {done.product === "report" ? t("리포트 신청을 받았어요.") : t("자리를 잡아두었어요.")}</h1>
-    {done.date !== null && done.hour !== null ? <p className="booking-done-slot"><CalendarDays size={16} />{bookingSlotLabel(done.date, done.hour, locale)}</p> : <p className="booking-done-slot"><Mail size={16} />{t("사주 리포트 · 약 하루 뒤 PDF 이메일 수령")}</p>}
-    <BankBox product={done.product} locale={locale} depositName={done.depositName} amount={done.amount} />
-    <p className="booking-done-amount">{t("이용 금액")}{" "}<strong>{formatWon(done.amount)}</strong>{done.marketingConsent ? t(" · 후기 활용 동의 할인 적용") : ""}</p>
-    <p className="booking-deadline"><Clock3 size={14} /><strong>{t("지금 바로 입금해 주세요.")}</strong> {zh ? "確認入帳後，申請即正式成立。" : "입금이 확인되면 신청이 확정돼요."}</p>
-    <ol className="booking-next">
-      <li><strong>{t("입금 확인 후 신청이 확정돼요.")}</strong> {zh ? "確認入帳後，將寄送後續說明至 " : "상담자가 입금을 확인한 뒤 "}<em>{done.email}</em>{zh ? "。" : "로 진행 안내를 보내드려요."}</li>
-      {done.product === "report" ? <>
-        <li><strong>{t("남겨주신 사연과 명식을 읽어요.")}</strong>{t("입금 확인 후 상담자가 직접 분석하고 작성해요. 한 분 한 분 직접 쓰기 때문에 약 하루가 걸립니다.")}</li>
-        <li><strong>{t("PDF 리포트를 이메일로 받아요.")}</strong>{t("신청할 때 남긴 질문과 사연을 바탕으로 작성한 약 10페이지 분량의 리포트를 보내드려요.")}</li>
-      </> : <>
-        <li><strong>{t("약속한 시간에 카카오톡 1:1 채팅으로 만나요.")}</strong>{t("미리 남겨주신 사연과 명식을 바탕으로 최대 1시간 이야기를 나눠요. 이야기가 정리되면 더 일찍 끝날 수도 있어요.")}</li>
-        <li><strong>{t("상담 뒤, 사주 리포트가 도착해요.")}</strong>{t("상담 후 직접 분석하고 작성한 약 10페이지 PDF 리포트를 같은 이메일로 보내드려요. 작성에는 약 하루가 걸립니다.")}</li>
-      </>}
-    </ol>
-    <div className="hero-actions"><a className="primary-button" href={homePath(locale)}>{t("홈으로 돌아가기")}</a>{FREE_READING_ENABLED && <a className="text-link" href={localPath(locale, "/read")}>{t("기다리는 동안 무료 사주 보기")}<ArrowRight size={16} /></a>}</div>
-  </section></main><SiteFooter locale={locale} /></>;
+  if (done) return <><SiteHeader locale={locale} /><main id="main-content" tabIndex={-1} className="shell booking-page"><BookingDone done={done} locale={locale} /></main><SiteFooter locale={locale} /></>;
 
   return <><SiteHeader locale={locale} /><main id="main-content" tabIndex={-1} className="shell booking-page">
     <a href={homePath(locale) + "#consultation"} className="booking-back"><ArrowLeft size={15} />{t("상담 안내로 돌아가기")}</a>
@@ -189,16 +196,20 @@ export function BookingPage({ initialProduct = "consultation", locale = "ko" }: 
         <p className="story-note"><UserRound size={14} />{t("연인, 배우자, 자녀처럼 다른 사람의 사주도 함께 봐야 한다면 그분의 생년월일, 태어난 시간, 성별을 사연에 같이 적어주세요. 이 정보가 없으면 상대방 풀이는 어려워요.")}</p>
       </section>
       <section className="booking-step">
-        <h2><span className="step-number">{reportOnly ? "STEP 03" : "STEP 04"}</span>{t("입금 안내")}</h2>
+        <h2><span className="step-number">{reportOnly ? "STEP 03" : "STEP 04"}</span>{t("결제")}</h2>
         <p className="booking-price"><strong>{formatWon(priceFor(form.marketingConsent, product))}</strong><span>{reportOnly ? t("사람이 직접 분석·작성한 약 10페이지 PDF를 이메일로 받아요. 제작에는 약 하루가 걸립니다.") : (zh ? "最長一小時的 KakaoTalk 一對一文字諮詢＋諮詢後的八字報告" : `${DURATION_TEXT} 카카오톡 1:1 채팅 상담 + 상담 후 사주 리포트`)}</span></p>
         <label className={`consent-card${form.marketingConsent ? " on" : ""}`}><input type="checkbox" checked={form.marketingConsent} onChange={(e) => set("marketingConsent", e.target.checked)} /><span><strong>{zh ? "同意匿名行銷使用，以 " : "마케팅 활용에 동의하고 "}{formatWon(offer.marketing)}{zh ? " " : "에 "}{reportOnly ? t("리포트 받기") : t("상담하기")}</strong><small>{zh ? "同意將諮詢或報告中的故事與解讀，隱去姓名及個資後用於行銷心得與內容。未同意也可申請，原價 " : `${MARKETING_CONSENT_TEXT} 동의하지 않아도 `}{formatWon(offer.base)}{zh ? "。" : "에 신청할 수 있어요."}</small></span></label>
-        <BankBox product={product} locale={locale} amount={priceFor(form.marketingConsent, product)} />
-        <label className="field"><span className="field-label">{t("입금자명")}{" "}<small>{t("이름과 다르면 적어주세요")}</small></span><input className="input-control" maxLength={40} value={form.depositName} onChange={(e) => set("depositName", e.target.value)} placeholder={form.name || t("입금할 때 쓰는 이름")} /></label>
-        <p className="booking-hint"><strong>{t("신청 뒤 바로 입금해 주세요.")}</strong> {reportOnly ? t("입금 확인 후 제작을 시작하며, 약 하루 뒤 리포트를 이메일로 보내드려요.") : t("입금이 확인되면 확정 메일을 보내드립니다.")}</p>
-        <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} />{zh ? "我同意將填寫資料用於預約、報告申請、入帳確認與寄送報告，並透過電子郵件與電話接收 DON SSAEM 的消息及活動通知。可隨時回覆拒收，使用服務後也可要求刪除資料。*" : CONTACT_CONSENT_TEXT}</label>
+        {!reportOnly && <KakaoConsultationNotice locale={locale} />}
+        <div className="refund-summary"><strong>{t("취소·환불 안내")}</strong><p>{t(REFUND_SUMMARY[product])}{" "}<a href="/terms#refund" target="_blank" rel="noreferrer">{zh ? "退款政策全文（韓文）" : "환불정책 전체 보기"}</a></p></div>
+        <p className="booking-hint"><strong>{t("결제가 완료되면 바로 확정돼요.")}</strong> {reportOnly ? t("결제 후 제작을 시작하며, 약 하루 뒤 리포트를 이메일로 보내드려요.") : t("확정 메일을 바로 보내드립니다.")}</p>
+        <div className="payment-agreements">
+          <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agree} onChange={(e) => set("agree", e.target.checked)} /><span>{zh ? "我同意將填寫資料用於預約、報告申請、付款確認與寄送報告，並透過電子郵件與電話接收 DON SSAEM 的消息及活動通知。可隨時回覆拒收，使用服務後也可要求刪除資料。*" : CONTACT_CONSENT_TEXT}</span></label>
+          <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agreeTerms} onChange={(e) => set("agreeTerms", e.target.checked)} /><span>{t(TERMS_CONSENT_TEXT)} *{" "}<a href="/terms" target="_blank" rel="noreferrer">{zh ? "使用條款" : "이용약관"}</a>{" · "}<a href="/terms#refund" target="_blank" rel="noreferrer">{zh ? "退款政策" : "환불정책"}</a></span></label>
+          {reportOnly && <label className="checkbox-label booking-check"><input type="checkbox" checked={form.agreeWithdrawal} onChange={(e) => set("agreeWithdrawal", e.target.checked)} /><span>{t(WITHDRAWAL_CONSENT_TEXT)} *</span></label>}
+        </div>
         {error && <p className="error-message" role="alert">{error}</p>}
-        <button className="primary-button booking-submit" type="submit" disabled={busy || (!reportOnly && !slot)}>{busy ? <Loader2 size={17} className="animate-spin" /> : <Mail size={17} />}{reportOnly ? t("리포트 신청하기") : slot ? t("이 시간으로 예약 요청하기") : t("시간을 먼저 골라주세요")}</button>
-        <p className="privacy-hint"><LockKeyhole size={13} /><span>{t("사이트에서 결제하지 않아요. 계좌이체 입금을 확인한 뒤 상담자가 직접 확정 안내를 드립니다.")}</span></p>
+        <button className="primary-button booking-submit" type="submit" disabled={busy || (!reportOnly && !slot)}>{busy ? <Loader2 size={17} className="animate-spin" /> : <CreditCard size={17} />}{!reportOnly && !slot ? t("시간을 먼저 골라주세요") : `${formatWon(priceFor(form.marketingConsent, product))} ${t("카드로 결제하기")}`}</button>
+        <p className="privacy-hint"><LockKeyhole size={13} /><span>{t("결제는 포트원·토스페이먼츠의 결제창에서 진행되며, 카드 정보는 돈쌤 서버에 저장되지 않아요.")}</span></p>
         {KAKAO_URL && <p className="privacy-hint"><Mail size={13} /><span>{zh ? "預約前有疑問？" : "예약 전에 궁금한 점이 있다면 "}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "用 KakaoTalk 問我們" : "카카오톡으로 편하게 물어보세요"}</a></span></p>}
       </section>
     </form>

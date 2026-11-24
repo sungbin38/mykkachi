@@ -9,8 +9,11 @@ await p.route('**/api/booking/slots', r => r.fulfill({ json: { slots: [{ id: 'ks
 let submitted;
 await p.route('**/api/booking', r => {
   submitted = r.request().postDataJSON();
-  return r.fulfill({ json: { id: 'test-booking', product: submitted.product, date: submitted.product === 'report' ? null : '2030-01-10', hour: submitted.product === 'report' ? null : 18, name: submitted.name, email: submitted.email, amount: submitted.marketingConsent ? (submitted.product === 'report' ? 50000 : 150000) : (submitted.product === 'report' ? 100000 : 200000), marketingConsent: submitted.marketingConsent, holdUntil: '2030-01-10T09:30:00Z', depositName: submitted.name } });
+  return r.fulfill({ json: { id: 'test-booking', product: submitted.product, date: submitted.product === 'report' ? null : '2030-01-10', hour: submitted.product === 'report' ? null : 18, name: submitted.name, email: submitted.email, amount: submitted.marketingConsent ? (submitted.product === 'report' ? 50000 : 150000) : (submitted.product === 'report' ? 100000 : 200000), marketingConsent: submitted.marketingConsent, orderName: 'test' } });
 });
+// The PortOne window is replaced by a stub that approves at once; the server verification is mocked with the saved order.
+await p.route('https://cdn.portone.io/**', r => r.fulfill({ contentType: 'text/javascript', body: 'window.PortOne={requestPayment:async q=>({transactionType:"PAYMENT",txId:"t",paymentId:q.paymentId})}' }));
+await p.route('**/api/payments/complete', r => r.fulfill({ json: { state: 'paid', booking: { id: 'test-booking', product: submitted.product, date: '2030-01-10', hour: 18, name: submitted.name, email: submitted.email, amount: 150000, marketingConsent: true, orderName: 'test' } } }));
 try {
   for (const width of [1440, 390]) {
     await p.setViewportSize({ width, height: 960 });
@@ -34,14 +37,14 @@ try {
   await p.getByRole('radio', { name: '女性', exact: true }).click();
   await p.locator('textarea').fill('我想了解接下來的工作方向以及適合轉職的時機。');
   await p.locator('.consent-card input').check();
-  await p.locator('.booking-check input').last().check();
+  for (const box of await p.locator('.payment-agreements input').all()) await box.check();
   await p.locator('.booking-submit').click();
   await p.locator('.booking-done').waitFor();
   assert.equal(submitted.locale, 'zh-TW');
   assert.equal(submitted.slotId, 'kst-18');
   assert.equal(submitted.birthDate, '1990-01-01');
   assert.ok((await p.locator('.booking-done-slot').innerText()).includes('17:00–18:00'));
-  assert.ok((await p.locator('.booking-deadline').innerText()).includes('17:30'));
+  assert.equal(submitted.termsAgreed, true);
   assert.ok((await p.locator('.booking-done-amount').innerText()).includes('150,000 韓元'));
   await p.goto(origin + '/zh-TW/book?product=report', { waitUntil: 'networkidle' });
   assert.equal(await p.locator('.booking-calendar').count(), 0);
@@ -54,7 +57,6 @@ try {
   await p.goto(origin + '/zh-TW', { waitUntil: 'networkidle' });
   assert.ok(await p.locator('a[href="/zh-TW/book?product=report"]').count() > 0);
   assert.ok(await p.locator('a[href="https://pf.kakao.com/_xfeQxiX/chat"]').count() >= 2);
-  assert.equal(await p.locator('a[href^="mailto:"]').count(), 0);
   assert.deepEqual(errors, []);
   console.log('PASS Taiwan/Korea time conversion, form payload, localized completion/deadline, report prices, responsive layouts, contact links; requests mocked, no reservations or emails sent');
 } finally { await browser.close(); }

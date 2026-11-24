@@ -13,6 +13,17 @@ export const BRAND = {
   chinese: "想更了解自己時，問問自己的八字。",
 };
 
+// Shown in every footer. Card companies compare this with the business registration certificate character by character; do not reword.
+export const BUSINESS = {
+  name: "돈쌤",
+  owner: "안성빈",
+  registration: "611-56-01112",
+  address: "경기도 고양시 일산동구 위시티4로 46, 206동 1502호 (식사동, 위시티 일산자이2단지)",
+  phone: "010-9737-3833",
+  email: "sungbin3833@gmail.com",
+  mailOrder: "간이과세자 신고 면제",
+};
+
 // Owner's KakaoTalk channel (돈쌤). KAKAO_URL opens the 1:1 chat directly; the channel home is KAKAO_CHANNEL_URL.
 export const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_xfeQxiX";
 export const KAKAO_URL: string = `${KAKAO_CHANNEL_URL}/chat`;

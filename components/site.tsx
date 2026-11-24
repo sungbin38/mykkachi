@@ -4,9 +4,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ArrowUpRight, Leaf, Heart, Compass, Moon, Globe2, LockKeyhole, BookOpen, Menu, ArrowRight, ChevronDown, UserRound, Clock3, Mail } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose, SheetDescription } from "@/components/ui/sheet";
-import { BRAND, FREE_READING_ENABLED, KAKAO_URL, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
+import { BRAND, BUSINESS, FREE_READING_ENABLED, KAKAO_URL, homePath, localPath, websiteSchema, type Locale } from "@/lib/brand";
 import { BrandMascot } from "./brand-mascot";
 import { FeaturedReviews } from "./reviews";
 import { PromoCountdown } from "./promo-countdown";
@@ -48,18 +47,20 @@ export function SiteHeader({ locale = "ko" }: { locale?: Locale }) {
 }
 export function SiteFooter({ locale = "ko" }: { locale?: Locale }) {
   const zh = locale === "zh-TW";
-  const [policy, setPolicy] = useState("");
-  const privacy = zh
-    ? "免費排盤所用的生日、出生時間與暱稱僅在瀏覽器中處理，不儲存在伺服器。網站僅累計匿名事件次數，不記錄生日、IP 或使用者識別碼。預約諮詢時填寫的姓名、電子郵件、聯絡方式、出生資料與故事，用於預約確認、諮詢與寄送報告，並儲存在伺服器；依預約時的同意，也會以電子郵件與電話寄送 DON SSAEM 的消息與活動通知，可隨時回覆取消；諮詢後可要求刪除。管理後台需密碼登入，內容草稿儲存在伺服器。"
-    : "무료 사주에 입력한 생년월일·출생시간·닉네임은 브라우저에서 계산하며 서버에 저장하지 않습니다. 페이지별 익명 이벤트 횟수만 집계하며 생년월일·IP·사용자 식별자를 저장하지 않습니다. 상담 예약·리포트 신청 시 입력한 이름·이메일·연락처·출생 정보·사연은 신청 확인과 상담, 리포트 작성·발송에 사용하며 서버에 저장됩니다. 예약 시 동의에 따라 남긴 이메일과 연락처로 돈쌤의 소식·이벤트 안내를 보내드리며, 답장으로 언제든 수신을 거절할 수 있습니다. 상담 뒤 삭제를 요청하시면 지워드립니다. 관리자 콘텐츠 초안도 서버에 저장됩니다.";
-  const terms = zh
-    ? "免費八字排盤採陽曆、節氣換年月、午夜換日，不做真太陽時校正。解讀以文化體驗與自我探索為目的。一對一諮詢由老師透過 KakaoTalk 文字聊天進行，諮詢前請務必加入 KakaoTalk 諮詢頻道。每次最長一小時，談完可能提前結束。費用為 20 萬韓元，同意行銷用途則為 15 萬韓元；進行方式與取消退款規則將於預約確認信中說明，確認後再以銀行轉帳付款。諮詢包含報告；只購買報告原價 10 萬韓元，10 月特價期間（至 2026 年 10 月 31 日）為 1 萬韓元，同意匿名行銷用途為 5 千韓元。報告約 10 頁，由老師親自分析與撰寫，約需一天，再以 PDF 寄到電子信箱。單獨報告於確認付款後開始製作。網站不提供自動扣款。"
-    : "무료 사주는 양력·절입 기준 연월주와 자정 기준 일주를 사용하며 진태양시 보정을 적용하지 않습니다. 해석은 문화적 경험과 자기 이해를 위한 참고입니다. 1:1 상담은 카카오톡 채팅으로 상담자가 직접 진행하며, 상담 전 카카오톡 상담 채널을 반드시 추가해야 합니다. 회당 최대 1시간이고 이야기가 정리되면 더 일찍 끝날 수 있습니다. 비용은 20만원, 상담 이야기의 익명 후기·콘텐츠 활용에 동의하면 15만원이며, 진행 방법·취소 및 환불 기준은 예약 확인 메일로 안내받고 확인한 뒤 계좌이체로 결제하는 방식입니다. 상담 후 리포트가 포함됩니다. 상담 없이 리포트만 받는 상품은 정가 10만원이며, 11월 특가 기간(2026년 11월 30일까지)에는 1만원, 사연과 풀이의 익명 마케팅 활용에 동의하면 5천원입니다. 리포트는 약 10페이지 분량의 PDF로 이메일 발송합니다. 상담자가 직접 분석하고 작성해 약 하루가 걸리며, 리포트 단독 상품은 입금 확인 후 제작을 시작합니다. 사이트 내 자동 결제는 제공하지 않습니다.";
-  return <><footer className="site-footer"><div className="shell">
+  return <footer className="site-footer"><div className="shell">
     <div className="footer-top"><a href={homePath(locale)} aria-label={zh ? "돈쌤 DON SSAEM 首頁" : "돈쌤 DON SSAEM 홈"}><Logo /></a>
-      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><a href={homePath(locale)+"#story"}>{zh ? "從八字認識自己" : "사주로 보는 나"}</a><a href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a><button onClick={() => setPolicy("privacy")}>{zh ? "隱私說明" : "개인정보 안내"}</button><button onClick={() => setPolicy("terms")}>{zh ? "使用說明" : "이용 안내"}</button></div>
-    </div><p className="site-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·입금에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><div className="footer-bottom"><span>© {new Date().getFullYear()} DON SSAEM. Take your time. Find your way.</span></div>
-  </div></footer><Dialog open={!!policy} onOpenChange={() => setPolicy("")}><DialogContent><DialogTitle>{policy === "privacy" ? (zh ? "隱私說明" : "개인정보 안내") : (zh ? "使用說明" : "이용 안내")}</DialogTitle><DialogDescription className="dialog-copy">{policy === "privacy" ? privacy : terms}</DialogDescription></DialogContent></Dialog></>;
+      <div className="footer-links"><a href={localPath(locale, "/journal")}>{zh ? "日常專欄" : "돈쌤의 사주 노트"}</a><a href={homePath(locale)+"#story"}>{zh ? "從八字認識自己" : "사주로 보는 나"}</a><a href={localPath(locale, "/book")}>{zh ? "預約一對一諮詢" : "상담 예약"}</a><a href={localPath(locale, "/reviews")}>{zh ? "諮詢故事" : "상담 이야기"}</a></div>
+    </div><p className="site-contact">{zh ? "預約或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "예약·결제에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p>
+    {/* Business details required for card-payment review: keep the wording identical to the registration certificate. */}
+    <address className="footer-business" lang="ko">
+      <p>상호: {BUSINESS.name} | 대표자: {BUSINESS.owner} | 사업자등록번호: {BUSINESS.registration}</p>
+      <p>주소: {BUSINESS.address}</p>
+      <p>전화: <a href={`tel:${BUSINESS.phone}`}>{BUSINESS.phone}</a> | 이메일: <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a></p>
+      <p>통신판매업 신고: {BUSINESS.mailOrder}</p>
+    </address>
+    <nav className="footer-legal" aria-label={zh ? "政策" : "약관 및 정책"}><a href="/terms">{zh ? "使用條款（韓文）" : "이용약관"}</a><span aria-hidden="true">·</span><a href={localPath(locale, "/privacy")}>{zh ? "隱私政策" : "개인정보처리방침"}</a><span aria-hidden="true">·</span><a href="/terms#refund">{zh ? "退款政策（韓文）" : "환불정책"}</a></nav>
+    <div className="footer-bottom"><span>© {new Date().getFullYear()} DON SSAEM. Take your time. Find your way.</span></div>
+  </div></footer>;
 }
 export function HomePage({ locale, featuredArticles }: { locale: Locale; featuredArticles: JournalCardData[] }) {
   const zh = locale === "zh-TW";
@@ -81,9 +82,9 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
     ["사람이 직접 명식을 세우고 읽어요", "상담자가 연·월·일·시 네 기둥을 먼저 확인하고, 당신의 상황에 맞춰 풀어요. 한 분 한 분 직접 분석해요."], ["당신의 사연을 명식 안에 놓고 봐요", "예약할 때 남긴 고민을 상담 전에 미리 읽어요. 사주는 실마리이고, 중심은 지금 당신이 겪는 일이에요."], ["다시 꺼내 읽을 수 있는 리포트를 남겨요", "상담이 끝나면 나눈 이야기를 정리해 약 하루 뒤 이메일로 보내드려요. 시간이 지나 다시 읽어도 괜찮도록요."],
   ];
   const steps = zh ? [
-    ["選擇日期與時間", "以一小時為單位，挑選你方便的時段。諮詢最長一小時，可能提前結束。"], ["留下基本資料", "出生年月日與時間、性別、聯絡方式。請務必寫下你的故事，寫得越具體，解讀就越深入。"], ["立即轉帳後確認", "預約後請立即將諮詢費用（20 萬韓元，同意匿名分享心得則 15 萬韓元）轉入指定帳戶，30 分鐘內未轉帳將自動取消。老師確認後寄出確定通知。請務必加入 KakaoTalk 諮詢頻道並傳送預約姓名。到約定時間，以 KakaoTalk 一對一文字聊天進行，最長一小時。"], ["收到八字報告", "諮詢結束後，老師親自分析與撰寫約 10 頁的 PDF 報告，約需一天，再寄到你的信箱。"],
+    ["選擇日期與時間", "以一小時為單位，挑選你方便的時段。諮詢最長一小時，可能提前結束。"], ["留下基本資料", "出生年月日與時間、性別、聯絡方式。請務必寫下你的故事，寫得越具體，解讀就越深入。"], ["信用卡付款後確認", "以信用卡支付諮詢費用（20 萬韓元，同意匿名分享心得則 15 萬韓元），付款完成後立即確認並寄出確認信。請務必加入 KakaoTalk 諮詢頻道並傳送預約姓名。到約定時間，以 KakaoTalk 一對一文字聊天進行，最長一小時。"], ["收到八字報告", "諮詢結束後，老師親自分析與撰寫約 10 頁的 PDF 報告，約需一天，再寄到你的信箱。"],
   ] : [
-    ["날짜와 시간 고르기", "1시간 단위로 열린 시간 중에서 편한 때를 골라요. 상담은 최대 1시간이고, 더 일찍 끝날 수도 있어요."], ["나에 대해 알려주기", "생년월일과 태어난 시간, 성별, 연락처를 남겨요. 사연은 꼭 적어주세요. 상황과 궁금한 점을 자세히 적을수록 더 깊이 읽을 수 있어요."], ["바로 입금하고 확정", "상담 비용 20만원(후기 활용 동의 시 15만원)을 예약 직후 안내한 계좌로 입금해요. 30분 안에 입금이 없으면 자동 취소돼요. 상담자가 확인하고 확정 메일을 보내요. 카카오톡 상담 채널을 반드시 추가하고 예약자 성함을 보내주세요. 약속한 시간에 카카오톡 1:1 채팅으로 최대 1시간 이야기를 나눠요."], ["사주 리포트 받기", "상담 후 직접 분석하고 작성한 약 10페이지 PDF 리포트를 이메일로 보내드려요. 작성에는 약 하루가 걸립니다."],
+    ["날짜와 시간 고르기", "1시간 단위로 열린 시간 중에서 편한 때를 골라요. 상담은 최대 1시간이고, 더 일찍 끝날 수도 있어요."], ["나에 대해 알려주기", "생년월일과 태어난 시간, 성별, 연락처를 남겨요. 사연은 꼭 적어주세요. 상황과 궁금한 점을 자세히 적을수록 더 깊이 읽을 수 있어요."], ["카드로 결제하고 확정", "상담 비용 20만원(후기 활용 동의 시 15만원)을 카드로 결제해요. 결제가 완료되면 예약이 바로 확정되고 확정 메일을 보내드려요. 카카오톡 상담 채널을 반드시 추가하고 예약자 성함을 보내주세요. 약속한 시간에 카카오톡 1:1 채팅으로 최대 1시간 이야기를 나눠요."], ["사주 리포트 받기", "상담 후 직접 분석하고 작성한 약 10페이지 PDF 리포트를 이메일로 보내드려요. 작성에는 약 하루가 걸립니다."],
   ];
   const reportParts = zh ? [
     ["日柱", "你的名牌：與生俱來的性格與傾向"], ["格局", "你天生的「武器」與使用方式"], ["大運流向", "每十年的環境變化，以及該留意的事"], ["要小心的事", "關係、健康、金錢上需要注意的訊號"], ["開運方法", "數字、運動、植物、食物：日常的小習慣"], ["方向與顏色", "搬家、旅行、工作可參考的方位與衣著"], ["與你合得來的人", "容易相處的日柱"], ["提醒", "寫給你的最後一段話"],
@@ -158,8 +159,8 @@ export function HomePage({ locale, featuredArticles }: { locale: Locale; feature
           <a className="outline-button" href={`${localPath(locale, "/book")}?product=report`}>{zh ? "只申請八字報告" : "리포트만 신청하기"}<ArrowUpRight size={18} /></a>
         </article>
       </div>
-      <p className="service-footnote">{zh ? "單獨報告不含一對一對話。確認付款後由老師親自分析與撰寫，約需一天，再以電子郵件寄送。預約時段以台灣標準時間（UTC+8）顯示，費用以韓元計價，轉帳至 Hana Bank（韓國韓亞銀行）帳戶。" : "리포트 단독 상품에는 1:1 상담이 포함되지 않아요. 입금 확인 후 상담자가 직접 분석하고 작성하며, 약 하루 뒤 이메일로 보내드려요."}</p>
-      <p className="site-contact">{zh ? "諮詢、報告或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "상담·리포트 신청이나 입금에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
+      <p className="service-footnote">{zh ? "單獨報告不含一對一對話。付款後由老師親自分析與撰寫，約需一天，再以電子郵件寄送。預約時段以台灣標準時間（UTC+8）顯示，費用以韓元計價，以信用卡付款。" : "리포트 단독 상품에는 1:1 상담이 포함되지 않아요. 결제 후 상담자가 직접 분석하고 작성하며, 약 하루 뒤 이메일로 보내드려요."}</p>
+      <p className="site-contact">{zh ? "諮詢、報告或付款遇到問題，請透過 KakaoTalk 聯絡我們。" : "상담·리포트 신청이나 결제에 문제가 있으면 카카오톡으로 문의해 주세요."}<a href={KAKAO_URL} target="_blank" rel="noreferrer">{zh ? "KakaoTalk 客服" : "카카오톡 문의"}</a></p><details className="consultation-process"><summary>{zh ? "一對一諮詢如何進行？" : "1:1 상담은 어떻게 진행되나요?"}<ChevronDown size={18} aria-hidden="true" /></summary><ol className="consultation-timeline">{steps.map(([title, body], i) => <li key={title}><span className="timeline-number" aria-hidden="true">{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></details>
     </div></section>
     <FeaturedReviews locale={locale} />
     <section id="report" className="shell report-section" data-reveal aria-labelledby="report-title">
