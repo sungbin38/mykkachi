@@ -14,7 +14,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly", priority: path ? 0.7 : 1,
       alternates: { languages: { "ko-KR": ORIGIN + (path || "/"), "zh-TW": ORIGIN + "/zh-TW" + path, "x-default": ORIGIN + (path || "/") } },
     }));
-    return [...pages, ...collections[index].map((a) => {
+    // Policy pages exist once (Korean), plus the Traditional Chinese privacy page.
+    const policies: MetadataRoute.Sitemap = (locale === "ko" ? ["/terms", "/privacy"] : ["/zh-TW/privacy"]).map((path) => ({ url: ORIGIN + path, changeFrequency: "yearly", priority: 0.3 }));
+    return [...pages, ...policies, ...collections[index].map((a) => {
       const path = `/journal/${a.slug}`;
       const url = ORIGIN + localPath(locale, path);
       return {

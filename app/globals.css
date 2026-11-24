@@ -1446,15 +1446,8 @@ h3 {
 .booking-price { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
 .booking-price strong { font-family: var(--font-gowun), serif; font-size: 28px; color: #2f4a46; }
 .booking-price span { font-size: 14px; color: #6c7567; }
-.bank-box { background: #f8f5ed; border: 1px dashed #c7d2c0; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; text-align: left; }
-.bank-box-label { display: flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: 1px; color: #517c73; font-weight: 600; margin-bottom: 8px; }
-.bank-box-account { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 17px; margin-bottom: 4px; }
-.bank-account-number { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
-.bank-copy { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border: 1px solid var(--border); border-radius: 30px; background: #fff; font-family: inherit; font-size: 12px; cursor: pointer; }
-.bank-box-sub { font-size: 13.5px; color: #5d6b63; }
 .booking-hint { font-size: 14px; line-height: 1.8; color: #5d6b63; margin-bottom: 16px; word-break: keep-all; }
 .booking-deadline { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: #b56d4d; margin-top: 4px; }
-.booking-done .bank-box { margin: 22px auto 8px; max-width: 460px; }
 @media (max-width: 640px) {
   .birth-row { grid-template-columns: 1fr; }
   .mini-form-row { flex-direction: column; }

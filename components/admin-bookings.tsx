@@ -9,7 +9,7 @@ type Source = { landingPath?: string | null; referrer?: string | null; referrerH
 type Booking = {
   id: string; locale?: "ko" | "zh-TW"; product: BookingProduct; slotId: string | null; date: string | null; hour: number | null; name: string; email: string; phone: string | null;
   birthDate: string; birthTime: string | null; birthUnknown: boolean; calendar: "solar" | "lunar"; gender: string | null;
-  topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null;
+  topic: string | null; story: string | null; depositName: string | null; amount: number; marketingConsent: boolean; status: BookingStatus; holdUntil: string | null; paidAt: string | null; paymentId?: string | null;
   note: string | null; reportSentAt: string | null; seenAt: string | null; visitorId: string | null; sessionId: string | null; source: Source | null; createdAt: string; updatedAt: string;
 };
 type Payload = { bookings: Booking[]; slots: Slot[]; unseen: number; notifications: boolean };
@@ -115,9 +115,9 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
   return <>
     {error && <p className="error-message" role="alert">{error}</p>}
     <div className="metric-grid bookings-metrics">
-      <div className="metric-card"><span className="tiny-label muted">입금 대기</span><strong>{waiting}</strong><p>입금 확인이 필요한 요청</p></div>
-      <div className="metric-card"><span className="tiny-label muted">다가오는 상담</span><strong>{upcomingConsults}</strong><p>확정 {confirmedConsults} · 입금 대기 {upcomingConsults - confirmedConsults}</p></div>
-      <div className="metric-card"><span className="tiny-label muted">진행할 리포트</span><strong>{pendingReports}</strong><p>입금 확인 후 아직 안 보낸 리포트 {reportsToSend}</p></div>
+      <div className="metric-card"><span className="tiny-label muted">결제 대기</span><strong>{waiting}</strong><p>아직 결제되지 않은 신청</p></div>
+      <div className="metric-card"><span className="tiny-label muted">다가오는 상담</span><strong>{upcomingConsults}</strong><p>확정 {confirmedConsults} · 결제 대기 {upcomingConsults - confirmedConsults}</p></div>
+      <div className="metric-card"><span className="tiny-label muted">진행할 리포트</span><strong>{pendingReports}</strong><p>결제 완료 후 아직 안 보낸 리포트 {reportsToSend}</p></div>
       <div className="metric-card"><span className="tiny-label muted">열린 시간</span><strong>{data.slots.filter((s) => s.status === "open" && s.date >= todayKST()).length}</strong><p className="metric-inline-note">{data.notifications ? <><BellRing size={13} />새 예약 이메일 알림 켜짐</> : <><BellOff size={13} />알림 미설정</>}</p></div>
     </div>
     <section className="studio-panel bookings-table-panel">
@@ -158,8 +158,8 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
         {selected && <>
           <DialogHeader><DialogTitle>{selected.name}님 · {BOOKING_PRODUCTS[selected.product].name}{selected.date && selected.hour !== null ? ` · ${dayLabel(selected.date)} ${hh(selected.hour)}` : ""}</DialogTitle><DialogDescription>{dt(selected.createdAt)} 요청 · <span className={`pill ${STATUS_CLASS[selected.status]}`}>{bookingStatusLabel(selected.status, selected.product)}</span></DialogDescription></DialogHeader>
           <div className="booking-pay-row">
-            <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 활용 동의</em>}</strong><span>입금자명 {selected.depositName || selected.name}{selected.status === "requested" && selected.holdUntil ? ` · 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 입금 확인 ${dt(selected.paidAt)}` : ""}</span></div>
-            {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />입금 확인 · 확정</button>}
+            <div><strong>{formatWon(selected.amount)}{selected.marketingConsent && <em className="consent-tag">마케팅 활용 동의</em>}</strong><span>{selected.paymentId ? `카드 결제 ${selected.paymentId}` : selected.depositName ? `입금자명 ${selected.depositName}` : "결제 전"}{selected.status === "requested" && selected.holdUntil ? ` · 결제 기한 ${dt(selected.holdUntil)}` : ""}{selected.paidAt ? ` · 결제 확인 ${dt(selected.paidAt)}` : ""}</span></div>
+            {selected.status === "requested" && <button type="button" className="primary-button small" disabled={saving} onClick={() => patch(selected, { status: "confirmed" })}><Banknote size={15} />수동으로 결제 확인 · 확정</button>}
           </div>
           <dl className="booking-detail">
             <div><dt>신청 언어 / 시간 기준</dt><dd>{selected.locale === "zh-TW" ? "대만 번체 · 고객 UTC+8 / 관리자 한국 시간(KST)" : "한국어 · 한국 시간(KST)"}</dd></div><div><dt>상품</dt><dd>{BOOKING_PRODUCTS[selected.product].name}</dd></div>
@@ -177,7 +177,7 @@ export function BookingsPanel({ onSeen }: { onSeen?: () => void }) {
             <button type="button" className="outline-button" disabled={saving} onClick={() => patch(selected, { reportSent: !selected.reportSentAt })}>{selected.reportSentAt ? <><X size={14} />리포트 발송 취소</> : <><Mail size={14} />리포트 보냈어요</>}</button>
           </div>
           <label className="field"><span className="field-label">상담 메모 (나만 보는 메모)</span><textarea className="input-control booking-story" rows={4} maxLength={2000} value={note} onChange={(e) => setNote(e.target.value)} onBlur={() => note !== (selected.note || "") && patch(selected, { note })} placeholder="상담 중 메모, 리포트에 넣을 내용 등" /></label>
-          <p className="panel-footnote">1:1 상담은 취소하면 그 시간이 다시 열려요. 입금 대기 신청은 자동으로 만료되지 않아요. 리포트만 신청한 건은 시간표에 영향을 주지 않아요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
+          <p className="panel-footnote">1:1 상담은 취소하면 그 시간이 다시 열려요. 카드 결제를 마치지 않은 신청은 30분 뒤 자동으로 만료되고 시간이 다시 열려요. 환불은 포트원 콘솔에서 결제를 취소하면 예약도 함께 취소돼요. 리포트만 신청한 건은 시간표에 영향을 주지 않아요. 리포트는 이메일 앱에서 PDF를 첨부해 보낸 뒤 여기서 표시해 두세요.</p>
         </>}
       </DialogContent>
     </Dialog>

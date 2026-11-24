@@ -52,6 +52,7 @@ export function FeaturedReviews({ locale = "ko" }: { locale?: Locale }) {
         <div><h2 id="reviews-heading">{zh ? <>面對選擇時，<br />一起聊聊心裡的事。</> : <>선택 앞에서,<br />함께 나누는 이야기.</>}</h2></div><Link className="text-link" href={localPath(locale, "/reviews")}>{zh ? "閱讀所有故事" : "상담 이야기 더 보기"}<ArrowUpRight size={16} /></Link>
       </div>
       <div className="reviews-grid">{getFeaturedReviews(locale).map(story => <ReviewCard preview key={story.id} story={story} locale={locale} />)}</div>
+      <p className="reviews-disclaimer">{zh ? "諮詢故事為個人經驗分享。八字解讀僅供參考，不保證特定結果。" : "상담 이야기는 개인의 경험입니다. 사주 풀이는 참고용 해석이며 특정한 결과를 보장하지 않습니다."}</p>
     </div>
   </section>;
 }
@@ -74,6 +75,7 @@ export function ReviewsCollection({ locale = "ko" }: { locale?: Locale }) {
     </div>
     <div className="reviews-collection-label"><h2>{reviewCategories.find(item => item.id === category)?.[locale]} {zh ? "故事" : "이야기"}</h2><span role="status" aria-live="polite">{visibleStories.length}{zh ? " 篇" : "편"}</span></div>
     <div key={category} id="reviews-results" className="reviews-grid reviews-collection">{visibleStories.map(story => <ReviewCard key={story.id} story={story} locale={locale} />)}</div>
+    <p className="reviews-disclaimer">{zh ? "諮詢故事為個人經驗分享。八字解讀僅供參考，不保證特定結果。" : "상담 이야기는 개인의 경험입니다. 사주 풀이는 참고용 해석이며 특정한 결과를 보장하지 않습니다."}</p>
     <div className="reviews-closing"><BrandMascot portrait size={64} /><p>{zh ? "你的故事，也可以慢慢說給我聽。" : "당신의 이야기도, 천천히 들려주세요."}</p><Link className="primary-button" href={`${homePath(locale)}#consultation`}>{zh ? "了解Don 老師的諮詢方式" : "돈쌤 상담 안내"}</Link></div>
   </main>;
 }

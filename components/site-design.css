@@ -356,16 +356,11 @@ body:has(.site-header) .page-heading > p { color: var(--muted-foreground); }
 .booking-page .consent-card { background: var(--card); border-color: var(--input); padding: 16px; color: var(--ink); }
 .booking-page .consent-card.on { border-color: var(--primary); background: var(--card); }
 .booking-page .consent-card strong { color: var(--ink); }
-.booking-page .consent-card small, .booking-page :is(.booking-hint, .privacy-hint, .story-note, .bank-box-sub, .booking-empty) { color: var(--muted-foreground); }
+.booking-page .consent-card small, .booking-page :is(.booking-hint, .privacy-hint, .story-note, .booking-empty) { color: var(--muted-foreground); }
 .booking-page .privacy-hint { align-items: flex-start; line-height: 1.8; overflow-wrap: anywhere; }
 .booking-page:lang(ko) .privacy-hint { word-break: keep-all; }
 .booking-page .privacy-hint > svg { flex-shrink: 0; margin-top: 4px; }
 .booking-page .privacy-hint > span { min-width: 0; }
-.booking-page .bank-box { background: var(--card); border-color: var(--border); border-radius: 14px; padding: 17px; }
-.booking-page .bank-box-account { flex-wrap: wrap; }
-.booking-page .bank-box-account strong { color: var(--ink); font-size: 15px; }
-.booking-page .bank-box-label, .booking-page .bank-copy { color: var(--primary); }
-.booking-page .bank-copy { background: var(--card); border-color: var(--input); }
 .booking-page .booking-chip { background: var(--card); border-color: var(--input); color: var(--ink); }
 .booking-page .booking-chip span { color: var(--muted-foreground); }
 .booking-page .booking-chip.on { background: var(--primary); color: var(--primary-foreground); }
@@ -643,3 +638,29 @@ body .journal-cover.illustrated-cover { background: var(--soft); }
 .booking-page .booking-products > button > span.promo-countdown { display: flex; margin-top: 14px; color: #8f2f20; font-size: 13.5px; line-height: 1.4; }
 .booking-page .booking-products > button .promo-countdown span { color: inherit; }
 .booking-page .booking-products > button .promo-countdown .promo-dday { color: #fff; }
+
+/* Footer business details and policy links (card-payment review). */
+.footer-business { font-style: normal; font-size: 12px; line-height: 1.9; color: var(--muted-foreground); word-break: keep-all; overflow-wrap: anywhere; }
+.footer-business a { text-decoration: underline; text-underline-offset: 3px; }
+.footer-legal { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; margin-top: 10px; font-size: 13px; color: var(--ink); }
+.footer-legal a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 600; }
+/* Terms and privacy pages. */
+.legal-page { max-width: 760px; padding-top: 56px; padding-bottom: 80px; color: var(--ink); }
+.legal-page h1 { font-family: var(--font-gowun), serif; font-weight: 400; font-size: 32px; margin-bottom: 14px; }
+.legal-page h2 { font-size: 17px; font-weight: 700; margin: 34px 0 10px; }
+.legal-page section { scroll-margin-top: 96px; }
+.legal-page section:target { background: var(--soft); border-radius: 14px; padding: 2px 18px 16px; margin: 0 -18px; }
+.legal-page p, .legal-page li { font-size: 15px; line-height: 1.9; color: var(--muted-foreground); word-break: keep-all; overflow-wrap: anywhere; }
+.legal-page p + p { margin-top: 8px; }
+.legal-page ul { list-style: disc; padding-left: 20px; margin: 6px 0 10px; }
+.legal-page .legal-updated { margin-top: 40px; font-size: 13px; }
+/* Payment step on the booking form. */
+.booking-page .refund-summary { border: 1px solid var(--border); border-radius: 14px; background: var(--card); padding: 15px 17px; margin-bottom: 16px; }
+.booking-page .refund-summary strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 4px; }
+.booking-page .refund-summary p { font-size: 13px; line-height: 1.8; color: var(--muted-foreground); word-break: keep-all; }
+.booking-page :is(.refund-summary, .payment-agreements, .booking-contact) a { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; }
+.booking-page .payment-agreements { display: grid; gap: 10px; margin-bottom: 18px; }
+.booking-page .payment-agreements .booking-check { align-self: auto; align-items: flex-start; margin-bottom: 0; }
+.booking-page .payment-agreements .booking-check input { margin-top: 3px; }
+.booking-done .kakao-consultation-notice { text-align: left; margin: 22px auto 8px; max-width: 460px; }
+.booking-done .hero-actions { justify-content: center; }

@@ -498,7 +498,7 @@ export function AdminDashboard({ name }: { name: string }) {
                 {
                   {
                     overview: "콘텐츠를 쌓고, 새로운 인연을 연결하세요.",
-                    bookings: "상담 시간을 열고, 입금을 확인하고, 들어온 이야기를 살피세요.",
+                    bookings: "상담 시간을 열고, 결제를 확인하고, 들어온 이야기를 살피세요.",
                     traffic: "누가 언제 어디서 들어와 어떻게 예약까지 갔는지 보세요.",
                     content:
                       "하나의 이야기, 세 개의 채널. 돈쌤의 목소리로 전해요.",
